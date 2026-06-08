@@ -249,11 +249,30 @@ def build(sid, cfg):
         ch_prefix[ch["id"]] = base
     ch_names = {ch["id"]: ch["title"] for ch in cfg["chapters"]}
     ch_order = {ch["id"]: i for i, ch in enumerate(cfg["chapters"])}
+    # 全局去重：按优先级处理，每页只归入最先匹配的题型
+    type_priority = ["计算题专项","问答题专项","选择题专项","填空题专项","名词解释专项"]
+    TYPE_FILTERS = {
+        "计算题专项": ["例:","例：","例题","计算","求:","求：","解:","解：","="],
+        "问答题专项": ["?","？","简述","说明","分析","论述","什么是","哪些","如何","为什么"],
+        "选择题专项": ["选择","下列","正确","错误","说法","是"],
+        "填空题专项": ["填空","下列","是"],
+        "名词解释专项": ["是指","称为","指的是","叫做"],
+    }
+    ch_prefix = {}
+    for ch in cfg["chapters"]:
+        base = os.path.splitext(ch["file"])[0]
+        ch_prefix[ch["id"]] = base
+    ch_names = {ch["id"]: ch["title"] for ch in cfg["chapters"]}
+    ch_order = {ch["id"]: i for i, ch in enumerate(cfg["chapters"])}
+    all_page_keys = {}  # chapter -> {page_num -> True}
+    for ch in cfg["chapters"]:
+        all_page_keys[ch["id"]] = set()
     cfg["typeSections"] = {}
-    for type_name, tnames in TYPE_TOPICS.items():
-        entries = []
-        has_img = False
-        seen_pages = set()
+    # 收集所有匹配页
+    raw_matches = {tn: [] for tn in type_priority}
+    for tn in type_priority:
+        tnames = TYPE_TOPICS[tn]
+        filt = TYPE_FILTERS[tn]
         for et in cfg["examTopics"]:
             if et["topic"] not in tnames: continue
             pages = ch_pages.get(et["ch"], [])
@@ -261,29 +280,47 @@ def build(sid, cfg):
             prefix = ch_prefix.get(et["ch"], "")
             if not prefix: continue
             for s in matched:
-                if s["num"] in seen_pages: continue
                 ptext = "\n".join(s["lines"])
-                if type_name in ["填空题专项","选择题专项","问答题专项"]:
-                    if not any(k in ptext for k in ["?","？","例:","例：","求:",":","计算","选择","下列","哪些"]):
-                        continue
-                seen_pages.add(s["num"])
+                if not any(k in ptext for k in filt): continue
                 img_path = f"slides/{prefix}_slide{int(s['num']):03d}.png"
-                full_img = os.path.join(os.path.dirname(HTML_OUT), img_path)
-                if os.path.exists(full_img):
-                    entries.append((et["ch"], int(s["num"]), img_path))
-                    has_img = True
+                if os.path.exists(os.path.join(os.path.dirname(HTML_OUT), img_path)):
+                    raw_matches[tn].append((et["ch"], int(s["num"]), img_path, prefix))
+    # 按优先级分配页到题型（全局去重）
+    global_assigned = set()
+    for tn in type_priority:
+        entries = []
+        for ch_id, pg, ip, prefix in raw_matches[tn]:
+            key = (ch_id, pg)
+            if key in global_assigned: continue
+            global_assigned.add(key)
+            entries.append((ch_id, pg, ip))
+            # 检查下一页是否是答案页
+            np = pg + 1
+            nk = (ch_id, np)
+            if nk not in global_assigned:
+                next_img = f"slides/{prefix}_slide{np:03d}.png"
+                if os.path.exists(os.path.join(os.path.dirname(HTML_OUT), next_img)):
+                    # 快速检查下页是否含答案特征
+                    for p in ch_pages.get(ch_id, []):
+                        if int(p["num"]) == np:
+                            ntxt = "\n".join(p["lines"])
+                            if any(k in ntxt for k in ["解:","解：","答案","答:","答：","="]):
+                                global_assigned.add(nk)
+                                entries.append((ch_id, np, next_img))
+                            break
         entries.sort(key=lambda x: (ch_order.get(x[0], 99), x[1]))
-        parts = [f'<div class="ss"><h3>{type_name}</h3><div style="font-size:.8em;color:var(--text2);margin-bottom:10px">原始PPT截图</div>']
+        # 渲染（可折叠）
+        parts = [f'<div class="ss"><div class="ss-h" onclick="this.classList.toggle(\'coll\');this.nextElementSibling.classList.toggle(\'coll\')"><span>{tn}</span><span class="ss-toggle">▼</span></div><div class="ss-b">']
         current_ch = None
         for ch_id, pg, ip in entries:
             if ch_id != current_ch:
                 current_ch = ch_id
                 parts.append(f'<div class="ch-sep">{ch_names.get(ch_id, ch_id)}</div>')
             parts.append(f'<div class="siw"><span class="sil">第 {pg} 页</span><img src="{ip}" loading="lazy" class="si"></div>')
-        if not has_img:
+        if not entries:
             parts.append('<p style="color:var(--text2);padding:12px">暂无截图</p>')
-        parts.append('</div>')
-        cfg["typeSections"][type_name] = "\n".join(parts)
+        parts.append('</div></div>')
+        cfg["typeSections"][tn] = "\n".join(parts)
 
     # ── 名词解释（完整定义，多行提取，按考点分组）──
     def extract_definitions(pages):
@@ -308,8 +345,10 @@ def build(sid, cfg):
         bad_terms = ["一类","另一类","一种","另一种","此外","因此","所谓",
             "用于","就是","可以说","同时","这里","这类","这类萃取剂",
             "UF6","PuO2","NpO2","PaCl4","UO2","Np","Pu","Am","Cm",
-            "也称直接稀释法","同位素稀释法的最大优点",
-            "冠醚","钚同铀和镎一样","二者","用水"]
+            "也称直接稀释法。","也称直接稀释法。它","也称直接稀释法","同位素稀释法的最大优点",
+            "冠醚","钚同铀和镎一样","二者","用水",
+            "卤化物：PaCl4","卤化物:PaCl4","室温时，","最重要",
+            "树脂的单位量用1 mL表示，则","树脂的单位量用1 g表示，则"]
         results = []
         for p in pages:
             ls = p["lines"]
@@ -349,7 +388,7 @@ def build(sid, cfg):
                         term_name = term_name[:idx].strip()
                 # 过滤
                 if len(term_name) < 2: continue
-                if term_name in bad_terms: continue
+                if any(b in term_name for b in bad_terms): continue
                 if any(term_name.endswith(b) for b in bad_term_end): continue
                 if re.match(r'^[\d]+', term_name): continue
                 if re.match(r'^[A-Za-z]{1,2}$', term_name): continue  # 纯字母缩写
@@ -477,7 +516,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .siw{margin-bottom:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface)}
 .sil{display:block;font-size:.7em;color:var(--text2);padding:6px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600}
 .si{width:100%;height:auto;display:block}
-.ch-sep{padding:8px 14px;font-size:.85em;font-weight:600;color:var(--primary);background:var(--plight);border-bottom:1px solid var(--border)}
+.ch-sep{padding:8px 14px;font-size:.82em;font-weight:600;color:var(--primary);background:var(--plight);border-bottom:1px solid var(--border)}
+/* collapsible sections */
+.ss-h{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:12px 18px;background:var(--surface);border-bottom:1px solid var(--border);font-size:.88em;font-weight:600;color:var(--primary)}
+.ss-h:hover{background:var(--plight)}
+.ss-toggle{font-size:.7em;transition:transform .2s;color:var(--text2)}
+.ss-h.coll .ss-toggle{transform:rotate(-90deg)}
+.ss-b{padding:4px 0}
+.ss-b.coll{display:none}
 @media(max-width:900px){.sb{display:none}.ma{padding:12px}.og{grid-template-columns:repeat(2,1fr)}}
 .mb{display:none;background:none;border:none;font-size:1.05em;cursor:pointer;color:var(--primary);padding:4px}
 @media(max-width:900px){.mb{display:block}}
