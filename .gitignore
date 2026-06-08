@@ -22,3 +22,8 @@ output/_分析报告.txt
 .DS_Store
 Thumbs.db
 .temp.txt
+slide*.png
+slide*.jpg
+slide*.x-wmf
+_check_math.py
+_temp_check.txt
