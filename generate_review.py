@@ -1,1130 +1,507 @@
 """
-生成复习网页生成器
-功能：读取提取的PPT文本和考试要点，生成多科目可扩展的复习HTML
+复习网页生成器 v2
+以考点为主线组织内容，按需展示PPT中最相关的部分
 """
 
-import os
-import json
-import re
+import os, json, re
 
 OUT_DIR = r"D:\code\cherry studio\复习\output"
 HTML_OUT = r"D:\code\cherry studio\复习\index.html"
 EXAM_FILE = os.path.join(OUT_DIR, "考试要点.txt")
-CHAPTER_FILES = {}  # 由扫描自动填充
 
-# ─── 科目配置（未来新增科目只需在这里添加） ───
+# ─── 科目配置 ───
 SUBJECTS = {
     "radiochemistry": {
-        "name": "放射化学",
-        "nameEn": "Radiochemistry",
-        "examDate": "2026年6月18日",
+        "name": "放射化学", "nameEn": "Radiochemistry",
+        "examDate": "2026-06-18T18:30:00+08:00",
+        "examDateLabel": "2026年6月18日",
         "chapters": [
-            {"id": "ch1",  "file": "1.第一章 绪论 (2026)-1(2).txt",             "title": "第一章 绪论", "exam": ["学科特点"]},
-            {"id": "ch2",  "file": "2.第二章 放射性(2026)-1.txt",               "title": "第二章 放射性", "exam": ["衰变公式", "半衰期与衰变常数", "衰变类型", "贝克和居里", "比活度", "平衡公式"]},
-            {"id": "ch3",  "file": "3.第三章 放射性核素的物理化学.txt",          "title": "第三章 放射性核素的物理化学", "exam": ["同位素效应", "胶体判定", "吸附"]},
-            {"id": "ch4",  "file": "4.第四章 物质的分离.txt",                    "title": "第四章 物质的分离", "exam": ["共沉淀", "同二晶", "电化学", "载体", "萃取", "离子交换"]},
-            {"id": "ch5",  "file": "6. 天然核素-1.txt",                          "title": "第六章 天然放射性元素化学", "exam": ["天然放射性系", "天然放射性元素"]},
-            {"id": "ch6",  "file": "7. 第七章 锕系理论(2).txt",                  "title": "第七章 锕系理论", "exam": ["核反应式", "镭氡计算", "铀钚转化"]},
-            {"id": "ch7",  "file": "8.第八章(2).txt",                            "title": "第八章 裂片元素及活化产物化学", "exam": []},
-            {"id": "ch8",  "file": "9.第九章 放射性核素的制备.txt",              "title": "第九章 放射性核素的制备", "exam": ["核素制备", "分析方法"]},
+            {"id": "ch1", "file": "1.第一章 绪论 (2026)-1(2).txt",  "title": "第一章 绪论"},
+            {"id": "ch2", "file": "2.第二章 放射性(2026)-1.txt",    "title": "第二章 放射性"},
+            {"id": "ch3", "file": "3.第三章 放射性核素的物理化学.txt", "title": "第三章 放射性核素的物理化学"},
+            {"id": "ch4", "file": "4.第四章 物质的分离.txt",         "title": "第四章 物质的分离"},
+            {"id": "ch5", "file": "6. 天然核素-1.txt",               "title": "第六章 天然放射性元素化学"},
+            {"id": "ch6", "file": "7. 第七章 锕系理论(2).txt",       "title": "第七章 锕系理论"},
+            {"id": "ch7", "file": "8.第八章(2).txt",                 "title": "第八章 裂片元素及活化产物化学"},
+            {"id": "ch8", "file": "9.第九章 放射性核素的制备.txt",   "title": "第九章 放射性核素的制备"},
+        ],
+        "examTopics": [
+            {"topic": "学科特点",  "ch": "ch1", "keywords": ["特点", "放射化学", "学科", "研究", "内容"]},
+            {"topic": "衰变公式与半衰期", "ch": "ch2", "keywords": ["衰变", "公式", "半衰期", "N=", "N0", "λ", "指数", "衰变常数"]},
+            {"topic": "放射性的单位与比活度", "ch": "ch2", "keywords": ["贝克", "居里", "比活度", "Bq", "Ci", "活度"]},
+            {"topic": "衰变类型(α/β/γ)", "ch": "ch2", "keywords": ["α衰变", "β衰变", "γ衰变", "衰变类型", "α粒子", "β粒子"]},
+            {"topic": "放射性平衡", "ch": "ch2", "keywords": ["平衡", "久期平衡", "长期平衡", "子体", "母体"]},
+            {"topic": "同位素效应与交换", "ch": "ch3", "keywords": ["同位素效应", "同位素交换", "平衡常数"]},
+            {"topic": "放射性胶体", "ch": "ch3", "keywords": ["胶体", "真胶体", "假胶体", "分散体系"]},
+            {"topic": "吸附作用", "ch": "ch3", "keywords": ["吸附", "吸附剂", "吸附率", "吸附系数"]},
+            {"topic": "共沉淀与同晶", "ch": "ch4", "keywords": ["共沉淀", "同晶", "同二晶", "结晶", "混晶"]},
+            {"topic": "电化学(能斯特方程)", "ch": "ch4", "keywords": ["能斯特", "电化学", "置换", "电沉积", "电极"]},
+            {"topic": "载体与反载体", "ch": "ch4", "keywords": ["载体", "反载体", "Carrier", "放射性核素纯度"]},
+            {"topic": "溶剂萃取", "ch": "ch4", "keywords": ["萃取", "萃取率", "萃取剂", "盐析剂", "掩蔽剂"]},
+            {"topic": "离子交换分离", "ch": "ch4", "keywords": ["离子交换", "稀释液", "分离", "交换"]},
+            {"topic": "天然放射性系", "ch": "ch5", "keywords": ["天然放射", "放射系", "铀系", "钍系", "母体"]},
+            {"topic": "锕系元素与核反应", "ch": "ch6", "keywords": ["锕系", "核反应", "反应式", "铀钚", "钍铀", "转化"]},
+            {"topic": "镭氡计算", "ch": "ch6", "keywords": ["镭", "氡", "计算"]},
+            {"topic": "核素制备方法", "ch": "ch8", "keywords": ["制备", "反应堆", "加速器", "同位素", "中子"]},
+            {"topic": "同位素稀释法", "ch": "ch8", "keywords": ["稀释法", "同位素稀释", "分析"]},
         ]
     }
-    # 未来新增科目示例：
-    # "organic-chemistry": {
-    #     "name": "有机化学",
-    #     "nameEn": "Organic Chemistry",
-    #     "examDate": "2026年7月",
-    #     "chapters": [
-    #         {"id": "oc1", "file": "有机化学_第一章.txt", "title": "第一章 ...", "exam": [...]},
-    #     ]
-    # }
 }
 
 
 def load_text(filepath):
-    """读取提取的PPT文本"""
     path = os.path.join(OUT_DIR, filepath)
     if not os.path.exists(path):
         return [], f"文件未找到: {filepath}"
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
-    # 按页分割
     pages = re.split(r'=====\s*第\s*(\d+)\s*页\s*=====', content)
-    # pages[0] 是来源信息，之后交替出现 页码 和 内容
     result = []
-    header = pages[0].strip() if pages else ""
     for i in range(1, len(pages), 2):
-        page_num = pages[i].strip() if i < len(pages) else ""
+        page_num = pages[i].strip()
         page_content = pages[i + 1].strip() if i + 1 < len(pages) else ""
-        # 过滤掉仅含标题行或过短的内容
         lines = [l for l in page_content.split("\n") if l.strip()]
         if lines:
             result.append({"num": page_num, "lines": lines})
-    return result, header
+    return result, (pages[0].strip() if pages else "")
 
 
-def load_exam_requirements():
-    """读取考试要求"""
+def load_exam_lines():
     if not os.path.exists(EXAM_FILE):
         return []
     with open(EXAM_FILE, "r", encoding="utf-8") as f:
         return [l.strip() for l in f if l.strip()]
 
 
-def extract_formulas(pages):
-    """从页面内容中提取公式行（严格过滤）"""
-    formulas = []
-    # 真正的公式应包含等号且等号两边有数学内容
-    math_patterns = [
-        r'^[A-Za-zλμρπεωΩ].*=',
-        r'=.*\d',
-        r'\b(ln|lg|exp|log|sin|cos|tan)\b',
-        r'\d+\s*[×x÷/\-+]\s*\d',
-        r'×\s*10',
-        r'[NnEeAa].*=.*\d',
-        r'λ\s*=',
-        r'[Ttτ].*=',
-        r'[KkSs].*=',
-    ]
-    for page in pages:
-        for line in page["lines"]:
-            line = line.strip()
-            if not line or len(line) < 4 or len(line) > 130:
-                continue
-            # 不能是纯中文长句
-            zh_count = sum(1 for c in line if '一' <= c <= '鿿')
-            if zh_count > len(line) * 0.6 and '=' not in line:
-                continue
-            # 必须匹配公式特征
-            if any(re.search(p, line) for p in math_patterns):
-                formulas.append(line)
-    return formulas
+def filter_relevant(lines, keywords):
+    relevant = []
+    for line in lines:
+        s = line.strip()
+        if not s or len(s) < 3:
+            continue
+        if re.match(r'^[\d\s\.\,\;\(\)\-\+\*/]+$', s):
+            continue
+        if any(kw in s for kw in keywords):
+            relevant.append(s)
+    return relevant
 
 
-def extract_key_terms(pages):
-    """提取名词解释（更精确）"""
-    terms = []
-    seen_texts = set()
-    for page in pages:
-        for i, line in enumerate(page["lines"]):
-            line = line.strip()
-            if not line or len(line) < 4 or len(line) > 100:
-                continue
-            # 跳过纯数字行、目录索引行
-            if re.match(r'^[\d\s\.\,\;]+$', line):
-                continue
-            if line in seen_texts:
-                continue
-            seen_texts.add(line)
-
-            # 定义句式：X是指/称为/指的是/即...
-            if re.search(r'(是指|称为|叫做|指的是|即)\S', line):
-                terms.append(line)
-            # 冒号分隔的名词解释（前段短、后段长）
-            elif "：" in line:
-                idx = line.index("：")
-                name = line[:idx]
-                desc = line[idx+1:]
-                if 1 < len(name) < 25 and len(desc) > 3 and not re.search(r'[=×÷]', name):
-                    if len(desc) < 120:
-                        terms.append(line)
-    return terms
+def extract_topic(topic, pages):
+    kw = topic["keywords"]
+    matched = []
+    for p in pages:
+        lines = filter_relevant(p["lines"], kw)
+        if lines:
+            matched.append({"num": p["num"], "lines": lines[:8]})
+    return matched
 
 
-# ─── HTML 模板 ───
+def build_subject(sid, cfg):
+    print(f"  处理: {cfg['name']}")
 
-HTML_HEADER = r"""<!DOCTYPE html>
+    exam_lines = load_exam_lines()
+
+    # load all chapters
+    ch_pages = {}
+    for ch in cfg["chapters"]:
+        ch_pages[ch["id"]], _ = load_text(ch["file"])
+
+    # --- exam overview ---
+    ov = []
+    ov.append('<div class="overview-banner">')
+    ov.append(f'<h2>{cfg["name"]} 考试概览</h2>')
+    ov.append(f'<div class="date">考试时间：{cfg["examDateLabel"]}</div>')
+
+    type_map = {
+        "填空题": ("16分", "8题 x 2分"), "选择题": ("14分", "7题，含多选"),
+        "名词解释": ("16分", "4个 x 4分"), "问答题": ("24分", "4个 x 6分"),
+        "计算题": ("30分", "3题 x 10分")
+    }
+    ov.append('<div class="overview-grid">')
+    for line in exam_lines:
+        for name, (score, detail) in type_map.items():
+            if name in line and "分" in line:
+                ov.append(f'<div class="overview-item"><div class="name">{name}</div><div class="score">{score}</div><div class="detail">{detail}</div></div>')
+                break
+    ov.append('</div></div>')
+
+    ov.append('<div class="tips-card"><h3>重点知识</h3><ul>')
+    in_kw = False
+    for line in exam_lines:
+        if "重点知识" in line:
+            in_kw = True
+            continue
+        if in_kw and any(x in line for x in ["注意", "铅笔", "计算器", "AI"]):
+            break
+        if in_kw and line.strip():
+            ov.append(f'<li>{line.strip()}</li>')
+    ov.append('</ul></div>')
+
+    ov.append('<div class="tips-card"><h3>注意事项</h3><ul>')
+    for line in exam_lines:
+        if any(x in line for x in ["注意", "铅笔", "计算器"]):
+            ov.append(f'<li>{line.strip()}</li>')
+    ov.append('</ul></div>')
+
+    cfg["examOverviewHTML"] = "\n".join(ov)
+
+    # --- topic content ---
+    cfg["topicsHTML"] = {}
+    for et in cfg["examTopics"]:
+        pages = ch_pages.get(et["ch"], [])
+        matched = extract_topic(et, pages)
+        ch_title = next((c["title"] for c in cfg["chapters"] if c["id"] == et["ch"]), "")
+
+        parts = []
+        parts.append(f'<div class="topic-header"><h2>{et["topic"]}</h2><div class="topic-source">来源：<a href="#" onclick="navigate(\'ch-{et["ch"]}\');return false">{ch_title}</a></div></div>')
+        if matched:
+            for slide in matched:
+                parts.append('<div class="topic-slide">')
+                parts.append(f'<div class="topic-slide-num">第 {slide["num"]} 页</div>')
+                for line in slide["lines"]:
+                    e = line.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+                    if any(c in line for c in ["=","λ","×","ln","lg"]) and any(c.isdigit() for c in line) and len(line) < 100:
+                        parts.append(f'<div class="topic-formula">{e}</div>')
+                    else:
+                        parts.append(f'<p>{e}</p>')
+                parts.append('</div>')
+        else:
+            parts.append(f'<div class="topic-empty">参考 <a href="#" onclick="navigate(\'ch-{et["ch"]}\');return false">{ch_title}</a> 相关内容</div>')
+        cfg["topicsHTML"][et["topic"]] = "\n".join(parts)
+
+    # --- chapter content ---
+    for ch in cfg["chapters"]:
+        pages = ch_pages.get(ch["id"], [])
+        if not pages:
+            ch["html"] = '<div class="empty-state"><p>内容加载中...</p></div>'
+            continue
+        parts = [f'<div class="chapter-header"><h2>{ch["title"]}</h2></div>']
+        for p in pages:
+            parts.append('<div class="slide-card">')
+            parts.append(f'<div class="slide-header" onclick="this.classList.toggle(\'collapsed\');this.nextElementSibling.classList.toggle(\'collapsed\')"><span>第 {p["num"]} 页</span><span class="icon">▼</span></div>')
+            parts.append('<div class="slide-body collapsed">')
+            for line in p["lines"]:
+                e = line.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+                parts.append(f'<p>{e}</p>')
+            parts.append('</div></div>')
+        ch["html"] = "\n".join(parts)
+
+    # --- formulas ---
+    formulas = set()
+    for et in cfg["examTopics"]:
+        pages = ch_pages.get(et["ch"], [])
+        matched = extract_topic(et, pages)
+        for slide in matched:
+            for line in slide["lines"]:
+                if any(c in line for c in ["=","λ","×","ln","lg"]) and any(c.isdigit() for c in line) and 4 < len(line) < 120:
+                    zh = sum(1 for c in line if 'u4e00' <= c <= 'u9fff')
+                    if zh / max(len(line), 1) < 0.5:
+                        formulas.add(line.strip())
+    fh = ['<div class="special-section"><h3>必背公式</h3><div class="formula-grid">']
+    for f in sorted(formulas):
+        e = f.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+        fh.append(f'<div class="formula-item">{e}</div>')
+    fh.append('</div></div>')
+    cfg["formulasHTML"] = "\n".join(fh)
+
+    # --- terms ---
+    seen = set()
+    th = ['<div class="special-section"><h3>名词解释</h3><ul class="term-list">']
+    for ch in cfg["chapters"]:
+        pages = ch_pages.get(ch["id"], [])
+        for p in pages:
+            for line in p["lines"]:
+                s = line.strip()
+                if any(k in s for k in ["是指","称为","叫做","指的是"]) and 8 < len(s) < 100 and s not in seen:
+                    seen.add(s)
+                    e = s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+                    th.append(f'<li>{e}</li>')
+    th.append('</ul></div>')
+    cfg["termsHTML"] = "\n".join(th)
+
+    print(f"  考点 {len(cfg['examTopics'])} 个, 公式 {len(formulas)} 条, 名词 {len(seen)} 个")
+
+
+TEMPLATE = r'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>复习系统 | Review</title>
+<title>复习系统</title>
 <style>
-  :root {
-    --bg: #f8f9fa;
-    --surface: #ffffff;
-    --text: #1a1a2e;
-    --text-secondary: #555;
-    --primary: #4361ee;
-    --primary-light: #eef0ff;
-    --accent: #f72585;
-    --border: #dee2e6;
-    --success: #06d6a0;
-    --warning: #ffd166;
-    --sidebar-width: 280px;
-    --radius: 12px;
-    --shadow: 0 2px 12px rgba(0,0,0,0.08);
-    --font: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
-    --font-mono: "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, monospace;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-    font-size: 15px;
-  }
+:root{--bg:#f4f5f7;--surface:#fff;--text:#1a1a2e;--text2:#666;--primary:#4361ee;--primary-light:#eef0ff;--accent:#e63946;--border:#ddd;--radius:10px;--shadow:0 1px 6px rgba(0,0,0,0.06);--font:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;--mono:"Cascadia Code",Consolas,monospace}
+.dark-mode{--bg:#1a1a2e;--surface:#16213e;--text:#e0e0e0;--text2:#889;--primary:#6c8cff;--primary-light:#1e2a4a;--border:#2a2a4a;--shadow:0 1px 6px rgba(0,0,0,0.3)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
 
-  /* ─── 暗黑模式 ─── */
-  .dark-mode {
-    --bg: #1a1a2e;
-    --surface: #16213e;
-    --text: #e0e0e0;
-    --text-secondary: #a0a0b0;
-    --primary: #6c8cff;
-    --primary-light: #1e2a4a;
-    --border: #2a2a4a;
-    --shadow: 0 2px 12px rgba(0,0,0,0.3);
-  }
+#progressBar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));z-index:9999;width:0%;transition:width .1s}
 
-  /* 阅读进度条 */
-  .progress-bar {
-    position: fixed; top: 0; left: 0; height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    z-index: 9999; width: 0%; transition: width 0.1s;
-  }
+/* topbar */
+.topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);height:48px;padding:0 12px;display:flex;align-items:center;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.topbar button{background:none;border:none;cursor:pointer;color:var(--primary);padding:4px 6px;border-radius:4px;font-size:1em}
+.topbar button:hover{background:var(--primary-light)}
+.topbar .title{flex:1;font-weight:600;font-size:.9em}
+.topbar .title .en{font-weight:400;color:var(--text2);font-size:.78em;margin-left:4px}
+.topbar .badge{background:var(--accent);color:#fff;padding:2px 10px;border-radius:10px;font-size:.7em}
+.topbar .cd{font-size:.7em;color:var(--text2)}
+#searchBox{padding:3px 10px;border:1px solid var(--border);border-radius:12px;font-size:.8em;font-family:var(--font);outline:none;width:120px;background:var(--bg);color:var(--text);display:none}
 
-  /* 暗黑模式切换按钮 */
-  .dark-toggle {
-    background: none; border: none; cursor: pointer;
-    font-size: 1.1em; padding: 4px 8px; border-radius: 6px;
-    color: var(--text-secondary); transition: background 0.2s;
-  }
-  .dark-toggle:hover { background: var(--primary-light); }
+/* layout */
+.layout{display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 48px)}
 
-    /* ─── 科目选择页（首页） ─── */
-  .subject-selector {
-    display: none;
-    max-width: 800px;
-    margin: 60px auto;
-    padding: 0 24px;
-  }
-  .subject-selector.active { display: block; }
-  .subject-selector h1 {
-    font-size: 2.2em;
-    text-align: center;
-    margin-bottom: 8px;
-    color: var(--primary);
-  }
-  .subject-selector .subtitle {
-    text-align: center;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
-    font-size: 1em;
-  }
-  .subject-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-  }
-  .subject-card {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px 24px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: var(--shadow);
-  }
-  .subject-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(67, 97, 238, 0.15);
-  }
-  .subject-card h3 { font-size: 1.2em; margin-bottom: 4px; }
-  .subject-card .en { font-size: 0.85em; color: var(--text-secondary); }
-  .subject-card .meta { margin-top: 12px; font-size: 0.85em; color: var(--text-secondary); }
-  .subject-card .badge {
-    display: inline-block;
-    background: var(--primary-light);
-    color: var(--primary);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 0.8em;
-    margin-top: 8px;
-  }
-  .add-subject-card {
-    border: 2px dashed var(--border);
-    background: transparent;
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    font-size: 1em;
-    min-height: 140px;
-    cursor: default;
-  }
-  .add-subject-card:hover { transform: none; border-color: var(--border); }
+/* sidebar */
+.sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;padding:6px 0}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.sidebar .st{padding:5px 14px 3px;font-size:.68em;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);font-weight:600}
+.sidebar .it{display:block;padding:5px 14px 5px 18px;color:var(--text);text-decoration:none;font-size:.82em;border-left:3px solid transparent;cursor:pointer;transition:all .1s}
+.sidebar .it:hover{background:var(--primary-light);color:var(--primary)}
+.sidebar .it.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:600}
+.sidebar .it .num{display:inline-block;width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;background:var(--bg);font-size:.65em;font-weight:600;margin-right:3px;color:var(--text2)}
+.sidebar .it.active .num{background:var(--primary);color:#fff}
+.sidebar .ti{padding-left:20px;font-size:.8em}
 
-  /* ─── 复习页面 ─── */
-  .review-page { display: none; }
-  .review-page.active { display: block; }
+/* main */
+.main{flex:1;padding:20px 28px 60px;min-width:0}
+.block{display:none;animation:f .25s}
+.block.active{display:block}
+@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-  /* 顶部导航 */
-  .top-bar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  }
-  .top-bar .back-btn {
-    background: none;
-    border: none;
-    font-size: 1.3em;
-    cursor: pointer;
-    color: var(--primary);
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: background 0.2s;
-  }
-  .top-bar .back-btn:hover { background: var(--primary-light); }
-  .top-bar .title-area { font-size: 1em; font-weight: 600; }
-  .top-bar .title-area .en { font-weight: 400; color: var(--text-secondary); font-size: 0.85em; }
-  .top-bar .exam-badge {
-    margin-left: auto;
-    background: var(--accent);
-    color: #fff;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 0.8em;
-    font-weight: 500;
-  }
+/* overview */
+.ob{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:var(--radius);padding:24px 28px;margin-bottom:20px}
+.ob h2{font-size:1.3em;margin-bottom:4px}
+.ob .date{opacity:.85;font-size:.82em;margin-bottom:14px}
+.og{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.oi{background:rgba(255,255,255,.15);border-radius:6px;padding:8px 12px}
+.oi .nm{font-size:.78em;opacity:.9}
+.oi .sc{font-size:1.3em;font-weight:700}
+.oi .dt{font-size:.68em;opacity:.75}
+.tc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px}
+.tc h3{color:var(--primary);font-size:.9em;margin-bottom:6px}
+.tc ul{padding-left:16px}
+.tc li{margin-bottom:2px;color:var(--text2);font-size:.85em}
 
-  /* 主体布局 */
-  .layout {
-    display: flex;
-    max-width: 1400px;
-    margin: 0 auto;
-    min-height: calc(100vh - 56px);
-  }
+/* topic */
+.th{margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--primary)}
+.th h2{font-size:1.2em;color:var(--primary)}
+.th .src{font-size:.8em;color:var(--text2);margin-top:3px}
+.th .src a{color:var(--primary);text-decoration:none}
+.ts{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px;box-shadow:var(--shadow)}
+.ts .sn{font-size:.72em;color:var(--text2);margin-bottom:4px;font-weight:600}
+.ts p{margin-bottom:2px;font-size:.9em}
+.tf{font-family:var(--mono);background:var(--primary-light);padding:4px 10px;border-radius:4px;margin:3px 0;border-left:3px solid var(--primary);font-size:.85em}
+.te{color:var(--text2);font-size:.85em;padding:16px 0}
+.te a{color:var(--primary);text-decoration:none}
 
-  /* 侧边栏 */
-  .sidebar {
-    width: var(--sidebar-width);
-    flex-shrink: 0;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 16px 0;
-    position: sticky;
-    top: 56px;
-    height: calc(100vh - 56px);
-    overflow-y: auto;
-  }
-  .sidebar::-webkit-scrollbar { width: 4px; }
-  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+/* chapter */
+.sh{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:6px;overflow:hidden}
+.shd{padding:6px 14px;background:var(--bg);font-size:.78em;font-weight:600;color:var(--text2);cursor:pointer;user-select:none;display:flex;justify-content:space-between}
+.shd:hover{background:var(--primary-light)}
+.shd .ic{transition:transform .2s;font-size:.7em}
+.shd.c .ic{transform:rotate(-90deg)}
+.sb{padding:8px 14px;line-height:1.8;font-size:.88em}
+.sb.c{display:none}
+.sb p{margin-bottom:3px}
 
-  .sidebar-section { margin-bottom: 8px; }
-  .sidebar-section-title {
-    padding: 8px 20px 4px;
-    font-size: 0.75em;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    font-weight: 600;
-  }
-  .sidebar-item {
-    display: block;
-    padding: 7px 20px 7px 24px;
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.92em;
-    border-left: 3px solid transparent;
-    transition: all 0.15s;
-    cursor: pointer;
-    position: relative;
-  }
-  .sidebar-item:hover { background: var(--primary-light); color: var(--primary); }
-  .sidebar-item.active {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-left-color: var(--primary);
-    font-weight: 600;
-  }
-  .sidebar-item .exam-tag {
-    display: inline-block;
-    font-size: 0.65em;
-    background: var(--accent);
-    color: #fff;
-    padding: 0 6px;
-    border-radius: 8px;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
-  .sidebar-item .ch-num {
-    display: inline-block;
-    width: 22px;
-    height: 22px;
-    line-height: 22px;
-    text-align: center;
-    border-radius: 50%;
-    background: var(--bg);
-    font-size: 0.75em;
-    font-weight: 600;
-    margin-right: 6px;
-    color: var(--text-secondary);
-  }
-  .sidebar-item.active .ch-num { background: var(--primary); color: #fff; }
+/* special */
+.ss{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px}
+.ss h3{font-size:.95em;color:var(--primary);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.fi{background:var(--primary-light);border-left:3px solid var(--primary);padding:6px 10px;border-radius:4px;font-family:var(--mono);font-size:.82em}
+.tl{padding-left:16px}
+.tl li{margin-bottom:4px;font-size:.85em;color:var(--text2)}
 
-  /* 主内容区 */
-  .main-content {
-    flex: 1;
-    padding: 32px 40px 60px;
-    min-width: 0;
-  }
+/* subject cards */
+.sc{max-width:500px;margin:40px auto;padding:0 16px}
+.sc h1{text-align:center;font-size:1.8em;color:var(--primary);margin-bottom:4px}
+.sc p{text-align:center;color:var(--text2);margin-bottom:28px;font-size:.9em}
+.scc{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.sccd{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.sccd:hover{border-color:var(--primary);transform:translateY(-2px)}
+.sccd h3{font-size:1.05em;margin-bottom:2px}
 
-  /* 考试概览 */
-  .exam-overview {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
-    border-radius: var(--radius);
-    padding: 32px 36px;
-    margin-bottom: 32px;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-  }
-  .exam-overview h2 { font-size: 1.5em; margin-bottom: 6px; }
-  .exam-overview .exam-date { opacity: 0.85; font-size: 0.9em; margin-bottom: 20px; }
-  .exam-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-  }
-  .exam-type {
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(4px);
-    border-radius: 8px;
-    padding: 12px 16px;
-  }
-  .exam-type .name { font-size: 0.85em; opacity: 0.9; }
-  .exam-type .score { font-size: 1.6em; font-weight: 700; }
-  .exam-type .detail { font-size: 0.75em; opacity: 0.75; }
+/* mobile */
+@media(max-width:900px){
+.sidebar{display:none}
+.main{padding:12px}
+.og{grid-template-columns:repeat(2,1fr)}
+.fg{grid-template-columns:1fr}
+}
+.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200}
+.so.s{display:block}
+.sidebar.ms{display:block;position:fixed;left:0;top:0;z-index:300;height:100vh;box-shadow:4px 0 20px rgba(0,0,0,.15)}
+.mb{display:none;background:none;border:none;font-size:1em;cursor:pointer;color:var(--primary);padding:4px}
+@media(max-width:900px){.mb{display:block}}
 
-  .exam-tips {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 32px;
-    box-shadow: var(--shadow);
-  }
-  .exam-tips h3 { color: var(--primary); margin-bottom: 8px; font-size: 1em; }
-  .exam-tips ul { padding-left: 20px; }
-  .exam-tips li { margin-bottom: 4px; color: var(--text-secondary); font-size: 0.92em; }
-
-  /* 章节内容块 */
-  .chapter-block {
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
-  .chapter-block.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  .chapter-header {
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid var(--primary);
-  }
-  .chapter-header h2 { font-size: 1.5em; color: var(--primary); }
-  .chapter-header .exam-topics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .chapter-header .exam-topic-tag {
-    background: var(--accent);
-    color: #fff;
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 0.78em;
-  }
-  .chapter-header .no-exam {
-    font-size: 0.85em;
-    color: var(--text-secondary);
-  }
-
-  /* 幻灯片内容卡片 */
-  .slide-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: box-shadow 0.2s;
-  }
-  .slide-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-
-  .slide-header {
-    padding: 10px 18px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    font-size: 0.82em;
-    font-weight: 600;
-    color: var(--text-secondary);
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .slide-header:hover { background: var(--primary-light); }
-  .slide-header .toggle-icon { transition: transform 0.2s; font-size: 0.8em; }
-  .slide-header.collapsed .toggle-icon { transform: rotate(-90deg); }
-
-  .slide-body {
-    padding: 14px 18px;
-    line-height: 1.9;
-    font-size: 0.95em;
-  }
-  .slide-body.collapsed { display: none; }
-
-  .slide-body p { margin-bottom: 6px; }
-  .slide-body .formula-line {
-    font-family: var(--font-mono);
-    background: var(--primary-light);
-    padding: 6px 12px;
-    border-radius: 6px;
-    margin: 6px 0;
-    font-size: 0.95em;
-    border-left: 3px solid var(--primary);
-  }
-  .slide-body .highlight {
-    background: #fff3cd;
-    padding: 0 3px;
-    border-radius: 3px;
-  }
-  .slide-body .key-term {
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .slide-body .img-placeholder {
-    display: inline-block;
-    background: var(--bg);
-    border: 1px dashed var(--border);
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 0.82em;
-    color: var(--text-secondary);
-    margin: 4px 0;
-  }
-
-  /* 专题区块（公式、名词） */
-  .special-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow);
-  }
-  .special-section h3 {
-    font-size: 1.15em;
-    color: var(--primary);
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-  .special-section .item {
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .special-section .item:last-child { border-bottom: none; }
-
-  /* 无内容提示 */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-secondary);
-  }
-  .empty-state .icon { font-size: 3em; margin-bottom: 12px; }
-  .empty-state p { font-size: 1em; }
-
-  /* 公式专题 */
-  .formula-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
-  }
-  .formula-item {
-    background: var(--primary-light);
-    border-left: 3px solid var(--primary);
-    padding: 10px 14px;
-    border-radius: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-    line-height: 1.6;
-  }
-
-  /* 名词专题 */
-  .term-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .term-item:last-child { border-bottom: none; }
-  .term-item .term-name {
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  /* 响应式 */
-  @media (max-width: 900px) {
-    .sidebar { display: none; }
-    .main-content { padding: 20px; }
-    .exam-grid { grid-template-columns: repeat(2, 1fr); }
-    .formula-grid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 500px) {
-    .exam-grid { grid-template-columns: 1fr; }
-    .exam-overview { padding: 20px; }
-  }
-
-  /* 考点-章节映射表 */
-  .exam-mapping { margin-bottom: 24px; }
-  .mapping-table { display: flex; flex-direction: column; gap: 4px; }
-  .mapping-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 8px 14px; border-radius: 8px;
-    text-decoration: none; color: var(--text);
-    transition: background 0.15s; cursor: pointer;
-  }
-  .mapping-row:hover { background: var(--primary-light); }
-  .mapping-ch {
-    background: var(--primary); color: #fff;
-    padding: 2px 10px; border-radius: 12px;
-    font-size: 0.8em; font-weight: 600; white-space: nowrap;
-  }
-  .mapping-topic { flex: 1; font-size: 0.95em; }
-  .mapping-arrow {
-    font-size: 0.8em; color: var(--primary);
-    opacity: 0; transition: opacity 0.2s;
-  }
-  .mapping-row:hover .mapping-arrow { opacity: 1; }
-
-  /* 打印样式 */
-  @media print {
-    .top-bar, .sidebar, .mobile-menu-btn, .sidebar-overlay { display: none !important; }
-    .layout { display: block; max-width: 100%; }
-    .main-content { padding: 0; }
-    .chapter-block { display: block !important; page-break-after: always; }
-    .chapter-block.active { display: block !important; }
-    .slide-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
-    .slide-body { display: block !important; }
-    .slide-header { background: #f5f5f5; }
-    .slide-header .toggle-icon { display: none; }
-    .exam-overview { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .mapping-row:hover .mapping-arrow { opacity: 1; }
-  }
-
-  /* 移动端侧栏切换 */
-  .mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: var(--primary);
-    padding: 4px 8px;
-  }
-  @media (max-width: 900px) {
-    .mobile-menu-btn { display: block; }
-  }
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    z-index: 200;
-  }
-  .sidebar-overlay.show { display: block; }
-  .sidebar.mobile-show {
-    display: block;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 300;
-    height: 100vh;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  }
+@media print{
+.topbar,.sidebar,.mb,.so,#progressBar,#searchBox{display:none!important}
+.layout{display:block}
+.main{padding:0}
+.block{display:block!important;page-break-after:always}
+.sh{break-inside:avoid;border:1px solid #ccc}
+.sb{display:block!important}
+.shd{background:#f5f5f5;cursor:default}
+.shd .ic{display:none}
+.ob{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
-<body><div class="progress-bar" id="progressBar"></div>
+<body>
+<div id="progressBar"></div>
 
-<!-- ═══ 科目选择页 ═══ -->
-<div id="subjectSelector" class="subject-selector active">
-  <h1>📚 复习系统</h1>
-  <p class="subtitle">选择科目开始复习</p>
-  <div class="subject-cards">
-    <!-- 由 JS 动态生成 -->
-  </div>
+<div id="subjectSelector" class="block active" style="max-width:500px;margin:40px auto;padding:0 16px;">
+  <h1 style="text-align:center;font-size:1.8em;color:var(--primary);margin-bottom:4px;">复习系统</h1>
+  <p style="text-align:center;color:var(--text2);margin-bottom:28px;">选择科目开始复习</p>
+  <div id="subjectCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;"></div>
 </div>
 
-<!-- ═══ 复习页面 ═══ -->
-<div id="reviewPage" class="review-page">
-
-  <!-- 顶栏 -->
-  <div class="top-bar">
-    <button class="back-btn" onclick="showSubjectSelector()" title="返回科目选择">←</button>
-    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
-    <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="切换暗黑模式">🌙</button><div class="title-area">
-      <span id="subjectTitle">放射化学</span>
-      <span class="en" id="subjectTitleEn">Radiochemistry</span>
-    </div>
-    <span class="exam-badge" id="examBadge">
-	    📅 6月18日考试</span><span id="countdown" data-date="2026-06-18T18:30:00+08:00" style="margin-left:12px;font-size:0.78em;color:var(--text-secondary);white-space:nowrap;"></span><input type="text" id="searchBox" placeholder="搜索关键词..." oninput="searchContent(this.value)" style="display:none;padding:4px 12px;border:1px solid var(--border);border-radius:16px;font-size:0.85em;font-family:var(--font);outline:none;width:160px;background:var(--bg);">
+<div id="reviewPage" class="block">
+  <div class="topbar">
+    <button onclick="backHome()">&larr;</button>
+    <button class="mb" onclick="toggleS()">&#9776;</button>
+    <div class="title"><span id="stitle"></span><span class="en" id="sen"></span></div>
+    <span class="badge" id="sbadge"></span>
+    <span class="cd" id="scd"></span>
+    <button onclick="toggleDark()" id="dtb" style="font-size:.9em;">&#127769;</button>
+    <input type="text" id="searchBox" placeholder="搜索...">
   </div>
-
-  <!-- 遮罩 -->
-  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
-
+  <div id="sidebarOverlay" class="so" onclick="toggleS()"></div>
   <div class="layout">
-    <!-- 侧边栏 -->
-    <nav class="sidebar" id="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-section-title">概览</div>
-        <a class="sidebar-item active" data-target="overview" onclick="navigateTo('overview')">
-          📋 考试概览
-        </a>
-      </div>
-      <div class="sidebar-section" id="chapterNav">
-        <div class="sidebar-section-title" style="display:flex;justify-content:space-between;align-items:center;padding-right:12px;">章节复习<button onclick="toggleAllSlides()" style="font-size:0.85em;background:var(--primary-light);border:1px solid var(--border);border-radius:12px;padding:1px 8px;cursor:pointer;color:var(--primary);font-weight:400;">展开/折叠</button></div>
-        <!-- 由 JS 动态生成 -->
-      </div>
-      <div class="sidebar-section" id="specialNav">
-        <div class="sidebar-section-title">重点专题</div>
-        <a class="sidebar-item" data-target="formulas" onclick="navigateTo('formulas')">📐 必背公式</a>
-        <a class="sidebar-item" data-target="terms" onclick="navigateTo('terms')">📖 名词解释</a>
-      </div>
-    </nav>
-
-    <!-- 主内容 -->
-    <main class="main-content" id="mainContent">
-      <!-- 由 JS 动态渲染 -->
-    </main>
+    <nav class="sidebar" id="sidebar"></nav>
+    <main class="main" id="mainContent"></main>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  科目数据（由 Python 生成）
-// ═══════════════════════════════════════════════════════
+const DATA = %DATA%;
+let C = null;
 
-const SUBJECTS = %SUBJECTS_JSON%;
-
-let currentSubject = null;
-
-// ═══ 科目选择 ═══
-function showSubjectSelector() {
-  document.getElementById('searchBox').style.display = 'none';
+function backHome(){
   document.getElementById('subjectSelector').classList.add('active');
   document.getElementById('reviewPage').classList.remove('active');
-  document.title = '复习系统 | Review';
-  window.scrollTo(0, 0);
+  document.getElementById('searchBox').style.display='none';
+  document.title='复习系统';
 }
 
-function enterSubject(subjectId) {
-  currentSubject = SUBJECTS[subjectId];
+function enterSubject(id){
+  C=DATA[id];
   document.getElementById('subjectSelector').classList.remove('active');
   document.getElementById('reviewPage').classList.add('active');
-  document.title = currentSubject.name + ' | ';
-  document.getElementById('subjectTitle').textContent = currentSubject.name;
-  document.getElementById('subjectTitleEn').textContent = currentSubject.nameEn;
-  document.getElementById('examBadge').textContent = currentSubject.examDate; updateCountdown();
-  document.getElementById('searchBox').style.display = 'inline-block';
-  document.getElementById('searchBox').value = '';
-  searchContent('');
-  renderSidebarChapters(currentSubject.chapters);
-  renderMainContent(currentSubject);
-  navigateTo('overview');
+  document.getElementById('stitle').textContent=C.name;
+  document.getElementById('sen').textContent=C.nameEn;
+  document.getElementById('sbadge').textContent=C.examDateLabel;
+  document.getElementById('searchBox').style.display='';
+  document.getElementById('searchBox').value='';
+  updateCD();
+  renderS();
+  renderM();
+  nav('overview');
 }
 
-function renderSidebarChapters(chapters) {
-  const nav = document.getElementById('chapterNav');
-  let html = '<div class="sidebar-section-title" style="display:flex;justify-content:space-between;align-items:center;padding-right:12px;">章节复习<button onclick="toggleAllSlides()" style="font-size:0.85em;background:var(--primary-light);border:1px solid var(--border);border-radius:12px;padding:1px 8px;cursor:pointer;color:var(--primary);font-weight:400;">展开/折叠</button></div>';
-  chapters.forEach((ch, i) => {
-    const hasExam = ch.exam && ch.exam.length > 0;
-    html += '<a class="sidebar-item" data-target="ch-' + ch.id + '" onclick="navigateTo(\'ch-' + ch.id + '\')">'
-         + '<span class="ch-num">' + (i+1) + '</span>'
-         + ch.title
-         + (hasExam ? ' <span class="exam-tag">考</span>' : '')
-         + '</a>';
+function renderS(){
+  const sb=document.getElementById('sidebar');
+  let h='<div class="st">概览</div><a class="it active" data-t="overview" onclick="nav(\'overview\')">考试概览</a>';
+  h+='<div class="st">考点复习</div>';
+  C.examTopics.forEach((t,i)=>{
+    h+='<a class="it ti" data-t="topic-'+i+'" onclick="nav(\'topic-'+i+'\')">'+t.topic+'</a>';
   });
-  nav.innerHTML = html;
-}
-
-// ═══ 渲染主内容 ═══
-function renderMainContent(subject) {
-  const container = document.getElementById('mainContent');
-  let html = '';
-
-  // --- 考试概览 ---
-  html += '<div id="section-overview" class="chapter-block active">';
-  html += subject.examOverviewHTML;
-  html += '</div>';
-
-  // --- 各章节 ---
-  subject.chapters.forEach(ch => {
-    html += '<div id="section-ch-' + ch.id + '" class="chapter-block">';
-    html += ch.html || '<div class="empty-state"><div class="icon">📄</div><p>内容加载中...</p></div>';
-    html += '</div>';
+  h+='<div class="st">章节浏览</div>';
+  C.chapters.forEach((c,i)=>{
+    h+='<a class="it" data-t="ch-'+c.id+'" onclick="nav(\'ch-'+c.id+'\')"><span class="num">'+(i+1)+'</span>'+c.title+'</a>';
   });
-
-  // --- 重点专题 ---
-  html += '<div id="section-formulas" class="chapter-block">';
-  html += subject.formulasHTML || '<div class="empty-state"><div class="icon">📐</div><p>暂无公式数据</p></div>';
-  html += '</div>';
-
-  html += '<div id="section-terms" class="chapter-block">';
-  html += subject.termsHTML || '<div class="empty-state"><div class="icon">📖</div><p>暂无名词数据</p></div>';
-  html += '</div>';
-
-  container.innerHTML = html;
+  h+='<div class="st">专题</div><a class="it" data-t="formulas" onclick="nav(\'formulas\')">公式</a><a class="it" data-t="terms" onclick="nav(\'terms\')">名词解释</a>';
+  sb.innerHTML=h;
 }
 
-// ═══ 导航 ═══
-function navigateTo(target) {
-  // 更新侧边栏状态
-  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-  const sidebarItem = document.querySelector('.sidebar-item[data-target="' + target + '"]');
-  if (sidebarItem) sidebarItem.classList.add('active');
-
-  // 显示对应内容
-  document.querySelectorAll('.chapter-block').forEach(el => el.classList.remove('active'));
-  const section = document.getElementById('section-' + target);
-  if (section) {
-    section.classList.add('active');
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  // 关闭移动端侧边栏
-  if (window.innerWidth <= 900) {
-    document.getElementById('sidebar').classList.remove('mobile-show');
-    document.getElementById('sidebarOverlay').classList.remove('show');
-  }
-}
-
-function toggleMobileSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebarOverlay');
-  sidebar.classList.toggle('mobile-show');
-  overlay.classList.toggle('show');
-}
-
-// ═══ 初始化：渲染科目卡片 ═══
-
-// === 搜索功能 ===
-function searchContent(query) {
-  if (!query.trim()) {
-    document.querySelectorAll('.slide-card').forEach(c => c.style.display = '');
-    document.querySelectorAll('.chapter-block').forEach(b => {
-      if (b.classList.contains('active')) b.style.display = 'block';
-    });
-    return;
-  }
-  const q = query.toLowerCase();
-  document.querySelectorAll('.slide-card').forEach(card => {
-    const body = card.querySelector('.slide-body');
-    if (body && body.textContent.toLowerCase().includes(q)) {
-      card.style.display = '';
-      card.querySelector('.slide-header')?.classList.remove('collapsed');
-      card.querySelector('.slide-body')?.classList.remove('collapsed');
-    } else {
-      card.style.display = 'none';
-    }
+function renderM(){
+  const mc=document.getElementById('mainContent');
+  let h='<div id="section-overview" class="block active">'+C.examOverviewHTML+'</div>';
+  C.examTopics.forEach((t,i)=>{
+    h+='<div id="section-topic-'+i+'" class="block">'+(C.topicsHTML[t.topic]||'')+'</div>';
   });
+  C.chapters.forEach(c=>{
+    h+='<div id="section-ch-'+c.id+'" class="block">'+(c.html||'')+'</div>';
+  });
+  h+='<div id="section-formulas" class="block">'+C.formulasHTML+'</div>';
+  h+='<div id="section-terms" class="block">'+C.termsHTML+'</div>';
+  mc.innerHTML=h;
 }
 
-// === 全部展开/折叠 ===
-function toggleAllSlides() {
-  const headers = document.querySelectorAll('.slide-header');
-  const bodies = document.querySelectorAll('.slide-body');
-  const allCollapsed = Array.from(headers).every(h => h.classList.contains('collapsed'));
-  headers.forEach(h => allCollapsed ? h.classList.remove('collapsed') : h.classList.add('collapsed'));
-  bodies.forEach(b => allCollapsed ? b.classList.remove('collapsed') : b.classList.add('collapsed'));
+function nav(t){
+  document.querySelectorAll('.sidebar .it').forEach(e=>e.classList.remove('active'));
+  const si=document.querySelector('.sidebar .it[data-t="'+t+'"]');
+  if(si) si.classList.add('active');
+  document.querySelectorAll('.main .block').forEach(e=>e.classList.remove('active'));
+  const sec=document.getElementById('section-'+t);
+  if(sec){sec.classList.add('active');sec.scrollIntoView({behavior:'smooth',block:'start'});}
 }
 
-// === 考试倒计时 ===
-function updateCountdown() {
-  const el = document.getElementById('countdown');
-  if (!el) return;
-  const target = new Date(el.dataset.date);
-  const now = new Date();
-  const diff = target - now;
-  if (diff <= 0) { el.textContent = '考试已开始！'; return; }
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-  const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-  el.textContent = '距离考试还有 ' + days + ' 天 ' + hours + ' 小时';
+function toggleS(){
+  document.getElementById('sidebar').classList.toggle('ms');
+  document.getElementById('sidebarOverlay').classList.toggle('s');
 }
-setInterval(updateCountdown, 60000);
 
-// === 回到顶部 ===
-window.addEventListener('scroll', function() {
-  const btn = document.getElementById('scrollTop');
-  if (!btn) return;
-  btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+document.getElementById('searchBox').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  document.querySelectorAll('.sh').forEach(c=>{
+    const b=c.querySelector('.sb');
+    if(!q||(b&&b.textContent.toLowerCase().includes(q))){c.style.display='';if(b)b.classList.remove('c');c.querySelector('.shd')?.classList.remove('c');}
+    else c.style.display='none';
+  });
 });
 
-// === 键盘导航 ===
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-    const active = document.querySelector('.chapter-block.active');
-    if (!active) return;
-    const slides = active.querySelectorAll('.slide-header');
-    if (!slides.length) return;
-    // Find current visible slide (first non-collapsed)
-    let currentIdx = -1;
-    slides.forEach((s, i) => { if (!s.classList.contains('collapsed')) currentIdx = i; });
-    if (currentIdx === -1) { slides[0].click(); return; }
-    slides[currentIdx].classList.add('collapsed');
-    slides[currentIdx].nextElementSibling.classList.add('collapsed');
-    const next = e.key === 'ArrowRight' ? Math.min(currentIdx + 1, slides.length - 1) : Math.max(currentIdx - 1, 0);
-    slides[next].classList.remove('collapsed');
-    slides[next].nextElementSibling.classList.remove('collapsed');
-    slides[next].scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-});
-
-// === 暗黑模式 ===
-function toggleDarkMode() {
+function toggleDark(){
   document.body.classList.toggle('dark-mode');
-  const btn = document.getElementById('darkToggle');
-  btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-  localStorage.setItem('reviewDarkMode', document.body.classList.contains('dark-mode'));
+  const b=document.getElementById('dtb');
+  b.textContent=document.body.classList.contains('dark-mode')?'&#9728;':'&#127769;';
+  localStorage.setItem('rd',document.body.classList.contains('dark-mode')?'1':'0');
 }
-(function() {
-  if (localStorage.getItem('reviewDarkMode') === 'true') {
-    document.body.classList.add('dark-mode');
-    const btn = document.getElementById('darkToggle');
-    if (btn) btn.textContent = '☀️';
-  }
-})();
+if(localStorage.getItem('rd')==='1'){document.body.classList.add('dark-mode');document.getElementById('dtb').textContent='&#9728;';}
 
-// === 阅读进度条 ===
-window.addEventListener('scroll', function() {
-  const bar = document.getElementById('progressBar');
-  if (!bar) return;
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  if (docHeight > 0) {
-    bar.style.width = (scrollTop / docHeight * 100) + '%';
-  }
+function updateCD(){
+  const el=document.getElementById('scd');
+  if(!el||!C)return;
+  const d=new Date(C.examDate).getTime()-Date.now();
+  if(d<=0){el.textContent='考试已开始';return;}
+  const dd=Math.floor(d/86400000),hh=Math.floor((d%86400000)/3600000);
+  el.textContent=dd+'天'+hh+'小时';
+}
+setInterval(updateCD,60000);
+
+window.addEventListener('scroll',function(){
+  const bar=document.getElementById('progressBar');
+  if(!bar)return;
+  const st=window.scrollY,dh=document.documentElement.scrollHeight-window.innerHeight;
+  if(dh>0)bar.style.width=(st/dh*100)+'%';
 });
 
-function initSubjectCards() {
-  const container = document.querySelector('.subject-cards');
-  let html = '';
-  let first = true;
-  for (const [id, sub] of Object.entries(SUBJECTS)) {
-    const chCount = sub.chapters.length;
-    html += '<div class="subject-card" onclick="enterSubject(\'' + id + '\')">'
-         + '<h3>' + sub.name + '</h3>'
-         + '<div class="en">' + sub.nameEn + '</div>'
-         + '<div class="meta">📚 ' + chCount + ' 章 · 📅 ' + sub.examDate + '</div>'
-         + '<div class="badge">点击复习 →</div>'
-         + '</div>';
+(function(){
+  const c=document.getElementById('subjectCards');
+  let h='';
+  for(const[id,sub]of Object.entries(DATA)){
+    h+='<div class="sccd" onclick="enterSubject(\''+id+'\')"><h3>'+sub.name+'</h3><div style="font-size:.8em;color:var(--text2)">'+sub.nameEn+'</div><div style="margin-top:6px;font-size:.78em;color:var(--text2)">'+sub.examTopics.length+' 考点</div></div>';
   }
-  // 占位卡片
-  html += '<div class="subject-card add-subject-card">+ 后续可添加更多科目</div>';
-  container.innerHTML = html;
-
-  // 如果只有一个科目，直接进入
-  const keys = Object.keys(SUBJECTS);
-  if (keys.length === 1) {
-    enterSubject(keys[0]);
-  }
-}
-
-initSubjectCards();
+  c.innerHTML=h;
+  const k=Object.keys(DATA);
+  if(k.length===1)enterSubject(k[0]);
+})();
 </script>
-<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none;position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.3em;cursor:pointer;box-shadow:0 4px 12px rgba(67,97,238,0.3);z-index:99;align-items:center;justify-content:center;">&#8593;</button></body>
-</html>
-"""
-
-
-def build_subject_data(subject_id, subject_cfg):
-    """生成某个科目的完整 HTML 数据"""
-    print(f"  正在处理: {subject_cfg['name']}")
-
-    # 加载考试要求
-    exam_lines = load_exam_requirements()
-
-    # ---- 构建考试概览 HTML ----
-    overview_parts = []
-    overview_parts.append('<div class="exam-overview">')
-    overview_parts.append(f'<h2>{subject_cfg["name"]} 考试概览</h2>')
-    overview_parts.append(f'<div class="exam-date">📅 考试时间：{subject_cfg["examDate"]}</div>')
-
-    # 解析考试题型
-    exam_types = []
-    current_type = {}
-    for line in exam_lines:
-        if "填空题" in line and "分" in line:
-            exam_types.append({"name": "填空题", "score": "16分", "detail": "8题 × 2分，一空分值不定"})
-        elif "选择题" in line and "分" in line:
-            exam_types.append({"name": "选择题", "score": "14分", "detail": "7题，含单选和多选，部分答对得分"})
-        elif "名词解释" in line and "分" in line:
-            exam_types.append({"name": "名词解释", "score": "16分", "detail": "4个 × 4分"})
-        elif "问答题" in line and "分" in line:
-            exam_types.append({"name": "问答题", "score": "24分", "detail": "4个 × 6分"})
-        elif "计算题" in line and "分" in line:
-            exam_types.append({"name": "计算题", "score": "30分", "detail": "3题 × 10分，保留两位小数"})
-
-    overview_parts.append('<div class="exam-grid">')
-    for et in exam_types:
-        overview_parts.append(f'<div class="exam-type"><div class="name">{et["name"]}</div><div class="score">{et["score"]}</div><div class="detail">{et["detail"]}</div></div>')
-    overview_parts.append('</div></div>')
-
-    # 注意事项
-    tips = [l for l in exam_lines if "注意" in l or "铅笔" in l or "计算器" in l]
-    overview_parts.append('<div class="exam-tips"><h3>⚠️ 考试注意事项</h3><ul>')
-    for t in tips:
-        overview_parts.append(f'<li>{t}</li>')
-    overview_parts.append('</ul></div>')
-
-    # 重点知识点列表
-    overview_parts.append('<div class="exam-tips"><h3>放射化学重点知识</h3><ul>')
-    in_keywords = False
-    for line in exam_lines:
-        if "重点知识" in line:
-            in_keywords = True
-            continue
-        if in_keywords and ("注意" in line or "铅笔" in line or "计算器" in line or "AI 生成" in line):
-            continue
-        if in_keywords and line.strip():
-            overview_parts.append(f'<li>{line.strip()}</li>')
-    overview_parts.append('</ul></div>')
-
-    # 考点与章节对应表
-    overview_parts.append('<div class="exam-tips exam-mapping"><h3>考点 → 章节对应</h3>')
-    overview_parts.append('<div class="mapping-table">')
-    for ch in subject_cfg["chapters"]:
-        if ch["exam"]:
-            for topic in ch["exam"]:
-                ch_num = ch["title"].split(" ")[0] if " " in ch["title"] else ch["title"]
-                overview_parts.append(
-                    f'<a class="mapping-row" href="#" onclick="navigateTo(\'ch-{ch["id"]}\');return false">'
-                    f'<span class="mapping-ch">{ch_num}</span>'
-                    f'<span class="mapping-topic">{topic}</span>'
-                    f'<span class="mapping-arrow">→ 复习</span>'
-                    f'</a>'
-                )
-    overview_parts.append('</div></div>')
-
-    subject_cfg["examOverviewHTML"] = "\n".join(overview_parts)
-
-    # ---- 处理各章节 ----
-    all_formulas = []
-    all_terms = []
-
-    for ch in subject_cfg["chapters"]:
-        pages, header = load_text(ch["file"])
-        if not pages:
-            ch["html"] = f'<div class="empty-state"><div class="icon">📄</div><p>{header}</p></div>'
-            continue
-
-        # 构建章节 HTML
-        parts = []
-        parts.append(f'<div class="chapter-header">')
-        parts.append(f'<h2>{ch["title"]}</h2>')
-        if ch["exam"]:
-            topic_tags = "".join(f'<span class="exam-topic-tag">★ {t}</span>' for t in ch["exam"])
-            parts.append(f'<div class="exam-topics">{topic_tags}</div>')
-        else:
-            parts.append(f'<div class="no-exam">📖 了解性内容</div>')
-        parts.append('</div>')
-
-        # 幻灯片卡片
-        for p in pages:
-            parts.append('<div class="slide-card">')
-            parts.append(f'<div class="slide-header" onclick="this.classList.toggle(\'collapsed\'); this.nextElementSibling.classList.toggle(\'collapsed\')">')
-            parts.append(f'<span>📄 第 {p["num"]} 页</span>')
-            parts.append('<span class="toggle-icon">▼</span>')
-            parts.append('</div>')
-            parts.append('<div class="slide-body">')
-
-            for line in p["lines"]:
-                line_escaped = line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                # 公式行
-                if any(k in line for k in ["=", "ln", "lg", "exp", "λ", "×10", "N=", "A="]) and len(line) < 100 and any(c.isdigit() for c in line):
-                    parts.append(f'<div class="formula-line">{line_escaped}</div>')
-                else:
-                    parts.append(f'<p>{line_escaped}</p>')
-
-            parts.append('</div></div>')
-
-        ch["html"] = "\n".join(parts)
-
-        # 收集公式和名词
-        all_formulas.extend(extract_formulas(pages))
-        all_terms.extend(extract_key_terms(pages))
-
-    # ---- 重点专题：公式 ----
-    formula_html = ['<div class="special-section"><h3>📐 必背公式</h3>']
-    formula_html.append('<div class="formula-grid">')
-    # 去重并排序
-    seen = set()
-    for f in all_formulas:
-        norm = f.strip()
-        if norm and norm not in seen and len(norm) > 3:
-            seen.add(norm)
-            formula_html.append(f'<div class="formula-item">{norm.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</div>')
-    formula_html.append('</div></div>')
-    subject_cfg["formulasHTML"] = "\n".join(formula_html)
-
-    # ---- 重点专题：名词解释 ----
-    term_html = ['<div class="special-section"><h3>📖 名词解释</h3>']
-    seen_terms = set()
-    for t in all_terms:
-        t = t.strip()
-        if t and t not in seen_terms and len(t) > 4:
-            seen_terms.add(t)
-            # 提取冒号前的名词
-            if "：" in t:
-                name, desc = t.split("：", 1)
-                term_html.append(f'<div class="term-item"><span class="term-name">{name}</span>：{desc.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</div>')
-            else:
-                term_html.append(f'<div class="term-item">{t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")}</div>')
-    term_html.append('</div>')
-    subject_cfg["termsHTML"] = "\n".join(term_html)
-
-    print(f"   ├─ 章节: {len(subject_cfg['chapters'])} 个")
-    print(f"   ├─ 公式: {len(all_formulas)} 条 (去重后 {len(seen)} 条)")
-    print(f"   └─ 名词: {len(seen_terms)} 个")
-
+</body>
+</html>'''
 
 def main():
-    print("=" * 50)
-    print("复习网页生成器")
-    print("=" * 50)
-
-    for sid, scfg in SUBJECTS.items():
-        build_subject_data(sid, scfg)
-
-    # 生成最终 HTML
-    subjects_json = json.dumps(SUBJECTS, ensure_ascii=False, indent=2)
-    html = HTML_HEADER.replace("%SUBJECTS_JSON%", subjects_json)
-
+    print("=" * 40)
+    print("复习网页生成器 v2")
+    print("=" * 40)
+    for sid, cfg in SUBJECTS.items():
+        build_subject(sid, cfg)
+    html = TEMPLATE.replace("%DATA%", json.dumps(SUBJECTS, ensure_ascii=False))
     with open(HTML_OUT, "w", encoding="utf-8") as f:
         f.write(html)
-
-    file_size = os.path.getsize(HTML_OUT) / 1024
-    print(f"\n[OK] 网页已生成: {HTML_OUT}")
-    print(f"   文件大小: {file_size:.1f} KB")
-    print(f"   科目数: {len(SUBJECTS)}")
-    print(f"   总章节: {sum(len(s['chapters']) for s in SUBJECTS.values())}")
-    print(f"\n[提示] 直接用浏览器打开 index.html 即可开始复习！")
-
+    size = os.path.getsize(HTML_OUT) / 1024
+    print(f"\n生成: {HTML_OUT} ({size:.0f} KB)")
+    print(f"科目: {len(SUBJECTS)}, 考点: {sum(len(s['examTopics']) for s in SUBJECTS.values())}")
 
 if __name__ == "__main__":
     main()
