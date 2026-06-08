@@ -94,22 +94,24 @@ SUBJECTS = {
 def fmt_sub_super(text):
     """将PPT文本中的上下标格式化为HTML标签"""
     t = text.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-    # 1. 科学计数法: ×10^数字 (如×109, ×1010, ×105)
+    # 1. 分数下标 (必须先于化学式下标，否则T1/2被T1误吃)
+    t = re.sub(r'([A-Za-z])\(?(\d+)/(\d+)\)?', r'\1<sub>\2/\3</sub>', t)
+    # 2. 科学计数法: ×10^数字
     t = re.sub(r'[×x]10(\d+)', r'×10<sup>\1</sup>', t)
     t = re.sub(r'(?<!\d)10(\d{2,3})(?!\d)', r'10<sup>\1</sup>', t)
-    # 2. 单位负指数: cm-2·s-1 => cm⁻²·s⁻¹ (字母后-数字)
+    # 3. 单位负指数: cm-2·s-1
     t = re.sub(r'(?<=[a-z])-(\d+)(?=[^a-zA-Z<]|$)', r'<sup>-\1</sup>', t)
-    # 3. 同位素上标: 数字+元素符号
+    # 4. 同位素上标: 数字+元素符号
     t = re.sub(r'(?<![A-Za-z(>\d])(\d+)([A-Z][a-z]?)(?![a-z<])', r'<sup>\1</sup>\2', t)
-    # 4. 化学式下标: 元素+数字
-    t = re.sub(r'(?<!\w)([A-Z][a-z]?)(\d+)(?!\w)', r'\1<sub>\2</sub>', t)
-    # 5. 变量下标: 常见字母+数字
+    # 5. 希腊字母下标: λ1, λ2, α1, β- 等
+    t = re.sub(r'([αβγδελμρσ])(\d+)', r'\1<sub>\2</sub>', t)
+    # 6. 变量下标: 常见字母+数字+连字 (N0, N0/2, T1, A0)
     t = re.sub(r'\b([NnAaTtKkDdMm])(\d+)\b', r'\1<sub>\2</sub>', t)
-    # 6. 分数下标: T1/2
-    t = re.sub(r'([A-Za-z])\(?(\d+)/(\d+)\)?', r'\1<sub>\2/\3</sub>', t)
-    # 7. 指数: e-λt
+    # 7. 化学式下标: 元素+数字 (不在标签内)
+    t = re.sub(r'(?<!\w)([A-Z][a-z]?)(\d+)(?!\w)', r'\1<sub>\2</sub>', t)
+    # 8. 指数: e-λt
     t = re.sub(r'\be-([λ\dμρσ]+[A-Za-z]*)', r'e<sup>-\1</sup>', t)
-    # 8. 同位素横线: Zr-101, Mo-107 (避开已被单位负指数处理的部分)
+    # 9. 同位素横线: Zr-101
     t = re.sub(r'([A-Z][a-z]{0,2})-(\d{2,3})(?![^<]*<\/sup>|-\d)', r'\1<sup>\2</sup>', t)
     return t
 
@@ -136,11 +138,16 @@ def slide_match(lines, kw):
     return len(matched) >= 2 if len(kw) >= 4 else len(matched) >= 1
 
 def slide_dedup(lines):
-    """幻灯片内行级去重"""
+    """幻灯片内行级去重 + 过滤噪声行"""
+    noise = ["放射化学","知识点回顾","课程内容","课程要求","目录","壹","贰","叁","肆","伍","陆",
+             "参考答案","答案：","解：","解:","例：","例:","本节目录","Contents"]
     kept = []
     for line in lines:
         s = line.strip()
         if not s or len(s) < 3: continue
+        if s in noise: continue
+        if re.match(r'^[\d\s\.,;()\-+*/%°\']+$', s): continue
+        if re.match(r'^第[一二三四五六七八九十\d]+[章节节]', s): continue
         is_dup = False
         for k in kept:
             short, long = (s, k) if len(s) < len(k) else (k, s)
@@ -227,6 +234,36 @@ def build(sid, cfg):
         fh.append('</div>')
     fh.append('</div>')
     cfg["fH"] = "\n".join(fh)
+
+    # ── 计算题专项（完整页面，不精简）──
+    calc_topics = {"衰变公式与半衰期","放射性的单位与比活度","电化学(能斯特方程)","镭氡计算","同位素稀释法"}
+    calc_chs = set()
+    for et in cfg["examTopics"]:
+        if et["topic"] in calc_topics:
+            calc_chs.add(et["ch"])
+    calc_pages = []
+    seen_calcs = set()
+    for et in cfg["examTopics"]:
+        if et["topic"] not in calc_topics: continue
+        pages = ch_pages.get(et["ch"], [])
+        for p in pages:
+            # 该页是否包含计算相关内容（数学公式、数字运算）
+            ptext = "\n".join(p["lines"])
+            if any(k in ptext for k in ["=","计算","公式","半衰期","活度","比活度","Bq","Ci","mol","g","mg","衰变常数"]):
+                if p["num"] not in seen_calcs:
+                    seen_calcs.add(p["num"])
+                    calc_pages.append({"num":p["num"],"lines":p["lines"]})
+    if calc_pages:
+        parts = ['<div class="ss"><h3>计算题专项（完整PPT内容）</h3>']
+        for s in calc_pages:
+            parts.append(f'<div class="ts"><div class="sn">第 {s["num"]} 页</div>')
+            for line in s["lines"]:
+                parts.append(f'<p>{fmt_sub_super(line)}</p>')
+            parts.append('</div>')
+        parts.append('</div>')
+        cfg["calcH"] = "\n".join(parts)
+    else:
+        cfg["calcH"] = '<div class="ss"><h3>计算题专项</h3><p style="color:var(--text2);padding:12px">暂无内容</p></div>'
 
     # ── 名词解释（完整定义，多行提取，按考点分组）──
     def extract_definitions(pages):
@@ -478,7 +515,7 @@ function rs(){
     var col={'填空':'#4361ee','选择':'#06d6a0','计算':'#e63946','问答':'#f77f00','填空/选择':'#4361ee','选择/填空':'#06d6a0','填空/计算':'#4361ee','计算/选择':'#e63946','问答/填空':'#f77f00','问答/计算':'#f77f00','填空/问答':'#4361ee'}[tp]||'#888';
     h+='<a class="it tp" data-t="topic-'+i+'" onclick="nav(\'topic-'+i+'\')">'+t.topic+(tp?'<span class="tag" style="background:'+col+'">'+tp+'</span>':'')+'</a>';
   });
-  h+='<div class="st">专题</div><a class="it" data-t="formulas" onclick="nav(\'formulas\')">公式</a><a class="it" data-t="terms" onclick="nav(\'terms\')">名词解释</a>';
+  h+='<div class="st">专题</div><a class="it" data-t="formulas" onclick="nav(\'formulas\')">公式</a><a class="it" data-t="calc" onclick="nav(\'calc\')">计算题</a><a class="it" data-t="terms" onclick="nav(\'terms\')">名词解释</a>';
   s.innerHTML=h;
 }
 
@@ -487,6 +524,7 @@ function rm(){
   var h='<div id="s-overview" class="bl act">'+C.ovHTML+'</div>';
   C.examTopics.forEach(function(t,i){h+='<div id="s-topic-'+i+'" class="bl">'+(C.tpH[t.topic]||'')+'</div>';});
   h+='<div id="s-formulas" class="bl">'+C.fH+'</div>';
+  h+='<div id="s-calc" class="bl">'+C.calcH+'</div>';
   h+='<div id="s-terms" class="bl">'+C.tH+'</div>';
   m.innerHTML=h;
 }
