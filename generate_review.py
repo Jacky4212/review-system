@@ -235,35 +235,50 @@ def build(sid, cfg):
     fh.append('</div>')
     cfg["fH"] = "\n".join(fh)
 
-    # ── 计算题专项（完整页面，不精简）──
-    calc_topics = {"衰变公式与半衰期","放射性的单位与比活度","电化学(能斯特方程)","镭氡计算","同位素稀释法"}
-    calc_chs = set()
-    for et in cfg["examTopics"]:
-        if et["topic"] in calc_topics:
-            calc_chs.add(et["ch"])
-    calc_pages = []
-    seen_calcs = set()
-    for et in cfg["examTopics"]:
-        if et["topic"] not in calc_topics: continue
-        pages = ch_pages.get(et["ch"], [])
-        for p in pages:
-            # 该页是否包含计算相关内容（数学公式、数字运算）
-            ptext = "\n".join(p["lines"])
-            if any(k in ptext for k in ["=","计算","公式","半衰期","活度","比活度","Bq","Ci","mol","g","mg","衰变常数"]):
-                if p["num"] not in seen_calcs:
-                    seen_calcs.add(p["num"])
-                    calc_pages.append({"num":p["num"],"lines":p["lines"]})
-    if calc_pages:
-        parts = ['<div class="ss"><h3>计算题专项（完整PPT内容）</h3>']
-        for s in calc_pages:
-            parts.append(f'<div class="ts"><div class="sn">第 {s["num"]} 页</div>')
-            for line in s["lines"]:
-                parts.append(f'<p>{fmt_sub_super(line)}</p>')
-            parts.append('</div>')
+    # ── 题型专项（原PPT页截图展示）──
+    TYPE_TOPICS = {
+        "填空题专项": ["学科特点","放射性胶体","吸附作用","共沉淀与同晶","核素制备方法","同位素稀释法"],
+        "选择题专项": ["衰变类型(α/β/γ)","放射性平衡","同位素效应与交换","天然放射性系"],
+        "名词解释专项": ["载体与反载体"],
+        "问答题专项": ["载体与反载体","溶剂萃取","离子交换分离","锕系元素与核反应"],
+        "计算题专项": ["衰变公式与半衰期","放射性的单位与比活度","电化学(能斯特方程)","镭氡计算","同位素稀释法"],
+    }
+    ch_prefix = {}
+    for ch in cfg["chapters"]:
+        base = os.path.splitext(ch["file"])[0]
+        ch_prefix[ch["id"]] = base
+    cfg["typeSections"] = {}
+    for type_name, tnames in TYPE_TOPICS.items():
+        parts = [f'<div class="ss"><h3>{type_name} — 原PPT页面</h3><div style="font-size:.8em;color:var(--text2);margin-bottom:10px">原始PPT幻灯片截图</div>']
+        has_img = False
+        seen_pages = set()
+        for et in cfg["examTopics"]:
+            if et["topic"] not in tnames: continue
+            pages = ch_pages.get(et["ch"], [])
+            matched = ext_topic(et, pages)
+            prefix = ch_prefix.get(et["ch"], "")
+            if not prefix: continue
+            for s in matched:
+                if s["num"] in seen_pages: continue
+                # 仅展示有题目特征的页面（名词解释除外，展示定义页）
+                ptext = "\n".join(s["lines"])
+                if type_name == "名词解释专项":
+                    if not any(k in ptext for k in ["是指","称为","指的是","叫做"]):
+                        continue
+                elif type_name in ["填空题专项","选择题专项","问答题专项"]:
+                    if not any(k in ptext for k in ["?","？","例:","例：","求:",":","计算","选择","下列","哪些"]):
+                        continue
+                seen_pages.add(s["num"])
+                seen_pages.add(s["num"])
+                img_path = f"slides/{prefix}_slide{int(s['num']):03d}.png"
+                full_img = os.path.join(os.path.dirname(HTML_OUT), img_path)
+                if os.path.exists(full_img):
+                    has_img = True
+                    parts.append(f'<div class="siw"><span class="sil">第 {s["num"]} 页</span><img src="{img_path}" loading="lazy" class="si"></div>')
+        if not has_img:
+            parts.append('<p style="color:var(--text2);padding:12px">暂无截图（需本地运行生成）</p>')
         parts.append('</div>')
-        cfg["calcH"] = "\n".join(parts)
-    else:
-        cfg["calcH"] = '<div class="ss"><h3>计算题专项</h3><p style="color:var(--text2);padding:12px">暂无内容</p></div>'
+        cfg["typeSections"][type_name] = "\n".join(parts)
 
     # ── 名词解释（完整定义，多行提取，按考点分组）──
     def extract_definitions(pages):
@@ -450,6 +465,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .scd{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .2s}
 .scd:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 4px 16px rgba(58,86,212,.12)}
 .scd h3{font-size:1.05em;margin-bottom:3px}
+/* slide images */
+.siw{margin-bottom:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface)}
+.sil{display:block;font-size:.7em;color:var(--text2);padding:6px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600}
+.si{width:100%;height:auto;display:block}
 @media(max-width:900px){.sb{display:none}.ma{padding:12px}.og{grid-template-columns:repeat(2,1fr)}}
 .mb{display:none;background:none;border:none;font-size:1.05em;cursor:pointer;color:var(--primary);padding:4px}
 @media(max-width:900px){.mb{display:block}}
@@ -515,7 +534,8 @@ function rs(){
     var col={'填空':'#4361ee','选择':'#06d6a0','计算':'#e63946','问答':'#f77f00','填空/选择':'#4361ee','选择/填空':'#06d6a0','填空/计算':'#4361ee','计算/选择':'#e63946','问答/填空':'#f77f00','问答/计算':'#f77f00','填空/问答':'#4361ee'}[tp]||'#888';
     h+='<a class="it tp" data-t="topic-'+i+'" onclick="nav(\'topic-'+i+'\')">'+t.topic+(tp?'<span class="tag" style="background:'+col+'">'+tp+'</span>':'')+'</a>';
   });
-  h+='<div class="st">专题</div><a class="it" data-t="formulas" onclick="nav(\'formulas\')">公式</a><a class="it" data-t="calc" onclick="nav(\'calc\')">计算题</a><a class="it" data-t="terms" onclick="nav(\'terms\')">名词解释</a>';
+  h+='<div class="st">题型专项</div><a class="it" data-t="type-填空" onclick="nav(\'type-填空\')">填空题</a><a class="it" data-t="type-选择" onclick="nav(\'type-选择\')">选择题</a><a class="it" data-t="type-名词" onclick="nav(\'type-名词\')">名词解释</a><a class="it" data-t="type-问答" onclick="nav(\'type-问答\')">问答题</a><a class="it" data-t="type-计算" onclick="nav(\'type-计算\')">计算题</a>';
+  h+='<div class="st">专题</div><a class="it" data-t="formulas" onclick="nav(\'formulas\')">公式</a><a class="it" data-t="terms" onclick="nav(\'terms\')">名词解释</a>';
   s.innerHTML=h;
 }
 
@@ -523,8 +543,12 @@ function rm(){
   var m=document.getElementById('main');
   var h='<div id="s-overview" class="bl act">'+C.ovHTML+'</div>';
   C.examTopics.forEach(function(t,i){h+='<div id="s-topic-'+i+'" class="bl">'+(C.tpH[t.topic]||'')+'</div>';});
+  h+='<div id="s-type-填空" class="bl">'+C.typeSections['填空题专项']+'</div>';
+  h+='<div id="s-type-选择" class="bl">'+C.typeSections['选择题专项']+'</div>';
+  h+='<div id="s-type-名词" class="bl">'+C.typeSections['名词解释专项']+'</div>';
+  h+='<div id="s-type-问答" class="bl">'+C.typeSections['问答题专项']+'</div>';
+  h+='<div id="s-type-计算" class="bl">'+C.typeSections['计算题专项']+'</div>';
   h+='<div id="s-formulas" class="bl">'+C.fH+'</div>';
-  h+='<div id="s-calc" class="bl">'+C.calcH+'</div>';
   h+='<div id="s-terms" class="bl">'+C.tH+'</div>';
   m.innerHTML=h;
 }
