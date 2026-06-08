@@ -71,7 +71,7 @@ SUBJECTS = {
             {"topic":"学科特点","ch":"ch1","kw":["特点","放射化学","学科","研究","内容"]},
             {"topic":"衰变公式与半衰期","ch":"ch2","kw":["衰变","公式","半衰期","N=","N0","λ","指数","衰变常数"]},
             {"topic":"放射性的单位与比活度","ch":"ch2","kw":["贝克","居里","比活度","Bq","Ci","活度"]},
-            {"topic":"衰变类型(α/β/γ)","ch":"ch2","kw":["α衰变","β衰变","γ衰变","衰变类型","α粒子","β粒子"]},
+            {"topic":"衰变类型(α/β/γ)","ch":"ch2","kw":["衰变","α","β","γ","alpha","beta","gamma","粒子","射线","电子流"]},
             {"topic":"放射性平衡","ch":"ch2","kw":["平衡","久期平衡","长期平衡","子体","母体"]},
             {"topic":"同位素效应与交换","ch":"ch3","kw":["同位素效应","同位素交换","平衡常数"]},
             {"topic":"放射性胶体","ch":"ch3","kw":["胶体","真胶体","假胶体","分散体系"]},
@@ -82,7 +82,7 @@ SUBJECTS = {
             {"topic":"溶剂萃取","ch":"ch4","kw":["萃取","萃取率","萃取剂","盐析剂","掩蔽剂"]},
             {"topic":"离子交换分离","ch":"ch4","kw":["离子交换","稀释液","分离","交换"]},
             {"topic":"天然放射性系","ch":"ch5","kw":["天然放射","放射系","铀系","钍系","母体"]},
-            {"topic":"锕系元素与核反应","ch":"ch6","kw":["锕系","核反应","反应式","铀钚","钍铀","转化"]},
+            {"topic":"锕系元素与核反应","ch":"ch6","kw":["锕系","核反应","反应式","铀钚","钍铀","转化","锕","铀","钚","钍","核反应式"]},
             {"topic":"镭氡计算","ch":"ch6","kw":["镭","氡","计算"]},
             {"topic":"核素制备方法","ch":"ch8","kw":["制备","反应堆","加速器","同位素","中子"]},
             {"topic":"同位素稀释法","ch":"ch8","kw":["稀释法","同位素稀释","分析"]},
@@ -125,12 +125,16 @@ def load_exam():
     with open(EXAM_FILE,"r",encoding="utf-8") as f: return [l.strip() for l in f if l.strip()]
 
 def flt(lines, kw):
+    """筛选行：至少匹配关键词条数>=2 或 关键词少时放宽"""
+    req = 2 if len(kw) >= 5 else 1
     r = []
     for line in lines:
         s = line.strip()
         if not s or len(s)<3: continue
         if re.match(r'^[\d\s\.,;()\-+*/]+$', s): continue
-        if any(k in s for k in kw): r.append(s)
+        matched = [k for k in kw if k in s]
+        if len(matched) >= req:
+            r.append(s)
     return r
 
 def ext_topic(topic, pages):
