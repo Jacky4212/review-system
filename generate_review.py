@@ -1,48 +1,63 @@
-"""复习网页生成器 v4 — 修复各项问题"""
+"""复习网页生成器 v5 — 上下标处理 + 考点题型标签 + 删章节浏览"""
 import os, json, re
 
 OUT_DIR = r"D:\code\cherry studio\复习\output"
 HTML_OUT = r"D:\code\cherry studio\复习\index.html"
 EXAM_FILE = os.path.join(OUT_DIR, "考试要点.txt")
 
-# ─── 分组公式 ───
+# ─── 考点→题型映射 ───
+TOPIC_TYPES = {
+    "学科特点":"填空","衰变公式与半衰期":"计算","放射性的单位与比活度":"计算",
+    "衰变类型(α/β/γ)":"选择","放射性平衡":"选择/填空","同位素效应与交换":"选择/填空",
+    "放射性胶体":"填空/选择","吸附作用":"填空/计算","共沉淀与同晶":"填空/选择",
+    "电化学(能斯特方程)":"计算/选择","载体与反载体":"问答","溶剂萃取":"问答/填空",
+    "离子交换分离":"问答/填空","天然放射性系":"选择/填空","锕系元素与核反应":"问答/计算",
+    "镭氡计算":"计算","核素制备方法":"填空/问答","同位素稀释法":"填空/计算",
+}
+TYPE_COLORS = {"填空":"#4361ee","选择":"#06d6a0","计算":"#e63946","问答":"#f77f00","填空/选择":"#4361ee","选择/填空":"#06d6a0","填空/计算":"#4361ee","计算/选择":"#e63946","问答/填空":"#f77f00","问答/计算":"#f77f00","选择/填空":"#06d6a0","填空/问答":"#4361ee"}
+
 FORMULA_GROUPS = [
     ("放射性衰变", [
-        ("衰变定律", "N = N_0 e^{-\\lambda t}"),
-        ("衰变常数", "\\lambda = \\frac{\\ln 2}{T_{1/2}}"),
-        ("半衰期", "T_{1/2} = \\frac{\\ln 2}{\\lambda}"),
-        ("活度定义", "A = \\lambda N = -\\frac{dN}{dt}"),
-        ("活度衰变", "A = A_0 e^{-\\lambda t}"),
-        ("长期平衡", "\\lambda_1 N_1 = \\lambda_2 N_2"),
+        ("衰变定律","N = N_0 e^{-\\lambda t}"),
+        ("衰变定律(另一形式)","N = N_0 \\left(\\frac{1}{2}\\right)^{t/T_{1/2}}"),
+        ("时间计算","t = \\frac{1}{\\lambda} \\ln \\frac{N_0}{N}"),
+        ("衰变常数","\\lambda = \\frac{\\ln 2}{T_{1/2}}"),
+        ("半衰期","T_{1/2} = \\frac{\\ln 2}{\\lambda}"),
+        ("活度定义","A = \\lambda N = -\\frac{dN}{dt}"),
+        ("初始活度","A_0 = \\lambda N_0"),
+        ("活度衰变","A = A_0 e^{-\\lambda t}"),
+        ("长期平衡","\\lambda_1 N_1 = \\lambda_2 N_2"),
     ]),
     ("放射性单位", [
-        ("比活度", "S = \\frac{A}{m}"),
-        ("居里→贝克换算", "1\\;\\text{Ci} = 3.7 \\times 10^{10}\\;\\text{Bq}"),
+        ("比活度","S = \\frac{A}{m}"),
+        ("比活度与核素参数","S = \\frac{N_A \\ln 2}{M \\cdot T_{1/2}}"),
+        ("居里->贝克换算","1\\;\\text{Ci} = 3.7 \\times 10^{10}\\;\\text{Bq}"),
     ]),
     ("吸附", [
-        ("吸附率", "R = \\frac{C_0 - C}{C_0} \\times 100\\%"),
-        ("分配系数", "K_d = \\frac{\\text{固相浓度}}{\\text{液相浓度}}"),
+        ("吸附率","R = \\frac{C_0 - C}{C_0} \\times 100\\%"),
+        ("吸附量","q = \\frac{V(C_0 - C)}{m}"),
+        ("分配系数","K_d = \\frac{\\text{固相浓度}}{\\text{液相浓度}}"),
     ]),
     ("溶剂萃取", [
-        ("分配比", "D = \\frac{C_{\\text{有}}}{C_{\\text{水}}}"),
-        ("分离系数", "\\alpha = \\frac{D_A}{D_B}"),
-        ("萃取率", "E = \\frac{D}{D + V_{\\text{水}}/V_{\\text{有}}}}"),
+        ("分配比","D = \\frac{C_{\\text{有}}}{C_{\\text{水}}}"),
+        ("分离系数","\\alpha = \\frac{D_A}{D_B}"),
+        ("萃取率(一次)","E = \\frac{D}{D + V_{\\text{水}}/V_{\\text{有}}}}"),
+        ("萃取率(多次)","E_n = 1 - \\left(\\frac{1}{D+1}\\right)^n"),
     ]),
     ("电化学", [
-        ("能斯特方程", "E = E^0 + \\frac{RT}{nF} \\ln \\frac{a_{\\text{ox}}}{a_{\\text{red}}}"),
+        ("能斯特方程","E = E^0 + \\frac{RT}{nF} \\ln \\frac{a_{\\text{ox}}}{a_{\\text{red}}}"),
     ]),
     ("共沉淀", [
-        ("同晶定义", "\\text{类质同晶：晶体结构相同，化学组成类似}"),
-        ("分配系数", "D = \\frac{[A]_{\\text{晶}}}{[A]_{\\text{液}}} / \\frac{[B]_{\\text{晶}}}{[B]_{\\text{液}}}"),
+        ("同晶定义","\\text{类质同晶：晶体结构相同，化学组成类似}"),
+        ("分配系数","D = \\frac{[A]_{\\text{晶}}}{[A]_{\\text{液}}} / \\frac{[B]_{\\text{晶}}}{[B]_{\\text{液}}}"),
     ]),
 ]
 
 SUBJECTS = {
     "radiochemistry": {
-        "name": "放射化学", "nameEn": "Radiochemistry",
-        "examDate": "2026-06-18T18:30:00+08:00",
-        "examDateLabel": "2026年6月18日",
-        "chapters": [
+        "name":"放射化学","nameEn":"Radiochemistry",
+        "examDate":"2026-06-18T18:30:00+08:00","examDateLabel":"2026年6月18日",
+        "chapters":[
             {"id":"ch1","file":"1.第一章 绪论 (2026)-1(2).txt","title":"第一章 绪论"},
             {"id":"ch2","file":"2.第二章 放射性(2026)-1.txt","title":"第二章 放射性"},
             {"id":"ch3","file":"3.第三章 放射性核素的物理化学.txt","title":"第三章 放射性核素的物理化学"},
@@ -52,7 +67,7 @@ SUBJECTS = {
             {"id":"ch7","file":"8.第八章(2).txt","title":"第八章 裂片元素及活化产物化学"},
             {"id":"ch8","file":"9.第九章 放射性核素的制备.txt","title":"第九章 放射性核素的制备"},
         ],
-        "examTopics": [
+        "examTopics":[
             {"topic":"学科特点","ch":"ch1","kw":["特点","放射化学","学科","研究","内容"]},
             {"topic":"衰变公式与半衰期","ch":"ch2","kw":["衰变","公式","半衰期","N=","N0","λ","指数","衰变常数"]},
             {"topic":"放射性的单位与比活度","ch":"ch2","kw":["贝克","居里","比活度","Bq","Ci","活度"]},
@@ -75,15 +90,33 @@ SUBJECTS = {
     }
 }
 
+# ─── 上下标格式化 ───
+def fmt_sub_super(text):
+    """将PPT文本中的上下标格式化为HTML标签"""
+    t = text.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+    # 1. 同位素上标: 数字+元素符号(前面不是字母)
+    t = re.sub(r'(?<![A-Za-z(])(\d+)([A-Z][a-z]?)(?![a-z])', r'<sup>\1</sup>\2', t)
+    # 2. 化学式下标: 元素+数字
+    t = re.sub(r'([A-Z][a-z]?)(\d+)', r'\1<sub>\2</sub>', t)
+    # 3. 变量下标: 常见变量字母+数字/上标字母
+    t = re.sub(r'\b([NnAaTtKkDdMm])(\d+)\b', r'\1<sub>\2</sub>', t)
+    # 4. 分数下标: 如T1/2
+    t = re.sub(r'([A-Za-z])\(?(\d+)/(\d+)\)?', r'\1<sub>\2/\3</sub>', t)
+    # 5. 指数: e-后面跟字母/数字
+    t = re.sub(r'\be-([λ\dμρσ]+[A-Za-z]*)', r'e<sup>-\1</sup>', t)
+    # 6. 单位中的-1,-2等上标(如cm-1, s-1)
+    t = re.sub(r'([A-Za-z]+)(\(-?\d+\))', r'\1<sup>\2</sup>', t)
+    return t
+
 def load_text(fp):
     path = os.path.join(OUT_DIR, fp)
     if not os.path.exists(path): return [], ""
-    with open(path,"r",encoding="utf-8") as f: content = f.read()
-    pages = re.split(r'=====\s*第\s*(\d+)\s*页\s*=====', content)
+    with open(path,"r",encoding="utf-8") as f: c = f.read()
+    pages = re.split(r'=====\s*第\s*(\d+)\s*页\s*=====', c)
     result = []
     for i in range(1, len(pages), 2):
-        n, c = pages[i].strip(), pages[i+1].strip() if i+1<len(pages) else ""
-        lines = [l for l in c.split("\n") if l.strip()]
+        n,p = pages[i].strip(), pages[i+1].strip() if i+1<len(pages) else ""
+        lines = [l for l in p.split("\n") if l.strip()]
         if lines: result.append({"num":n,"lines":lines})
     return result, (pages[0].strip() if pages else "")
 
@@ -116,18 +149,17 @@ def build(sid, cfg):
     for ch in cfg["chapters"]: ch_pages[ch["id"]], _ = load_text(ch["file"])
 
     # ── 考试概览 ──
-    ov = ['<div class="ob"><h2>'+cfg["name"]+' 考试概览</h2><div class="date">'+cfg["examDateLabel"]+'</div><div class="og">']
+    ov = [f'<div class="ob"><h2>{cfg["name"]} 考试概览</h2><div class="date">{cfg["examDateLabel"]}</div><div class="og">']
     m = {"填空题":"16分,8题×2分","选择题":"14分,7题含多选","名词解释":"16分,4个×4分","问答题":"24分,4个×6分","计算题":"30分,3题×10分"}
     for line in exam_lines:
-        for nm, det in m.items():
+        for nm,det in m.items():
             if nm in line and "分" in line:
-                sc, dt = det.split(",",1)
+                sc,dt = det.split(",",1)
                 ov.append(f'<div class="oi"><div class="nm">{nm}</div><div class="sc">{sc}</div><div class="dt">{dt}</div></div>')
                 break
     ov.append('</div></div>')
-
     ov.append('<div class="tc"><h3>重点知识</h3><ul>')
-    ink = False
+    ink=False
     for line in exam_lines:
         if "重点知识" in line: ink=True; continue
         if ink and any(x in line for x in ["注意","铅笔","计算器","AI"]): break
@@ -139,72 +171,66 @@ def build(sid, cfg):
     ov.append('</ul></div>')
     cfg["ovHTML"] = "\n".join(ov)
 
-    # ── 考点内容（逐页提取，保持上下文）──
+    # ── 考点内容（带上下标格式）──
     cfg["tpH"] = {}
     for et in cfg["examTopics"]:
         pages = ch_pages.get(et["ch"], [])
         matched = ext_topic(et, pages)
         ch_t = next((c["title"] for c in cfg["chapters"] if c["id"]==et["ch"]), "")
-        parts = [f'<div class="th"><h2>{et["topic"]}</h2><div class="src">来源：<a href="#" onclick="nav(\'ch-{et["ch"]}\');return false">{ch_t}</a></div></div>']
+        ttype = TOPIC_TYPES.get(et["topic"],"")
+        tcolor = TYPE_COLORS.get(ttype,"#666")
+        tag_html = f'<span class="tt" style="background:{tcolor}">{ttype}</span>' if ttype else ""
+        parts = [f'<div class="th"><div class="th-top"><h2>{et["topic"]}</h2>{tag_html}</div><div class="src">来源：{ch_t}</div></div>']
         if matched:
             for s in matched:
                 parts.append(f'<div class="ts"><div class="sn">第 {s["num"]} 页</div>')
-                for line in s["lines"]: parts.append(f'<p>{esc(line)}</p>')
+                for line in s["lines"]: parts.append(f'<p>{fmt_sub_super(line)}</p>')
                 parts.append('</div>')
         else:
-            parts.append(f'<div class="te">参考 <a href="#" onclick="nav(\'ch-{et["ch"]}\');return false">{ch_t}</a></div>')
+            parts.append(f'<div class="te">参考 {ch_t} 相关内容</div>')
         cfg["tpH"][et["topic"]] = "\n".join(parts)
-
-    # ── 章节内容（每页完整展示，默认折叠）──
-    for ch in cfg["chapters"]:
-        pages = ch_pages.get(ch["id"], [])
-        if not pages: ch["html"] = ""; continue
-        # 找出本本章有哪些考点
-        topic_kw = []
-        for et in cfg["examTopics"]:
-            if et["ch"] == ch["id"]: topic_kw.extend(et["kw"])
-        parts = [f'<div class="ch"><h2>{ch["title"]}</h2></div>']
-        for p in pages:
-            # 检查该页是否有考点内容
-            has_exam = any(k in "\n".join(p["lines"]) for k in topic_kw) if topic_kw else False
-            expanded = " act" if has_exam else ""
-            parts.append(f'<div class="sh"><div class="shd{expanded}" onclick="this.classList.toggle(\'c\');this.nextElementSibling.classList.toggle(\'c\')"><span>第 {p["num"]} 页</span><span class="ic">▼</span></div><div class="sbb c">')
-            for line in p["lines"]: parts.append(f'<p>{esc(line)}</p>')
-            parts.append('</div></div>')
-        ch["html"] = "\n".join(parts)
 
     # ── 公式（分组）──
     fh = ['<div class="ss"><h3>必背公式</h3>']
     for gname, formulas in FORMULA_GROUPS:
         fh.append(f'<div class="fg"><div class="fg-title">{gname}</div>')
-        for nm, tex in formulas:
-            fh.append(f'<div class="fi"><div class="fn">{nm}</div><div class="math">`{tex}`</div></div>')
+        for nm,tex in formulas: fh.append(f'<div class="fi"><div class="fn">{nm}</div><div class="math">`{tex}`</div></div>')
         fh.append('</div>')
     fh.append('</div>')
     cfg["fH"] = "\n".join(fh)
 
-    # ── 名词解释（卡片式：词汇高亮 + 完整原文）──
+    # ── 名词解释（按考点分组，从对应章节提取定义）──
     seen = set()
-    th = ['<div class="ss"><h3>名词解释</h3><div class="tc-grid">']
-    for ch in cfg["chapters"]:
-        pages = ch_pages.get(ch["id"], [])
+    topic_terms = {et["topic"]: [] for et in cfg["examTopics"]}
+    for et in cfg["examTopics"]:
+        pages = ch_pages.get(et["ch"], [])
         for p in pages:
             for line in p["lines"]:
                 s = line.strip()
                 if any(k in s for k in ["是指","称为","叫做","指的是"]) and 8<len(s)<120 and s not in seen:
                     seen.add(s)
-                    # 提取冒号前的词作为名词
                     term_name = s
-                    if "：" in s[:30]:
-                        term_name = s.split("：")[0]
-                    elif "是指" in s:
-                        term_name = s[:s.index("是指")]
-                    elif "称为" in s:
-                        term_name = s[:s.index("称为")]
-                    th.append(f'<div class="tc-card"><span class="tc-term">{esc(term_name)}</span><span class="tc-def">{esc(s)}</span></div>')
-    th.append('</div></div>')
+                    if "：" in s[:30]: term_name = s.split("：")[0]
+                    elif "是指" in s: term_name = s[:s.index("是指")]
+                    elif "称为" in s: term_name = s[:s.index("称为")]
+                    elif "指的是" in s: term_name = s[:s.index("指的是")]
+                    topic_terms[et["topic"]].append((term_name, s))
+
+    th = ['<div class="ss"><h3>名词解释（按考点分类）</h3>']
+    term_count = 0
+    for et in cfg["examTopics"]:
+        terms = topic_terms.get(et["topic"], [])
+        if not terms: continue
+        term_count += len(terms)
+        ttype = TOPIC_TYPES.get(et["topic"],"")
+        tcol = {"填空":"#4361ee","选择":"#06d6a0","计算":"#e63946","问答":"#f77f00"}.get(ttype.split("/")[0],"#888")
+        th.append(f'<div class="tg"><div class="tg-h"><span class="tg-title">{et["topic"]}</span><span class="tg-badge" style="background:{tcol}">{ttype}</span></div>')
+        for tn, td in terms:
+            th.append(f'<div class="ti"><span class="ti-term">{fmt_sub_super(tn)}</span><span class="ti-def">{fmt_sub_super(td)}</span></div>')
+        th.append('</div>')
+    th.append('</div>')
     cfg["tH"] = "\n".join(th)
-    print(f"  考点 {len(cfg['examTopics'])} 个, 名词 {len(seen)} 个")
+    print(f"  考点 {len(cfg['examTopics'])} 个, 名词 {term_count} 个")
 
 
 HTML = r'''<!DOCTYPE html>
@@ -229,16 +255,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .top .bd{background:var(--accent);color:#fff;padding:2px 10px;border-radius:10px;font-size:.68em}
 .top .cd{font-size:.68em;color:var(--text2);white-space:nowrap}
 .lo{display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 48px)}
-.sb{width:230px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;padding:4px 0}
+.sb{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;padding:4px 0}
 .sb::-webkit-scrollbar{width:4px}
 .sb::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .sb .st{padding:4px 12px 2px;font-size:.65em;color:var(--text2);font-weight:600}
 .sb .it{display:block;padding:4px 12px 4px 16px;color:var(--text);text-decoration:none;font-size:.8em;border-left:3px solid transparent;cursor:pointer;transition:all .1s}
 .sb .it:hover{background:var(--plight);color:var(--primary)}
 .sb .it.act{background:var(--plight);color:var(--primary);border-left-color:var(--primary);font-weight:600}
-.sb .it .n{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:50%;background:var(--bg);font-size:.62em;font-weight:600;margin-right:2px;color:var(--text2)}
-.sb .it.act .n{background:var(--primary);color:#fff}
 .sb .tp{padding-left:18px;font-size:.78em}
+.sb .tag{display:inline-block;font-size:.6em;padding:0 5px;border-radius:8px;color:#fff;margin-left:4px;font-weight:500;vertical-align:middle;line-height:1.5}
 .ma{flex:1;padding:20px 28px 60px;min-width:0}
 .bl{display:none;animation:f .2s}
 .bl.act{display:block}
@@ -255,23 +280,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .tc h3{color:var(--primary);font-size:.85em;margin-bottom:5px}
 .tc ul{padding-left:15px}
 .tc li{margin-bottom:2px;color:var(--text2);font-size:.82em}
-.th{margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--primary)}
+.th{margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--primary)}
+.th-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .th h2{font-size:1.15em;color:var(--primary)}
-.th .src{font-size:.78em;color:var(--text2);margin-top:2px}
-.th .src a{color:var(--primary);text-decoration:none}
+.tt{display:inline-block;font-size:.65em;color:#fff;padding:1px 10px;border-radius:10px;font-weight:600;letter-spacing:.03em}
+.th .src{font-size:.78em;color:var(--text2);margin-top:3px}
 .ts{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:7px}
 .ts .sn{font-size:.7em;color:var(--text2);margin-bottom:3px;font-weight:600}
 .ts p{margin-bottom:2px;font-size:.88em}
-.sh{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:5px;overflow:hidden}
-.shd{padding:5px 12px;background:var(--bg);font-size:.75em;font-weight:600;color:var(--text2);cursor:pointer;user-select:none;display:flex;justify-content:space-between}
-.shd:hover{background:var(--plight)}
-.shd .ic{transition:transform .2s;font-size:.65em}
-.shd.c .ic{transform:rotate(-90deg)}
-.sbb{padding:7px 12px;line-height:1.7;font-size:.85em}
-.sbb.c{display:none}
-.sbb p{margin-bottom:2px}
-.ch{margin-bottom:10px}
-.ch h2{font-size:1.1em;color:var(--primary);padding-bottom:6px;border-bottom:1px solid var(--border)}
+.ts p sub{font-size:.8em;color:var(--text)}
+.ts p sup{font-size:.8em;color:var(--text)}
 .ss{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px}
 .ss h3{font-size:.9em;color:var(--primary);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 .fg{margin-bottom:12px}
@@ -279,11 +297,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .fi{background:var(--plight);border-left:3px solid var(--primary);padding:8px 12px;border-radius:6px;margin-bottom:6px}
 .fi .fn{font-size:.75em;color:var(--text2);margin-bottom:2px}
 .fi .math{font-size:1.05em;padding:2px 0}
-/* 名词卡片 */
-.tc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.tc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
 .tc-card{background:var(--plight);border:1px solid var(--border);border-radius:6px;padding:8px 12px}
 .tc-term{display:inline-block;font-weight:600;color:var(--accent);font-size:.85em;margin-bottom:2px;padding:0 4px;border-radius:3px}
 .tc-def{display:block;font-size:.82em;color:var(--text);line-height:1.5;margin-top:2px}
+.tc-def sub,.tc-def sup{font-size:.75em}
+/* 名词分组 */
+.tg{margin-bottom:14px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.tg-h{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+.tg-title{font-size:.82em;font-weight:600;color:var(--primary)}
+.tg-badge{font-size:.65em;color:#fff;padding:0 8px;border-radius:8px;font-weight:500}
+.ti{padding:7px 14px;border-bottom:1px solid #f0f0f0;background:var(--surface)}
+.ti:last-child{border-bottom:none}
+.ti-term{font-weight:600;color:var(--accent);font-size:.82em;display:block;margin-bottom:1px}
+.ti-def{display:block;font-size:.8em;color:var(--text);line-height:1.5}
+.ti-def sub,.ti-def sup{font-size:.75em}
 .subject-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;max-width:480px;margin:0 auto}
 .scd{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:all .2s}
 .scd:hover{border-color:var(--primary);transform:translateY(-2px)}
@@ -304,10 +332,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .lo{display:block}
 .ma{padding:0}
 .bl{display:block!important;page-break-after:always}
-.sh{break-inside:avoid;border:1px solid #ccc}
-.sbb{display:block!important}
-.shd{background:#f5f5f5;cursor:default}
-.shd .ic{display:none}
 .ob{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
@@ -340,6 +364,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script>
 const D = %DATA%;
+const TC = %TYPES%;
 let C = null;
 
 function back(){document.getElementById('sel').classList.add('act');document.getElementById('rev').classList.remove('act');document.title='复习系统';}
@@ -352,7 +377,7 @@ function enter(id){
   document.getElementById('se').textContent=C.nameEn;
   document.getElementById('sb').textContent=C.examDateLabel;
   ud(); rs(); rm();
-  setTimeout(function(){document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent.slice(1,-1),el,{displayMode:false})}catch(e){console.log(e)}})},100);
+  setTimeout(function(){document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent.slice(1,-1),el,{displayMode:false})}catch(e){}})},100);
   nav('overview');
 }
 
@@ -360,9 +385,11 @@ function rs(){
   var s=document.getElementById('sidebar');
   var h='<div class="st">概览</div><a class="it act" data-t="overview" onclick="nav(\'overview\')">考试概览</a>';
   h+='<div class="st">考点复习</div>';
-  C.examTopics.forEach(function(t,i){h+='<a class="it tp" data-t="topic-'+i+'" onclick="nav(\'topic-'+i+'\')">'+t.topic+'</a>';});
-  h+='<div class="st">章节浏览</div>';
-  C.chapters.forEach(function(c,i){h+='<a class="it" data-t="ch-'+c.id+'" onclick="nav(\'ch-'+c.id+'\')"><span class="n">'+(i+1)+'</span>'+c.title+'</a>';});
+  C.examTopics.forEach(function(t,i){
+    var tp=TC[t.topic]||'';
+    var col={'填空':'#4361ee','选择':'#06d6a0','计算':'#e63946','问答':'#f77f00','填空/选择':'#4361ee','选择/填空':'#06d6a0','填空/计算':'#4361ee','计算/选择':'#e63946','问答/填空':'#f77f00','问答/计算':'#f77f00','填空/问答':'#4361ee'}[tp]||'#888';
+    h+='<a class="it tp" data-t="topic-'+i+'" onclick="nav(\'topic-'+i+'\')">'+t.topic+(tp?'<span class="tag" style="background:'+col+'">'+tp+'</span>':'')+'</a>';
+  });
   h+='<div class="st">专题</div><a class="it" data-t="formulas" onclick="nav(\'formulas\')">公式</a><a class="it" data-t="terms" onclick="nav(\'terms\')">名词解释</a>';
   s.innerHTML=h;
 }
@@ -371,7 +398,6 @@ function rm(){
   var m=document.getElementById('main');
   var h='<div id="s-overview" class="bl act">'+C.ovHTML+'</div>';
   C.examTopics.forEach(function(t,i){h+='<div id="s-topic-'+i+'" class="bl">'+(C.tpH[t.topic]||'')+'</div>';});
-  C.chapters.forEach(function(c){h+='<div id="s-ch-'+c.id+'" class="bl">'+(c.html||'')+'</div>';});
   h+='<div id="s-formulas" class="bl">'+C.fH+'</div>';
   h+='<div id="s-terms" class="bl">'+C.tH+'</div>';
   m.innerHTML=h;
@@ -386,19 +412,12 @@ function nav(t){
 
 function ts(){document.getElementById('sidebar').classList.toggle('ms');document.getElementById('so').classList.toggle('s');}
 
-function td(){
-  document.body.classList.toggle('dark-mode');
-  var b=document.getElementById('dtBtn');
-  b.textContent=document.body.classList.contains('dark-mode')?'☀️':'🌙';
-  localStorage.setItem('rd',document.body.classList.contains('dark-mode')?'1':'0');
-}
+function td(){document.body.classList.toggle('dark-mode');var b=document.getElementById('dtBtn');b.textContent=document.body.classList.contains('dark-mode')?'☀️':'🌙';localStorage.setItem('rd',document.body.classList.contains('dark-mode')?'1':'0');}
 if(localStorage.getItem('rd')==='1'){document.body.classList.add('dark-mode');document.getElementById('dtBtn').textContent='☀️';}
 
 function ud(){var e=document.getElementById('sc');if(!e||!C)return;var d=new Date(C.examDate).getTime()-Date.now();if(d<=0){e.textContent='考试已开始';return;}e.textContent=Math.floor(d/86400000)+'天'+Math.floor((d%86400000)/3600000)+'小时';}
 setInterval(ud,60000);
-
 window.addEventListener('scroll',function(){var b=document.getElementById('progressBar');if(!b)return;var s=window.scrollY,d=document.documentElement.scrollHeight-window.innerHeight;if(d>0)b.style.width=(s/d*100)+'%';});
-
 (function(){var c=document.getElementById('cards');var h='';for(var[id,sub]of Object.entries(D)){h+='<div class="scd" onclick="enter(\''+id+'\')"><h3>'+sub.name+'</h3><div style="font-size:.78em;color:var(--text2)">'+sub.nameEn+'</div><div style="margin-top:4px;font-size:.75em;color:var(--text2)">'+sub.examTopics.length+' 考点</div></div>';}c.innerHTML=h;var k=Object.keys(D);if(k.length===1)enter(k[0]);})();
 </script>
 </body>
@@ -406,10 +425,12 @@ window.addEventListener('scroll',function(){var b=document.getElementById('progr
 
 def main():
     print("="*40)
-    print("复习网页生成器 v4")
+    print("复习网页生成器 v5")
     print("="*40)
     for sid, cfg in SUBJECTS.items(): build(sid, cfg)
+    # Inject type data alongside subject data
     h = HTML.replace("%DATA%", json.dumps(SUBJECTS, ensure_ascii=False))
+    h = h.replace("%TYPES%", json.dumps(TOPIC_TYPES, ensure_ascii=False))
     with open(HTML_OUT, "w", encoding="utf-8") as f: f.write(h)
     print(f"\n生成: {HTML_OUT} ({os.path.getsize(HTML_OUT)/1024:.0f} KB)")
 
