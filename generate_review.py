@@ -654,7 +654,7 @@ HTML_HEADER = r"""<!DOCTYPE html>
       <span class="en" id="subjectTitleEn">Radiochemistry</span>
     </div>
     <span class="exam-badge" id="examBadge">
-	    📅 6月18日考试</span><input type="text" id="searchBox" placeholder="搜索关键词..." oninput="searchContent(this.value)" style="display:none;padding:4px 12px;border:1px solid var(--border);border-radius:16px;font-size:0.85em;font-family:var(--font);outline:none;width:160px;background:var(--bg);"></span>
+	    📅 6月18日考试</span><span id="countdown" data-date="2026-06-18T18:30:00+08:00" style="margin-left:12px;font-size:0.78em;color:var(--text-secondary);white-space:nowrap;"></span><input type="text" id="searchBox" placeholder="搜索关键词..." oninput="searchContent(this.value)" style="display:none;padding:4px 12px;border:1px solid var(--border);border-radius:16px;font-size:0.85em;font-family:var(--font);outline:none;width:160px;background:var(--bg);">
   </div>
 
   <!-- 遮罩 -->
@@ -670,7 +670,7 @@ HTML_HEADER = r"""<!DOCTYPE html>
         </a>
       </div>
       <div class="sidebar-section" id="chapterNav">
-        <div class="sidebar-section-title">章节复习</div>
+        <div class="sidebar-section-title" style="display:flex;justify-content:space-between;align-items:center;padding-right:12px;">章节复习<button onclick="toggleAllSlides()" style="font-size:0.85em;background:var(--primary-light);border:1px solid var(--border);border-radius:12px;padding:1px 8px;cursor:pointer;color:var(--primary);font-weight:400;">展开/折叠</button></div>
         <!-- 由 JS 动态生成 -->
       </div>
       <div class="sidebar-section" id="specialNav">
@@ -712,7 +712,7 @@ function enterSubject(subjectId) {
   document.title = currentSubject.name + ' | ';
   document.getElementById('subjectTitle').textContent = currentSubject.name;
   document.getElementById('subjectTitleEn').textContent = currentSubject.nameEn;
-  document.getElementById('examBadge').textContent = currentSubject.examDate;
+  document.getElementById('examBadge').textContent = currentSubject.examDate; updateCountdown();
   document.getElementById('searchBox').style.display = 'inline-block';
   document.getElementById('searchBox').value = '';
   searchContent('');
@@ -723,7 +723,7 @@ function enterSubject(subjectId) {
 
 function renderSidebarChapters(chapters) {
   const nav = document.getElementById('chapterNav');
-  let html = '<div class="sidebar-section-title">章节复习</div>';
+  let html = '<div class="sidebar-section-title" style="display:flex;justify-content:space-between;align-items:center;padding-right:12px;">章节复习<button onclick="toggleAllSlides()" style="font-size:0.85em;background:var(--primary-light);border:1px solid var(--border);border-radius:12px;padding:1px 8px;cursor:pointer;color:var(--primary);font-weight:400;">展开/折叠</button></div>';
   chapters.forEach((ch, i) => {
     const hasExam = ch.exam && ch.exam.length > 0;
     html += '<a class="sidebar-item" data-target="ch-' + ch.id + '" onclick="navigateTo(\'ch-' + ch.id + '\')">'
@@ -816,6 +816,58 @@ function searchContent(query) {
     }
   });
 }
+
+// === 全部展开/折叠 ===
+function toggleAllSlides() {
+  const headers = document.querySelectorAll('.slide-header');
+  const bodies = document.querySelectorAll('.slide-body');
+  const allCollapsed = Array.from(headers).every(h => h.classList.contains('collapsed'));
+  headers.forEach(h => allCollapsed ? h.classList.remove('collapsed') : h.classList.add('collapsed'));
+  bodies.forEach(b => allCollapsed ? b.classList.remove('collapsed') : b.classList.add('collapsed'));
+}
+
+// === 考试倒计时 ===
+function updateCountdown() {
+  const el = document.getElementById('countdown');
+  if (!el) return;
+  const target = new Date(el.dataset.date);
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) { el.textContent = '考试已开始！'; return; }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+  el.textContent = '距离考试还有 ' + days + ' 天 ' + hours + ' 小时';
+}
+setInterval(updateCountdown, 60000);
+
+// === 回到顶部 ===
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scrollTop');
+  if (!btn) return;
+  btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+});
+
+// === 键盘导航 ===
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    const active = document.querySelector('.chapter-block.active');
+    if (!active) return;
+    const slides = active.querySelectorAll('.slide-header');
+    if (!slides.length) return;
+    // Find current visible slide (first non-collapsed)
+    let currentIdx = -1;
+    slides.forEach((s, i) => { if (!s.classList.contains('collapsed')) currentIdx = i; });
+    if (currentIdx === -1) { slides[0].click(); return; }
+    slides[currentIdx].classList.add('collapsed');
+    slides[currentIdx].nextElementSibling.classList.add('collapsed');
+    const next = e.key === 'ArrowRight' ? Math.min(currentIdx + 1, slides.length - 1) : Math.max(currentIdx - 1, 0);
+    slides[next].classList.remove('collapsed');
+    slides[next].nextElementSibling.classList.remove('collapsed');
+    slides[next].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+});
+
 function initSubjectCards() {
   const container = document.querySelector('.subject-cards');
   let html = '';
@@ -842,7 +894,7 @@ function initSubjectCards() {
 
 initSubjectCards();
 </script>
-</body>
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none;position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.3em;cursor:pointer;box-shadow:0 4px 12px rgba(67,97,238,0.3);z-index:99;align-items:center;justify-content:center;">&#8593;</button></body>
 </html>
 """
 
