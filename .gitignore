@@ -1,0 +1,23 @@
+# PPT 原始文件（二进制大文件）
+放射化学/*.ppt
+放射化学/*.pptx
+放射化学/~$*
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时分析脚本
+analyze.py
+extract_ppt.py
+
+# Claude Code 本地设置
+.claude/
+
+# 临时分析报告
+output/_分析报告.txt
+
+# 系统文件
+.DS_Store
+Thumbs.db
