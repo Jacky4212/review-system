@@ -398,8 +398,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .mb{display:none;background:none;border:none;font-size:1.05em;cursor:pointer;color:var(--primary);padding:4px}
 @media(max-width:900px){.mb{display:block}}
 .so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:200}
-.so.s{display:block}.sb.ms{display:block;position:fixed;left:0;top:0;z-index:300;height:100vh}
-@media print{.top,.sb,#progressBar,.so,.mb{display:none!important}.lo{display:block}.ma{padding:0}.bl{display:block!important;page-break-after:always}.ob{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+.so.s{display:block}.sb.ms{display:block;position:fixed;left:0;top:0;z-index:300;height:100vh;box-shadow:4px 0 24px rgba(0,0,0,.15)}
+/* scroll-top button */
+#stb{display:none;position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.2em;cursor:pointer;box-shadow:0 3px 10px rgba(58,86,212,.3);z-index:50;align-items:center;justify-content:center;transition:opacity .2s}
+#stb:hover{opacity:.85}
+@media print{.top,.sb,#progressBar,.so,.mb,#stb{display:none!important}.lo{display:block}.ma{padding:0}.bl{display:block!important;page-break-after:always}.ob{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 </head>
 <body>
@@ -485,6 +488,10 @@ function ud(){var e=document.getElementById('sc');if(!e||!C)return;var d=new Dat
 setInterval(ud,60000);
 window.addEventListener('scroll',function(){var b=document.getElementById('progressBar');if(!b)return;var s=window.scrollY,d=document.documentElement.scrollHeight-window.innerHeight;if(d>0)b.style.width=(s/d*100)+'%';});
 (function(){var c=document.getElementById('cards');var h='';for(var[id,sub]of Object.entries(D)){h+='<div class="scd" onclick="enter(\''+id+'\')"><h3>'+sub.name+'</h3><div style="font-size:.78em;color:var(--text2)">'+sub.nameEn+'</div><div style="margin-top:4px;font-size:.75em;color:var(--text2)">'+sub.examTopics.length+' 考点</div></div>';}c.innerHTML=h;var k=Object.keys(D);if(k.length===1)enter(k[0]);})();
+</script>
+<button id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+<script>
+(function(){var b=document.getElementById("stb");window.addEventListener("scroll",function(){b.style.display=window.scrollY>300?"flex":"none"})})();
 </script>
 </body>
 </html>'''
