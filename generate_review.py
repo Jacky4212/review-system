@@ -72,31 +72,62 @@ def load_exam_requirements():
 
 
 def extract_formulas(pages):
-    """从页面内容中提取可能的公式行"""
+    """从页面内容中提取公式行（严格过滤）"""
     formulas = []
+    # 真正的公式应包含等号且等号两边有数学内容
+    math_patterns = [
+        r'^[A-Za-zλμρπεωΩ].*=',
+        r'=.*\d',
+        r'\b(ln|lg|exp|log|sin|cos|tan)\b',
+        r'\d+\s*[×x÷/\-+]\s*\d',
+        r'×\s*10',
+        r'[NnEeAa].*=.*\d',
+        r'λ\s*=',
+        r'[Ttτ].*=',
+        r'[KkSs].*=',
+    ]
     for page in pages:
         for line in page["lines"]:
-            # 包含常见公式特征的行
-            if any(k in line for k in ["=", "公式", "律", "ln", "lg", "exp", "λ", "×10", "E=", "A=", "N="]):
-                if len(line) > 5 and len(line) < 120:
-                    formulas.append(line)
+            line = line.strip()
+            if not line or len(line) < 4 or len(line) > 130:
+                continue
+            # 不能是纯中文长句
+            zh_count = sum(1 for c in line if '一' <= c <= '鿿')
+            if zh_count > len(line) * 0.6 and '=' not in line:
+                continue
+            # 必须匹配公式特征
+            if any(re.search(p, line) for p in math_patterns):
+                formulas.append(line)
     return formulas
 
 
 def extract_key_terms(pages):
-    """提取可能的名词解释（短行，带定义性质）"""
+    """提取名词解释（更精确）"""
     terms = []
+    seen_texts = set()
     for page in pages:
         for i, line in enumerate(page["lines"]):
             line = line.strip()
-            # 以"是指"、"称为"、"即"结尾或包含这些词的定义句
-            if any(k in line for k in ["是指", "称为", "叫做", "指的是", "即"]) and 8 < len(line) < 100:
+            if not line or len(line) < 4 or len(line) > 100:
+                continue
+            # 跳过纯数字行、目录索引行
+            if re.match(r'^[\d\s\.\,\;]+$', line):
+                continue
+            if line in seen_texts:
+                continue
+            seen_texts.add(line)
+
+            # 定义句式：X是指/称为/指的是/即...
+            if re.search(r'(是指|称为|叫做|指的是|即)\S', line):
                 terms.append(line)
-            # 冒号分隔的名词解释
-            elif "：" in line and len(line) < 80 and "。" not in line[:line.index("：")]:
-                parts = line.split("：", 1)
-                if len(parts) == 2 and len(parts[0]) < 20:
-                    terms.append(line)
+            # 冒号分隔的名词解释（前段短、后段长）
+            elif "：" in line:
+                idx = line.index("：")
+                name = line[:idx]
+                desc = line[idx+1:]
+                if 1 < len(name) < 25 and len(desc) > 3 and not re.search(r'[=×÷]', name):
+                    if len(desc) < 120:
+                        terms.append(line)
     return terms
 
 
@@ -531,6 +562,43 @@ HTML_HEADER = r"""<!DOCTYPE html>
     .exam-overview { padding: 20px; }
   }
 
+  /* 考点-章节映射表 */
+  .exam-mapping { margin-bottom: 24px; }
+  .mapping-table { display: flex; flex-direction: column; gap: 4px; }
+  .mapping-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 14px; border-radius: 8px;
+    text-decoration: none; color: var(--text);
+    transition: background 0.15s; cursor: pointer;
+  }
+  .mapping-row:hover { background: var(--primary-light); }
+  .mapping-ch {
+    background: var(--primary); color: #fff;
+    padding: 2px 10px; border-radius: 12px;
+    font-size: 0.8em; font-weight: 600; white-space: nowrap;
+  }
+  .mapping-topic { flex: 1; font-size: 0.95em; }
+  .mapping-arrow {
+    font-size: 0.8em; color: var(--primary);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .mapping-row:hover .mapping-arrow { opacity: 1; }
+
+  /* 打印样式 */
+  @media print {
+    .top-bar, .sidebar, .mobile-menu-btn, .sidebar-overlay { display: none !important; }
+    .layout { display: block; max-width: 100%; }
+    .main-content { padding: 0; }
+    .chapter-block { display: block !important; page-break-after: always; }
+    .chapter-block.active { display: block !important; }
+    .slide-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+    .slide-body { display: block !important; }
+    .slide-header { background: #f5f5f5; }
+    .slide-header .toggle-icon { display: none; }
+    .exam-overview { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .mapping-row:hover .mapping-arrow { opacity: 1; }
+  }
+
   /* 移动端侧栏切换 */
   .mobile-menu-btn {
     display: none;
@@ -585,7 +653,8 @@ HTML_HEADER = r"""<!DOCTYPE html>
       <span id="subjectTitle">放射化学</span>
       <span class="en" id="subjectTitleEn">Radiochemistry</span>
     </div>
-    <span class="exam-badge" id="examBadge">📅 6月18日考试</span>
+    <span class="exam-badge" id="examBadge">
+	    📅 6月18日考试</span><input type="text" id="searchBox" placeholder="搜索关键词..." oninput="searchContent(this.value)" style="display:none;padding:4px 12px;border:1px solid var(--border);border-radius:16px;font-size:0.85em;font-family:var(--font);outline:none;width:160px;background:var(--bg);"></span>
   </div>
 
   <!-- 遮罩 -->
@@ -629,6 +698,7 @@ let currentSubject = null;
 
 // ═══ 科目选择 ═══
 function showSubjectSelector() {
+  document.getElementById('searchBox').style.display = 'none';
   document.getElementById('subjectSelector').classList.add('active');
   document.getElementById('reviewPage').classList.remove('active');
   document.title = '复习系统 | Review';
@@ -639,18 +709,15 @@ function enterSubject(subjectId) {
   currentSubject = SUBJECTS[subjectId];
   document.getElementById('subjectSelector').classList.remove('active');
   document.getElementById('reviewPage').classList.add('active');
-  document.title = currentSubject.name + ' | 复习系统';
-
-  // 填充顶栏
+  document.title = currentSubject.name + ' | ';
   document.getElementById('subjectTitle').textContent = currentSubject.name;
   document.getElementById('subjectTitleEn').textContent = currentSubject.nameEn;
-  document.getElementById('examBadge').textContent = '📅 ' + currentSubject.examDate;
-
-  // 渲染侧边栏章节导航
+  document.getElementById('examBadge').textContent = currentSubject.examDate;
+  document.getElementById('searchBox').style.display = 'inline-block';
+  document.getElementById('searchBox').value = '';
+  searchContent('');
   renderSidebarChapters(currentSubject.chapters);
-  // 渲染主内容
   renderMainContent(currentSubject);
-  // 默认定位到概览
   navigateTo('overview');
 }
 
@@ -727,6 +794,28 @@ function toggleMobileSidebar() {
 }
 
 // ═══ 初始化：渲染科目卡片 ═══
+
+// === 搜索功能 ===
+function searchContent(query) {
+  if (!query.trim()) {
+    document.querySelectorAll('.slide-card').forEach(c => c.style.display = '');
+    document.querySelectorAll('.chapter-block').forEach(b => {
+      if (b.classList.contains('active')) b.style.display = 'block';
+    });
+    return;
+  }
+  const q = query.toLowerCase();
+  document.querySelectorAll('.slide-card').forEach(card => {
+    const body = card.querySelector('.slide-body');
+    if (body && body.textContent.toLowerCase().includes(q)) {
+      card.style.display = '';
+      card.querySelector('.slide-header')?.classList.remove('collapsed');
+      card.querySelector('.slide-body')?.classList.remove('collapsed');
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
 function initSubjectCards() {
   const container = document.querySelector('.subject-cards');
   let html = '';
@@ -743,6 +832,12 @@ function initSubjectCards() {
   // 占位卡片
   html += '<div class="subject-card add-subject-card">+ 后续可添加更多科目</div>';
   container.innerHTML = html;
+
+  // 如果只有一个科目，直接进入
+  const keys = Object.keys(SUBJECTS);
+  if (keys.length === 1) {
+    enterSubject(keys[0]);
+  }
 }
 
 initSubjectCards();
@@ -793,7 +888,7 @@ def build_subject_data(subject_id, subject_cfg):
     overview_parts.append('</ul></div>')
 
     # 重点知识点列表
-    overview_parts.append('<div class="exam-tips"><h3>📌 放射化学重点知识</h3><ul>')
+    overview_parts.append('<div class="exam-tips"><h3>放射化学重点知识</h3><ul>')
     in_keywords = False
     for line in exam_lines:
         if "重点知识" in line:
@@ -804,6 +899,22 @@ def build_subject_data(subject_id, subject_cfg):
         if in_keywords and line.strip():
             overview_parts.append(f'<li>{line.strip()}</li>')
     overview_parts.append('</ul></div>')
+
+    # 考点与章节对应表
+    overview_parts.append('<div class="exam-tips exam-mapping"><h3>考点 → 章节对应</h3>')
+    overview_parts.append('<div class="mapping-table">')
+    for ch in subject_cfg["chapters"]:
+        if ch["exam"]:
+            for topic in ch["exam"]:
+                ch_num = ch["title"].split(" ")[0] if " " in ch["title"] else ch["title"]
+                overview_parts.append(
+                    f'<a class="mapping-row" href="#" onclick="navigateTo(\'ch-{ch["id"]}\');return false">'
+                    f'<span class="mapping-ch">{ch_num}</span>'
+                    f'<span class="mapping-topic">{topic}</span>'
+                    f'<span class="mapping-arrow">→ 复习</span>'
+                    f'</a>'
+                )
+    overview_parts.append('</div></div>')
 
     subject_cfg["examOverviewHTML"] = "\n".join(overview_parts)
 
