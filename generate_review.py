@@ -167,7 +167,34 @@ HTML_HEADER = r"""<!DOCTYPE html>
     font-size: 15px;
   }
 
-  /* ─── 科目选择页（首页） ─── */
+  /* ─── 暗黑模式 ─── */
+  .dark-mode {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --text: #e0e0e0;
+    --text-secondary: #a0a0b0;
+    --primary: #6c8cff;
+    --primary-light: #1e2a4a;
+    --border: #2a2a4a;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
+  /* 阅读进度条 */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    z-index: 9999; width: 0%; transition: width 0.1s;
+  }
+
+  /* 暗黑模式切换按钮 */
+  .dark-toggle {
+    background: none; border: none; cursor: pointer;
+    font-size: 1.1em; padding: 4px 8px; border-radius: 6px;
+    color: var(--text-secondary); transition: background 0.2s;
+  }
+  .dark-toggle:hover { background: var(--primary-light); }
+
+    /* ─── 科目选择页（首页） ─── */
   .subject-selector {
     display: none;
     max-width: 800px;
@@ -631,7 +658,7 @@ HTML_HEADER = r"""<!DOCTYPE html>
   }
 </style>
 </head>
-<body>
+<body><div class="progress-bar" id="progressBar"></div>
 
 <!-- ═══ 科目选择页 ═══ -->
 <div id="subjectSelector" class="subject-selector active">
@@ -649,7 +676,7 @@ HTML_HEADER = r"""<!DOCTYPE html>
   <div class="top-bar">
     <button class="back-btn" onclick="showSubjectSelector()" title="返回科目选择">←</button>
     <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
-    <div class="title-area">
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="切换暗黑模式">🌙</button><div class="title-area">
       <span id="subjectTitle">放射化学</span>
       <span class="en" id="subjectTitleEn">Radiochemistry</span>
     </div>
@@ -865,6 +892,32 @@ document.addEventListener('keydown', function(e) {
     slides[next].classList.remove('collapsed');
     slides[next].nextElementSibling.classList.remove('collapsed');
     slides[next].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+});
+
+// === 暗黑模式 ===
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const btn = document.getElementById('darkToggle');
+  btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  localStorage.setItem('reviewDarkMode', document.body.classList.contains('dark-mode'));
+}
+(function() {
+  if (localStorage.getItem('reviewDarkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    const btn = document.getElementById('darkToggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+
+// === 阅读进度条 ===
+window.addEventListener('scroll', function() {
+  const bar = document.getElementById('progressBar');
+  if (!bar) return;
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (docHeight > 0) {
+    bar.style.width = (scrollTop / docHeight * 100) + '%';
   }
 });
 

@@ -1,9 +1,0 @@
-<div class="top-bar">
-    <button class="back-btn" onclick="showSubjectSelector()" title="返回科目选择">←</button>
-    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
-    <div class="title-area">
-      <span id="subjectTitle">放射化学</span>
-      <span class="en" id="subjectTitleEn">Radiochemistry</span>
-    </div>
-    <span class="exam-badge" id="examBadge"></span><span id="countdown" data-date="2026-06-18T18:30:00+08:00" style="font-size:0.78em;color:var(--text-secondary);white-space:nowrap;"></span><span class="exam-badge" id="examBadge2">
-	    📅 6月18日考试</span><input type=
