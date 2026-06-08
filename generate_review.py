@@ -199,22 +199,89 @@ def build(sid, cfg):
     fh.append('</div>')
     cfg["fH"] = "\n".join(fh)
 
-    # ── 名词解释（按考点分组，从对应章节提取定义）──
-    seen = set()
+    # ── 名词解释（完整定义，多行提取，按考点分组）──
+    def extract_definitions(pages):
+        """从页面中提取完整定义"""
+        def_pats = [
+            (r'^(.{1,30})(是指|指的是)(.{5,})',    1),  # term before
+            (r'^(.{1,25})(称为|称之为|叫做)(.{5,})', 2),  # term after ("X称为Y" => term=Y)
+            (r'^(.{2,12})是(.{35,})',              1),  # term before
+        ]
+        # 行首词（这些不会是定义的开头）
+        bad_starts = ["由于","比如","其中","因此","例如","因为","所以","但是","而且",
+            "然而","同时","另外","此外","首先","其次","然后","最后","对于","关于",
+            "通过","经过","利用","采用","根据","按照","从","在","将","把","被","为",
+            "主要","特别","通常","一般","基本","这里","这个","这些","这种",
+            "室温","金属","溶液","一个","一些","它们","两种","三类","能量",
+            "这里","现在","目前","那时","以后","以后","之前","之后","注意：","当"]
+        # 术语末尾词（这些词后面接"是"不构成定义）
+        bad_term_end = ["主要","特别","特别","通常","一般","总","就","都",
+            "可能","一定","已经","可以","会","要","已","还","也","又","更",
+            "很","最","极","较","相当","比较","尤其","甚至","至少","最多"]
+        # 术语本身不能是这些词
+        bad_terms = ["一类","另一类","一种","另一种","此外","因此","所谓",
+            "用于","就是","可以说","同时","这里"]
+        results = []
+        for p in pages:
+            ls = p["lines"]
+            for i, line in enumerate(ls):
+                s = line.strip()
+                if len(s) < 15: continue
+                if re.match(r'^[\d\s\.,;:\-+*/%°()\[\]{}]+$', s): continue
+                # 跳过非定义行首
+                if any(s.startswith(b) for b in bad_starts): continue
+                # 跳过编号开头
+                if re.match(r'^[\d①⑴①②③④⑤⑥]', s): continue
+                # 跳过可能包含"第"的行（章节标题）
+                if re.match(r'^第[一二三四五六七八九十\d]', s): continue
+                # 匹配定义模式
+                term_name = None
+                matched = None
+                for pat, grp in def_pats:
+                    m = re.search(pat, s)
+                    if m:
+                        matched = pat
+                        if grp == 1:
+                            term_name = m.group(1).strip()
+                        elif grp == 2:
+                            # "称为/叫做"：术语在关键词后面
+                            after = m.group(3).strip()
+                            term_name = re.split(r'[，。；,.;]', after)[0].strip()
+                            if len(term_name) > 20:
+                                term_name = after[:20]
+                        break
+                if not matched or not term_name: continue
+                # 清洗术语名
+                term_name = term_name.strip().lstrip("：:、；，。；,.;-—")
+                # 过滤
+                if len(term_name) < 2: continue
+                if term_name in bad_terms: continue
+                if any(term_name.endswith(b) for b in bad_term_end): continue
+                if re.match(r'^[\d]+', term_name): continue
+                if re.match(r'^[A-Za-z]{1,2}$', term_name): continue  # 纯字母缩写
+                # 收集多行定义
+                def_lines = [s]
+                for j in range(1, min(3, len(ls)-i)):
+                    nl = ls[i+j].strip()
+                    if not nl or len(nl) < 3: break
+                    if re.match(r'^.{1,20}(是指|称为|叫做|是.{15})', nl): break
+                    if re.match(r'^第[一二三四五六七八九十]|^\d+\.|^===|^http', nl): break
+                    def_lines.append(nl)
+                full_def = "".join(def_lines)
+                if len(full_def) < 20: continue
+                results.append((term_name, full_def, p["num"]))
+        return results
+
+    seen_terms = set()
     topic_terms = {et["topic"]: [] for et in cfg["examTopics"]}
     for et in cfg["examTopics"]:
         pages = ch_pages.get(et["ch"], [])
-        for p in pages:
-            for line in p["lines"]:
-                s = line.strip()
-                if any(k in s for k in ["是指","称为","叫做","指的是"]) and 8<len(s)<120 and s not in seen:
-                    seen.add(s)
-                    term_name = s
-                    if "：" in s[:30]: term_name = s.split("：")[0]
-                    elif "是指" in s: term_name = s[:s.index("是指")]
-                    elif "称为" in s: term_name = s[:s.index("称为")]
-                    elif "指的是" in s: term_name = s[:s.index("指的是")]
-                    topic_terms[et["topic"]].append((term_name, s))
+        defs = extract_definitions(pages)
+        for tn, fd, pn in defs:
+            key = tn[:8]  # 用术语前8字去重
+            if key not in seen_terms:
+                seen_terms.add(key)
+                topic_terms[et["topic"]].append((tn, fd, pn))
 
     th = ['<div class="ss"><h3>名词解释（按考点分类）</h3>']
     term_count = 0
@@ -225,8 +292,8 @@ def build(sid, cfg):
         ttype = TOPIC_TYPES.get(et["topic"],"")
         tcol = {"填空":"#4361ee","选择":"#06d6a0","计算":"#e63946","问答":"#f77f00"}.get(ttype.split("/")[0],"#888")
         th.append(f'<div class="tg"><div class="tg-h"><span class="tg-title">{et["topic"]}</span><span class="tg-badge" style="background:{tcol}">{ttype}</span></div>')
-        for tn, td in terms:
-            th.append(f'<div class="ti"><span class="ti-term">{fmt_sub_super(tn)}</span><span class="ti-def">{fmt_sub_super(td)}</span></div>')
+        for tn, fd, pn in terms:
+            th.append(f'<div class="ti"><span class="ti-term">{fmt_sub_super(tn)}</span><span class="ti-ref">第{pn}页</span><span class="ti-def">{fmt_sub_super(fd)}</span></div>')
         th.append('</div>')
     th.append('</div>')
     cfg["tH"] = "\n".join(th)
@@ -297,11 +364,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .fi{background:var(--plight);border-left:3px solid var(--primary);padding:8px 12px;border-radius:6px;margin-bottom:6px}
 .fi .fn{font-size:.75em;color:var(--text2);margin-bottom:2px}
 .fi .math{font-size:1.05em;padding:2px 0}
-.tc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
-.tc-card{background:var(--plight);border:1px solid var(--border);border-radius:6px;padding:8px 12px}
-.tc-term{display:inline-block;font-weight:600;color:var(--accent);font-size:.85em;margin-bottom:2px;padding:0 4px;border-radius:3px}
-.tc-def{display:block;font-size:.82em;color:var(--text);line-height:1.5;margin-top:2px}
-.tc-def sub,.tc-def sup{font-size:.75em}
 /* 名词分组 */
 .tg{margin-bottom:14px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .tg-h{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
@@ -310,6 +372,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .ti{padding:7px 14px;border-bottom:1px solid #f0f0f0;background:var(--surface)}
 .ti:last-child{border-bottom:none}
 .ti-term{font-weight:600;color:var(--accent);font-size:.82em;display:block;margin-bottom:1px}
+.ti-ref{font-size:.65em;color:var(--text2);float:right;margin-top:-1.2em}
 .ti-def{display:block;font-size:.8em;color:var(--text);line-height:1.5}
 .ti-def sub,.ti-def sup{font-size:.75em}
 .subject-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;max-width:480px;margin:0 auto}
