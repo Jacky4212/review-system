@@ -41,7 +41,7 @@ FORMULA_GROUPS = [
     ("溶剂萃取", [
         ("分配比","D = \\frac{C_{\\text{有}}}{C_{\\text{水}}}"),
         ("分离系数","\\alpha = \\frac{D_A}{D_B}"),
-        ("萃取率(一次)","E = \\frac{D}{D + V_{\\text{水}}/V_{\\text{有}}}}"),
+        ("萃取率(一次)","E = \\frac{D}{D + V_{\\text{水}}/V_{\\text{有}}}"),
         ("萃取率(多次)","E_n = 1 - \\left(\\frac{1}{D+1}\\right)^n"),
     ]),
     ("电化学", [
@@ -171,23 +171,28 @@ def build(sid, cfg):
     ov.append('</ul></div>')
     cfg["ovHTML"] = "\n".join(ov)
 
-    # ── 考点内容（带上下标格式）──
+    # ── 考点内容（带上下标格式，单考点内去重）──
     cfg["tpH"] = {}
     for et in cfg["examTopics"]:
         pages = ch_pages.get(et["ch"], [])
         matched = ext_topic(et, pages)
+        # 单考点内去重：同一页不重复展示
+        seen_nums = set()
+        deduped = []
+        for s in matched:
+            if s["num"] not in seen_nums:
+                seen_nums.add(s["num"])
+                deduped.append(s)
         ch_t = next((c["title"] for c in cfg["chapters"] if c["id"]==et["ch"]), "")
         ttype = TOPIC_TYPES.get(et["topic"],"")
         tcolor = TYPE_COLORS.get(ttype,"#666")
         tag_html = f'<span class="tt" style="background:{tcolor}">{ttype}</span>' if ttype else ""
         parts = [f'<div class="th"><div class="th-top"><h2>{et["topic"]}</h2>{tag_html}</div><div class="src">来源：{ch_t}</div></div>']
-        if matched:
-            for s in matched:
+        if deduped:
+            for s in deduped:
                 parts.append(f'<div class="ts"><div class="sn">第 {s["num"]} 页</div>')
                 for line in s["lines"]: parts.append(f'<p>{fmt_sub_super(line)}</p>')
                 parts.append('</div>')
-        else:
-            parts.append(f'<div class="te">参考 {ch_t} 相关内容</div>')
         cfg["tpH"][et["topic"]] = "\n".join(parts)
 
     # ── 公式（分组）──
@@ -220,7 +225,7 @@ def build(sid, cfg):
             "很","最","极","较","相当","比较","尤其","甚至","至少","最多"]
         # 术语本身不能是这些词
         bad_terms = ["一类","另一类","一种","另一种","此外","因此","所谓",
-            "用于","就是","可以说","同时","这里"]
+            "用于","就是","可以说","同时","这里","这类","这类萃取剂"]
         results = []
         for p in pages:
             ls = p["lines"]
@@ -252,7 +257,12 @@ def build(sid, cfg):
                         break
                 if not matched or not term_name: continue
                 # 清洗术语名
-                term_name = term_name.strip().lstrip("：:、；，。；,.;-—")
+                term_name = term_name.strip().lstrip("：:、；，。；,.;-—").rstrip("：:，,；;")
+                # 修剪术语名尾部：去掉"这类"、"这种"、"这些"等指示词
+                for tw in ["这类","这种","这些","该","此","其"]:
+                    idx = term_name.find(tw)
+                    if idx > 0:
+                        term_name = term_name[:idx].strip()
                 # 过滤
                 if len(term_name) < 2: continue
                 if term_name in bad_terms: continue
