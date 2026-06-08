@@ -94,18 +94,23 @@ SUBJECTS = {
 def fmt_sub_super(text):
     """将PPT文本中的上下标格式化为HTML标签"""
     t = text.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-    # 1. 同位素上标: 数字+元素符号(前面不是字母)
-    t = re.sub(r'(?<![A-Za-z(])(\d+)([A-Z][a-z]?)(?![a-z])', r'<sup>\1</sup>\2', t)
-    # 2. 化学式下标: 元素+数字
-    t = re.sub(r'([A-Z][a-z]?)(\d+)', r'\1<sub>\2</sub>', t)
-    # 3. 变量下标: 常见变量字母+数字/上标字母
+    # 1. 科学计数法: ×10^数字 (如×109, ×1010, ×105)
+    t = re.sub(r'[×x]10(\d+)', r'×10<sup>\1</sup>', t)
+    t = re.sub(r'(?<!\d)10(\d{2,3})(?!\d)', r'10<sup>\1</sup>', t)
+    # 2. 单位负指数: cm-2·s-1 => cm⁻²·s⁻¹ (字母后-数字)
+    t = re.sub(r'(?<=[a-z])-(\d+)(?=[^a-zA-Z<]|$)', r'<sup>-\1</sup>', t)
+    # 3. 同位素上标: 数字+元素符号
+    t = re.sub(r'(?<![A-Za-z(>\d])(\d+)([A-Z][a-z]?)(?![a-z<])', r'<sup>\1</sup>\2', t)
+    # 4. 化学式下标: 元素+数字
+    t = re.sub(r'(?<!\w)([A-Z][a-z]?)(\d+)(?!\w)', r'\1<sub>\2</sub>', t)
+    # 5. 变量下标: 常见字母+数字
     t = re.sub(r'\b([NnAaTtKkDdMm])(\d+)\b', r'\1<sub>\2</sub>', t)
-    # 4. 分数下标: 如T1/2
+    # 6. 分数下标: T1/2
     t = re.sub(r'([A-Za-z])\(?(\d+)/(\d+)\)?', r'\1<sub>\2/\3</sub>', t)
-    # 5. 指数: e-后面跟字母/数字
+    # 7. 指数: e-λt
     t = re.sub(r'\be-([λ\dμρσ]+[A-Za-z]*)', r'e<sup>-\1</sup>', t)
-    # 6. 单位中的-1,-2等上标(如cm-1, s-1)
-    t = re.sub(r'([A-Za-z]+)(\(-?\d+\))', r'\1<sup>\2</sup>', t)
+    # 8. 同位素横线: Zr-101, Mo-107 (避开已被单位负指数处理的部分)
+    t = re.sub(r'([A-Z][a-z]{0,2})-(\d{2,3})(?![^<]*<\/sup>|-\d)', r'\1<sup>\2</sup>', t)
     return t
 
 def load_text(fp):
@@ -124,24 +129,38 @@ def load_exam():
     if not os.path.exists(EXAM_FILE): return []
     with open(EXAM_FILE,"r",encoding="utf-8") as f: return [l.strip() for l in f if l.strip()]
 
-def flt(lines, kw):
-    """筛选行：至少匹配关键词条数>=2 或 关键词少时放宽"""
-    req = 2 if len(kw) >= 5 else 1
-    r = []
+def slide_match(lines, kw):
+    """判断幻灯片是否与考点相关：至少2个不同关键词出现在该页"""
+    text = "\n".join(lines)
+    matched = [k for k in kw if k in text]
+    return len(matched) >= 2 if len(kw) >= 4 else len(matched) >= 1
+
+def slide_dedup(lines):
+    """幻灯片内行级去重"""
+    kept = []
     for line in lines:
         s = line.strip()
-        if not s or len(s)<3: continue
-        if re.match(r'^[\d\s\.,;()\-+*/]+$', s): continue
-        matched = [k for k in kw if k in s]
-        if len(matched) >= req:
-            r.append(s)
-    return r
+        if not s or len(s) < 3: continue
+        is_dup = False
+        for k in kept:
+            short, long = (s, k) if len(s) < len(k) else (k, s)
+            if len(short) < 5: continue
+            if short in long and len(short)/max(len(long),1) > 0.5:
+                is_dup = True; break
+        if not is_dup: kept.append(s)
+    return kept
 
 def ext_topic(topic, pages):
+    """提取考点相关幻灯片：整页匹配，完整展示"""
     matched = []
     for p in pages:
-        lines = flt(p["lines"], topic["kw"])
-        if lines: matched.append({"num":p["num"],"lines":lines[:10]})
+        if not slide_match(p["lines"], topic["kw"]): continue
+        # 该页与考点相关，展示完整内容（去重）
+        lines = slide_dedup(p["lines"])
+        # 过滤纯数字/符号行
+        lines = [l for l in lines if not re.match(r'^[\d\s\.,;()\-+*/%°]+$', l)]
+        if lines:
+            matched.append({"num":p["num"],"lines":lines})
     return matched
 
 def esc(s): return s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
