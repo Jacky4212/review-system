@@ -101,7 +101,7 @@ CHAPTERS = [
     {
         'num': '1', 'file': 'ch01', 'title': '数字逻辑概论',
         'prev': 'index.html', 'prev_label': '← 返回首页',
-        'next': 'ch02.html', 'next_label': '第2章 →',
+        'next': 'ch02.html', 'next_label': '第2章 逻辑代数与HDL基础 →',
         'tprev': 'index.html', 'tprev_label': '← 返回首页',
         'tnext': 'ch02.html', 'tnext_label': '第2章 →',
         'content': '''
@@ -206,8 +206,8 @@ CHAPTERS = [
     },
     {
         'num': '2', 'file': 'ch02', 'title': '逻辑代数与HDL基础',
-        'prev': 'ch01.html', 'prev_label': '← 第1章',
-        'next': 'ch03.html', 'next_label': '第3章 →',
+        'prev': 'ch01.html', 'prev_label': '← 第1章 数字逻辑概论',
+        'next': 'ch03.html', 'next_label': '第3章 逻辑门电路 →',
         'tprev': 'ch01.html', 'tprev_label': '← 第1章',
         'tnext': 'ch03.html', 'tnext_label': '第3章 →',
         'content': '''
@@ -304,8 +304,8 @@ CHAPTERS = [
     },
     {
         'num': '4', 'file': 'ch04', 'title': '组合逻辑电路',
-        'prev': 'ch03.html', 'prev_label': '← 第3章',
-        'next': 'ch05.html', 'next_label': '第5章 →',
+        'prev': 'ch03.html', 'prev_label': '← 第3章 逻辑门电路',
+        'next': 'ch05.html', 'next_label': '第5章 锁存器和触发器 →',
         'tprev': 'ch03.html', 'tprev_label': '← 第3章',
         'tnext': 'ch05.html', 'tnext_label': '第5章 →',
         'content': '''
@@ -384,8 +384,8 @@ CHAPTERS = [
     },
     {
         'num': '5', 'file': 'ch05', 'title': '锁存器和触发器',
-        'prev': 'ch04.html', 'prev_label': '← 第4章',
-        'next': 'ch06.html', 'next_label': '第6章 →',
+        'prev': 'ch04.html', 'prev_label': '← 第4章 组合逻辑电路',
+        'next': 'ch06.html', 'next_label': '第6章 时序逻辑电路 →',
         'tprev': 'ch04.html', 'tprev_label': '← 第4章',
         'tnext': 'ch06.html', 'tnext_label': '第6章 →',
         'content': '''
@@ -458,8 +458,8 @@ CHAPTERS = [
     },
     {
         'num': '6', 'file': 'ch06', 'title': '时序逻辑电路',
-        'prev': 'ch05.html', 'prev_label': '← 第5章',
-        'next': 'ch07.html', 'next_label': '第7章 →',
+        'prev': 'ch05.html', 'prev_label': '← 第5章 锁存器和触发器',
+        'next': 'ch07.html', 'next_label': '第7章 半导体存储器 →',
         'tprev': 'ch05.html', 'tprev_label': '← 第5章',
         'tnext': 'ch07.html', 'tnext_label': '第7章 →',
         'content': '''
@@ -533,8 +533,8 @@ CHAPTERS = [
     },
     {
         'num': '8', 'file': 'ch08', 'title': 'FPGA和CPLD',
-        'prev': 'ch07.html', 'prev_label': '← 第7章',
-        'next': 'ch09.html', 'next_label': '第9章 →',
+        'prev': 'ch07.html', 'prev_label': '← 第7章 半导体存储器',
+        'next': 'ch09.html', 'next_label': '第9章 脉冲波形的变换与产生 →',
         'tprev': 'ch07.html', 'tprev_label': '← 第7章',
         'tnext': 'ch09.html', 'tnext_label': '第9章 →',
         'content': '''
@@ -597,8 +597,8 @@ CHAPTERS = [
     },
     {
         'num': '9', 'file': 'ch09', 'title': '脉冲波形的变换与产生',
-        'prev': 'ch08.html', 'prev_label': '← 第8章',
-        'next': 'ch10.html', 'next_label': '第10章 →',
+        'prev': 'ch08.html', 'prev_label': '← 第8章 FPGA和CPLD',
+        'next': 'ch10.html', 'next_label': '第10章 模数与数模转换器 →',
         'tprev': 'ch08.html', 'tprev_label': '← 第8章',
         'tnext': 'ch10.html', 'tnext_label': '第10章 →',
         'content': '''
@@ -663,10 +663,10 @@ def write_page(ch):
     for placeholder, value in [
         ('CHAPTER_NUM', ch['num']),
         ('CHAPTER_TITLE', ch['title']),
-        ('TOPBAR_PREV', ch['tprev']),
         ('TOPBAR_PREV_LABEL', ch['tprev_label']),
-        ('TOPBAR_NEXT', ch['tnext']),
         ('TOPBAR_NEXT_LABEL', ch['tnext_label']),
+        ('TOPBAR_PREV', ch['tprev']),
+        ('TOPBAR_NEXT', ch['tnext']),
         ('NAV_PREV_LABEL', ch['prev_label']),
         ('NAV_NEXT_LABEL', ch['next_label']),
         ('NAV_PREV', ch['prev']),
