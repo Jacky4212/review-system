@@ -277,6 +277,22 @@ doc.add_paragraph('.compare-grid + .compare-card — 对比卡片网格', style=
 doc.add_paragraph('table + th/td — 功能表/真值表', style='List Bullet')
 
 # ---------- Step 4 ----------
+p = doc.add_paragraph()
+p.add_run('验证流程：').bold = True
+verify_steps = [
+    '审查所有公式推导是否正确（如555定时器t<0.7RC、tw<1.1RC等）',
+    '核对功能表/真值表的每个输入输出组合是否与芯片datasheet一致',
+    '检查编码表（如BCD码、格雷码）的每一位数值是否正确',
+    '验证逻辑代数和布尔运算公式是否与教材一致',
+    '确认芯片引脚编号、逻辑符号、使能端极性等硬件细节准确',
+    '对不确定的内容联网搜索datasheet或权威资料核实',
+    '修正所有发现的错误后重新生成页面',
+]
+for s in verify_steps:
+    doc.add_paragraph(s, style='List Number')
+
+doc.add_paragraph('')
+
 doc.add_heading('Step 4 — 版本控制与推送到 GitHub', level=2)
 
 p = doc.add_paragraph()
