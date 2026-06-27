@@ -51,13 +51,13 @@
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-  .slide-num {
+  .section-num {
     font-size: 0.8rem;
     color: var(--text-light);
     font-weight: 600;
     letter-spacing: 0.5px;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
   }
   .section h3 {
@@ -69,8 +69,49 @@
   }
   .section h3:first-of-type { margin-top: 0; }
   .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section ul { margin: 6px 0 10px 20px; }
-  .section li { margin-bottom: 4px; font-size: 0.95em; }
+  .section p:last-child { margin-bottom: 0; }
+  .highlight {
+    background: #fffbe6;
+    border-left: 3px solid #f0c040;
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  .def-box {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .formula {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.95em;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: center;
+  }
+  th {
+    background: var(--code-bg);
+    font-weight: 600;
+    color: var(--primary);
+  }
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   .nav-links a {
     display: inline-block;
@@ -89,23 +130,22 @@
   @media (max-width: 640px) {
     .section { padding: 16px; }
     .topbar h2 { font-size: 1em; }
+    table { font-size: 0.85em; }
+    th, td { padding: 6px 8px; }
   }
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="topbar-inner">
-    <a href="index.html">← 返回首页</a>
+    <a href="index.html">&larr; 返回首页</a>
     <h2>第4章 MOS场效应管及其放大电路</h2>
-    <a href="ch05.html">第5章 双极结型三极管(BJT)及其放大电路 →</a>
+    <a href="ch05.html">第5章 双极结型三极管(BJT)及其放大电路 &rarr;</a>
   </div>
 </div>
-
 <div class="container">
-
     <div class="section">
-      <div class="slide-num">第 1 页</div>
+      <div class="section-num">第 1 页</div>
       <h3>N沟道</h3>
       <h3>P沟道</h3>
       <h3>增强型</h3>
@@ -120,7 +160,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 2 页</div>
+      <div class="section-num">第 2 页</div>
       <h3>4  场效应三极管及其放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -133,7 +173,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 3 页</div>
+      <div class="section-num">第 3 页</div>
       <p>4.1.1  N沟道增强型MOSFET
 4.1.2  N沟道耗尽型MOSFET
 4.1.3  P沟道MOSFET
@@ -143,7 +183,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 4 页</div>
+      <div class="section-num">第 4 页</div>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
       <h3>L：沟道长度</h3>
       <h3>W：沟道宽度</h3>
@@ -153,131 +193,131 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 5 页</div>
+      <div class="section-num">第 5 页</div>
       <h3>1．结构及电路符号</h3>
       <h3>剖面图</h3>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 6 页</div>
+      <div class="section-num">第 6 页</div>
       <h3>2．工作原理</h3>
-      <h3>（1）VGS对沟道的控制作用</h3>
-      <h3>当VGS≤0时</h3>
+      <h3>（1）V<sub>GS</sub>对沟道的控制作用</h3>
+      <div class="formula">当V<sub>GS</sub>≤0时</div>
       <p>无导电沟道， d、s间加电压时，也无电流产生。</p>
-      <h3>当0 &lt;VGS &lt;VTN 时</h3>
+      <h3>当0 &lt;V<sub>GS</sub> &lt;V<sub>TN</sub> 时</h3>
       <p>产生电场，但未形成导电沟道（反型层），d、s间加电压后，没有电流产生。</p>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 7 页</div>
-      <h3>当VGS &gt;VTN 时</h3>
+      <div class="section-num">第 7 页</div>
+      <h3>当V<sub>GS</sub> &gt;V<sub>TN</sub> 时</h3>
       <p>在电场作用下产生导电沟道，d、s间加电压后，将有电流产生。</p>
-      <h3>VGS越大，导电沟道越厚</h3>
-      <h3>VTN 称为阈值电压</h3>
+      <h3>V<sub>GS</sub>越大，导电沟道越厚</h3>
+      <h3>V<sub>TN</sub> 称为阈值电压</h3>
       <h3>必须依靠栅极外加电压才能产生反型层的MOSFET称为增强型器件</h3>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
       <h3>2．工作原理</h3>
-      <h3>（1）VGS对沟道的控制作用</h3>
+      <h3>（1）V<sub>GS</sub>对沟道的控制作用</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 8 页</div>
+      <div class="section-num">第 8 页</div>
       <h3>2．工作原理</h3>
-      <h3>（2）VDS对沟道的控制作用</h3>
-      <h3>靠近漏极d处的电位升高</h3>
-      <h3>电场强度减小</h3>
-      <h3>沟道变薄</h3>
-      <p>当VGS一定（VGS &gt;VTN ）时，</p>
-      <h3>VDS</h3>
-      <h3> ID</h3>
-      <h3>沟道电位梯度</h3>
+      <h3>（2）V<sub>DS</sub>对沟道的控制作用</h3>
+      <h3>↓靠近漏极d处的电位升高</h3>
+      <h3>↓电场强度减小</h3>
+      <h3>↓沟道变薄</h3>
+      <p>当V<sub>GS</sub>一定（V<sub>GS</sub> &gt;V<sub>TN</sub> ）时，</p>
+      <h3>V<sub>DS</sub>→</h3>
+      <h3>↓ I<sub>D</sub>→</h3>
+      <h3>↓沟道电位梯度→</h3>
       <h3>整个沟道呈楔形分布</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 9 页</div>
-      <h3>在夹断处：VGD=VGS-VDS =VTN</h3>
-      <p>当VDS增加到使VGD=VTN 时，在紧靠漏极处出现夹断。</p>
+      <div class="section-num">第 9 页</div>
+      <h3>在夹断处：V<sub>GD</sub>=V<sub>GS</sub>-V<sub>DS</sub> =V<sub>TN</sub></h3>
+      <p>当V<sub>DS</sub>增加到使V<sub>GD</sub>=V<sub>TN</sub> 时，在紧靠漏极处出现夹断。</p>
       <h3>2．工作原理</h3>
-      <h3>（2）VDS对沟道的控制作用</h3>
-      <p>当VGS一定（VGS &gt;VTN ）时，</p>
-      <h3>VDS</h3>
-      <h3> ID</h3>
-      <h3>沟道电位梯度</h3>
+      <h3>（2）V<sub>DS</sub>对沟道的控制作用</h3>
+      <p>当V<sub>GS</sub>一定（V<sub>GS</sub> &gt;V<sub>TN</sub> ）时，</p>
+      <h3>V<sub>DS</sub>→</h3>
+      <h3>↓ I<sub>D</sub>→</h3>
+      <h3>↓沟道电位梯度→</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 10 页</div>
-      <h3>夹断后，VDS</h3>
-      <h3>夹断区延长</h3>
-      <h3>沟道电阻</h3>
-      <h3> ID基本不变</h3>
+      <div class="section-num">第 10 页</div>
+      <h3>夹断后，V<sub>DS</sub>→</h3>
+      <h3>↓夹断区延长</h3>
+      <h3>↓沟道电阻→</h3>
+      <h3>↓ I<sub>D</sub>基本不变</h3>
       <h3>2．工作原理</h3>
-      <h3>（2）VDS对沟道的控制作用</h3>
+      <h3>（2）V<sub>DS</sub>对沟道的控制作用</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 11 页</div>
-      <h3>（3）VDS和VGS同时作用时</h3>
-      <h3>VDS一定，VGS变化时</h3>
-      <p>给定一个vGS ，就有一条不同的 iD-vDS 曲线。</p>
+      <div class="section-num">第 11 页</div>
+      <h3>（3）V<sub>DS</sub>和V<sub>GS</sub>同时作用时</h3>
+      <h3>V<sub>DS</sub>一定，V<sub>GS</sub>变化时</h3>
+      <p>给定一个v<sub>GS</sub> ，就有一条不同的 i<sub>D</sub>-v<sub>DS</sub> 曲线。</p>
       <h3>2．工作原理</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 12 页</div>
+      <div class="section-num">第 12 页</div>
       <p>沟道中只有一种类型的载流子参与导电，所以场效应管也称为单极型三极管。</p>
-      <p>MOSFET是电压控制电流器件（VCCS），iD受vGS控制。</p>
-      <p>预夹断前iD与vDS呈近似线性关系；夹断后，iD趋于饱和。</p>
-      <p>MOSFET的栅极是绝缘的，所以iG0，输入电阻很高。</p>
-      <p>只有当vGS&gt;VTN时，增强型MOSFET的d、s间才能导通。</p>
+      <p>MOSFET是电压控制电流器件（V<sub>CCS</sub>），i<sub>D</sub>受v<sub>GS</sub>控制。</p>
+      <p>预夹断前i<sub>D</sub>与v<sub>DS</sub>呈近似线性关系；夹断后，i<sub>D</sub>趋于饱和。</p>
+      <p>MOSFET的栅极是绝缘的，所以i<sub>G</sub>▲0，输入电阻很高。</p>
+      <p>只有当v<sub>GS</sub>&gt;V<sub>TN</sub>时，增强型MOSFET的d、s间才能导通。</p>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 13 页</div>
-      <p>VDS极性接反会怎样？</p>
+      <div class="section-num">第 13 页</div>
+      <p>V<sub>DS</sub>极性接反会怎样？</p>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
-      <h3>PN结正偏
+      <h3>P<sub>N</sub>结正偏
 MOS管失效</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 14 页</div>
+      <div class="section-num">第 14 页</div>
       <h3>3.  I-V特性曲线及特性方程</h3>
       <h3>（1）输出特性及大信号特性方程</h3>
-      <p>① 截止区
-当vGS＜VTN时，导电沟道尚未形成，iD＝0，为截止工作状态。</p>
+      <div class="formula">① 截止区
+当v<sub>GS</sub>＜V<sub>TN</sub>时，导电沟道尚未形成，i<sub>D</sub>＝0，为截止工作状态。</div>
       <h3>4.1.1  N沟道增强型MOSFET</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 15 页</div>
+      <div class="section-num">第 15 页</div>
       <h3>② 可变电阻区
-      vDS &lt;（vGS－VTN）</h3>
-      <h3>由于vDS较小，可近似为</h3>
-      <h3>rdso是一个受vGS控制的可变电阻</h3>
+      v<sub>DS</sub> &lt;（v<sub>GS</sub>－V<sub>TN</sub>）</h3>
+      <h3>由于v<sub>DS</sub>较小，可近似为</h3>
+      <h3>r<sub>dso</sub>是一个受v<sub>GS</sub>控制的可变电阻</h3>
       <h3>3.  I-V特性曲线及特性方程</h3>
       <h3>（1）输出特性及大信号特性方程</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 16 页</div>
+      <div class="section-num">第 16 页</div>
       <h3>② 可变电阻区</h3>
-      <p>n ：反型层中电子迁移率
-Cox ：栅极（与衬底间）氧化层单位面积电容</p>
+      <h3>★n ：反型层中电子迁移率
+Cox ：栅极（与衬底间）氧化层单位面积电容</h3>
       <h3>其中</h3>
-      <h3>Kn为电导常数，单位：mA/V2</h3>
+      <h3>K<sub>n</sub>为电导常数，单位：mA/V2</h3>
       <h3>3.  I-V特性曲线及特性方程</h3>
       <h3>（1）输出特性及大信号特性方程</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 17 页</div>
+      <div class="section-num">第 17 页</div>
       <h3>③ 恒流区（又称放大区）</h3>
-      <h3>vGS &gt;VTN，且vDS≥(vGS-VTN)</h3>
+      <div class="formula">v<sub>GS</sub> &gt;V<sub>TN</sub>，且v<sub>DS</sub>≥(v<sub>GS</sub>-V<sub>TN</sub>)</div>
       <h3>I-V 特性：</h3>
       <h3>必须让FET工作在恒流区（放大区）才有放大作用</h3>
       <h3>3.  I-V特性曲线及特性方程</h3>
@@ -285,14 +325,14 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 18 页</div>
+      <div class="section-num">第 18 页</div>
       <h3>（2）转移特性</h3>
-      <h3>在恒流区，iD受vGS控制</h3>
+      <h3>在恒流区，i<sub>D</sub>受v<sub>GS</sub>控制</h3>
       <h3>3.  I-V特性曲线及特性方程</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 19 页</div>
+      <div class="section-num">第 19 页</div>
       <p>4.1.1  N沟道增强型MOSFET
 4.1.2  N沟道耗尽型MOSFET
 4.1.3  P沟道MOSFET
@@ -302,7 +342,7 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 20 页</div>
+      <div class="section-num">第 20 页</div>
       <h3>1. 结构和工作原理简述</h3>
       <h3>4.1.2  N沟道耗尽型MOSFET</h3>
       <h3>二氧化硅绝缘层中掺有大量的正离子，已存在导电沟道</h3>
@@ -310,13 +350,13 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 21 页</div>
+      <div class="section-num">第 21 页</div>
       <h3>2.  I-V 特性曲线及大信号特性方程</h3>
       <h3>4.1.2  N沟道耗尽型MOSFET</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 22 页</div>
+      <div class="section-num">第 22 页</div>
       <p>4.1.1  N沟道增强型MOSFET
 4.1.2  N沟道耗尽型MOSFET
 4.1.3  P沟道MOSFET
@@ -326,26 +366,26 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 23 页</div>
+      <div class="section-num">第 23 页</div>
       <h3>4.1.3  P沟道MOSFET</h3>
       <h3>1. 电路符号</h3>
       <p># 衬底是什么类型的半导体材料？</p>
       <p># 哪个符号是增强型的？</p>
-      <p># 在增强型的P沟道MOSFET 中，vGS应加什么极性的电压才能工作在恒流区（线性放大区）？</p>
+      <p># 在增强型的P沟道MOSFET 中，v<sub>GS</sub>应加什么极性的电压才能工作在恒流区（线性放大区）？</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 24 页</div>
+      <div class="section-num">第 24 页</div>
       <p># 工作在恒流区的条件是什么？</p>
-      <p># 工作在恒流区时，vDS应加什么极性的电压？增强型和耗尽型对vGS的要求有何不同？</p>
-      <h3>电流均以流入漏极的方向为正！</h3>
+      <p># 工作在恒流区时，v<sub>DS</sub>应加什么极性的电压？增强型和耗尽型对v<sub>GS</sub>的要求有何不同？</p>
+      <p>电流均以流入漏极的方向为正！</p>
       <h3>2.  I-V特性曲线</h3>
       <h3>4.1.3  P沟道MOSFET</h3>
-      <p>增强型输出特性               增强型转移特性         耗尽型转移特性</p>
+      <h3>增强型输出特性               增强型转移特性         耗尽型转移特性</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 25 页</div>
+      <div class="section-num">第 25 页</div>
       <h3>3. 特性方程</h3>
       <h3>可变电阻区</h3>
       <h3>恒流区</h3>
@@ -354,7 +394,7 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 26 页</div>
+      <div class="section-num">第 26 页</div>
       <p>4.1.1  N沟道增强型MOSFET
 4.1.2  N沟道耗尽型MOSFET
 4.1.3  P沟道MOSFET
@@ -364,50 +404,50 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 27 页</div>
+      <div class="section-num">第 27 页</div>
       <h3>1. 沟道长度调制效应</h3>
-      <h3>当vGS固定、vDS增加时，沟道长度L变短，iD会有所增加</h3>
+      <h3>当v<sub>GS</sub>固定、v<sub>DS</sub>增加时，沟道长度L变短，i<sub>D</sub>会有所增加</h3>
       <h3>实际上饱和区的曲线并不是平坦的（N沟道为例）</h3>
-      <h3>L的单位为m</h3>
-      <p>当不考虑沟道调制效应时，＝0，曲线是平坦的。</p>
+      <h3>L的单位为★m</h3>
+      <div class="formula">当不考虑沟道调制效应时，●＝0，曲线是平坦的。</div>
       <h3>修正后</h3>
-      <h3>VA称为厄利（Early）电压</h3>
+      <h3>V<sub>A</sub>称为厄利（Ear<sub>ly</sub>）电压</h3>
       <h3>4.1.4  沟道长度调制等几种效应</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 28 页</div>
+      <div class="section-num">第 28 页</div>
       <h3>4.1.4  沟道长度调制等几种效应</h3>
       <h3>2.衬底调制效应（体效应）及衬底的正确连接</h3>
-      <p>衬底未与源极并接时，衬底与源极间的偏压vBS将影响实际的阈值电压和转移特性。</p>
-      <h3>VTNO表示vBS = 0时的开启电压</h3>
+      <p>衬底未与源极并接时，衬底与源极间的偏压v<sub>BS</sub>将影响实际的阈值电压和转移特性。</p>
+      <h3>V<sub>TNO</sub>表示v<sub>BS</sub> = 0时的开启电压</h3>
       <h3>对耗尽型器件的阈值电压有类似的影响</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 29 页</div>
-      <p>集成电路中，N沟道器件的衬底接电路的最低电位，P沟道器件的衬底接电路的最高电位，衬底B与源 极S之间就存在衬底偏压vBS。</p>
-      <p>为保证导电沟道与衬底之间的PN结反偏，要求：
-        N沟道: vBS  0
-        P沟道: vBS  0</p>
+      <div class="section-num">第 29 页</div>
+      <p>集成电路中，N沟道器件的衬底接电路的最低电位，P沟道器件的衬底接电路的最高电位，衬底B与源 极S之间就存在衬底偏压v<sub>BS</sub>。</p>
+      <p>为保证导电沟道与衬底之间的P<sub>N</sub>结反偏，要求：
+        N沟道: v<sub>BS</sub> ◀ 0
+        P沟道: v<sub>BS</sub> ↗ 0</p>
       <h3>4.1.4  沟道长度调制等几种效应</h3>
       <h3>2.衬底调制效应（体效应）及衬底的正确连接</h3>
-      <p>在分立元件电路中，场效应管的衬底通常与源极相连，即vBS =0。</p>
+      <p>在分立元件电路中，场效应管的衬底通常与源极相连，即v<sub>BS</sub> =0。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 30 页</div>
+      <div class="section-num">第 30 页</div>
       <h3>4.1.4  沟道长度调制等几种效应</h3>
       <h3>3. 温度效应</h3>
-      <p>VTN和电导常数Kn随温度升高而下降，且Kn受温度的影响大于VTN受温度的影响。</p>
-      <p>在VGS较小（iD也较小）时，温度升高会使iD增大；而VGS较大（iD也较大）时，温度升高将使iD减小。这种作用为功率MOS管的稳定运行提供了有利保障。</p>
+      <p>V<sub>TN</sub>和电导常数K<sub>n</sub>随温度升高而下降，且K<sub>n</sub>受温度的影响大于V<sub>TN</sub>受温度的影响。</p>
+      <p>在V<sub>GS</sub>较小（i<sub>D</sub>也较小）时，温度升高会使i<sub>D</sub>增大；而V<sub>GS</sub>较大（i<sub>D</sub>也较大）时，温度升高将使i<sub>D</sub>减小。这种作用为功率MOS管的稳定运行提供了有利保障。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 31 页</div>
+      <div class="section-num">第 31 页</div>
       <h3>4. 击穿效应</h3>
       <p>（1）漏衬击穿
-        外加的漏源电压过高，将导致漏极到衬底的PN结击穿。</p>
+        外加的漏源电压过高，将导致漏极到衬底的P<sub>N</sub>结击穿。</p>
       <p>若绝缘层厚度tox= 50 纳米时，只要约30V的栅极电压就可将绝缘层击穿，若取安全系数为3，则最大栅极安全电压只有10V。</p>
       <h3>（2）栅极击穿</h3>
       <p>通常在MOS管的栅源间接入双向稳压管，限制栅极电压以保护器件。</p>
@@ -415,7 +455,7 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 32 页</div>
+      <div class="section-num">第 32 页</div>
       <p>4.1.1  N沟道增强型MOSFET
 4.1.2  N沟道耗尽型MOSFET
 4.1.3  P沟道MOSFET
@@ -425,54 +465,54 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 33 页</div>
+      <div class="section-num">第 33 页</div>
       <h3>4.1.5  MOSFET的主要参数</h3>
       <h3>一、直流参数</h3>
-      <p>当vDS为某一固定值（例如10V）使iD等于一微小电流（例如50μA）时，栅源间的电压为VTN。</p>
-      <h3>阈值电压VTN
-（P沟道为VTP）</h3>
+      <p>当v<sub>DS</sub>为某一固定值（例如10V）使i<sub>D</sub>等于一微小电流（例如50μA）时，栅源间的电压为V<sub>TN</sub>。</p>
+      <h3>阈值电压V<sub>TN</sub>
+（P沟道为V<sub>TP</sub>）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 34 页</div>
+      <div class="section-num">第 34 页</div>
       <h3>4.1.5  MOSFET的主要参数</h3>
       <h3>一、直流参数</h3>
-      <h3>2. 饱和漏电流IDSS （耗尽型参数）</h3>
-      <h3>3. 直流输入电阻RGS （109Ω～1015Ω ）</h3>
+      <h3>2. 饱和漏电流I<sub>DSS</sub> （耗尽型参数）</h3>
+      <h3>3. 直流输入电阻R<sub>GS</sub> （109Ω～1015Ω ）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 35 页</div>
+      <div class="section-num">第 35 页</div>
       <h3>二、交流参数（饱和区）</h3>
       <h3>所以</h3>
-      <h3>1. 输出电阻rds</h3>
-      <h3>当不考虑沟道调制效应时，＝0，rds→∞</h3>
-      <p>实际中，rds一般在几十千欧到几百千欧之间。</p>
+      <h3>1. 输出电阻r<sub>ds</sub></h3>
+      <div class="formula">当不考虑沟道调制效应时，●＝0，r<sub>ds</sub>→∞</div>
+      <p>实际中，r<sub>ds</sub>一般在几十千欧到几百千欧之间。</p>
       <h3>对于增强型NMOS管</h3>
       <h3>有</h3>
       <h3>4.1.5  MOSFET的主要参数</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 36 页</div>
+      <div class="section-num">第 36 页</div>
       <h3>二、交流参数</h3>
       <h3>4.1.5  MOSFET的主要参数</h3>
-      <h3>2. 低频互导gm</h3>
+      <h3>2. 低频互导g<sub>m</sub></h3>
       <h3>NMOS增强型</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 37 页</div>
+      <div class="section-num">第 37 页</div>
       <h3>三、极限参数</h3>
       <h3>4.1.5  MOSFET的主要参数</h3>
-      <h3>1. 最大漏极电流IDM</h3>
-      <h3>2. 最大耗散功率PDM</h3>
+      <h3>1. 最大漏极电流I<sub>DM</sub></h3>
+      <h3>2. 最大耗散功率P<sub>DM</sub></h3>
       <h3>3. 漏源击穿电压V（BR）DS</h3>
       <h3>4. 栅源击穿电压V（BR）GS</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 38 页</div>
+      <div class="section-num">第 38 页</div>
       <h3>4  场效应三极管及其放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -485,7 +525,7 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 39 页</div>
+      <div class="section-num">第 39 页</div>
       <h3>4.2  MOSFET基本共源极放大电路</h3>
       <h3>4.2.1  基本共源极放大电路的组成</h3>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
@@ -493,23 +533,23 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 40 页</div>
+      <div class="section-num">第 40 页</div>
       <h3>4.2.1  基本共源极放大电路的组成</h3>
       <p>1. 如何让MOS管工作在恒流区？</p>
       <h3>元件作用</h3>
-      <h3>VGG：
-提供栅源电压使 vGS &gt; VTN</h3>
-      <p>VDD和Rd ： 
+      <h3>V<sub>GG</sub>：
+提供栅源电压使 v<sub>GS</sub> &gt; V<sub>TN</sub></h3>
+      <h3>V<sub>DD</sub>和Rd ： 
 提供合适的漏源电压，使
-         vDS &gt; vGS - VTN</p>
+         v<sub>DS</sub> &gt; v<sub>GS</sub> - V<sub>TN</sub></h3>
       <h3>Rd 还兼有将电流转换成电压的作用</h3>
-      <p>通常称VGG和VDD为三极管的工作电源，vi为信号。</p>
+      <p>通常称V<sub>GG</sub>和V<sub>DD</sub>为三极管的工作电源，vi为信号。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 41 页</div>
+      <div class="section-num">第 41 页</div>
       <h3>4.2.1  基本共源极放大电路的组成</h3>
-      <h3>（VGG &gt;&gt; vi）</h3>
+      <h3>（V<sub>GG</sub> &gt;&gt; vi）</h3>
       <p>2. 信号如何通过MOS管传递？</p>
       <h3>可获得信号电压增益</h3>
       <p>信号由栅源回路输入、漏源回路输出，即源极是公共端，所以称此电路为共源电路。
@@ -518,7 +558,7 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 42 页</div>
+      <div class="section-num">第 42 页</div>
       <h3>4.2  MOSFET基本共源极放大电路</h3>
       <h3>4.2.1  基本共源极放大电路的组成</h3>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
@@ -526,33 +566,33 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 43 页</div>
+      <div class="section-num">第 43 页</div>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <h3>1. 放大电路的静态和动态</h3>
       <p>静态：输入信号为零（vi= 0 或 ii= 0）时，放大电路的工作状态，也称直流工作状态。</p>
       <p>动态：输入信号不为零时，放大电路的工作状态。</p>
-      <p>此时，FET的直流量ID、VGS、VDS，在输出特性曲线上表示为一个确定的点，习惯上称该点为静态工作点Q。常将上述三个电量写成IDQ、VGSQ和VDSQ。</p>
+      <p>此时，FET的直流量I<sub>D</sub>、V<sub>GS</sub>、V<sub>DS</sub>，在输出特性曲线上表示为一个确定的点，习惯上称该点为静态工作点Q。常将上述三个电量写成I<sub>DQ</sub>、V<sub>GSQ</sub>和V<sub>DSQ</sub>。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 44 页</div>
+      <div class="section-num">第 44 页</div>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <h3>2. 放大电路的直流通路和交流通路</h3>
       <h3>仅有直流电流流经的通路为直流通路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 45 页</div>
+      <div class="section-num">第 45 页</div>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <h3>2. 放大电路的直流通路和交流通路</h3>
-      <p>直流电压源内阻为零，交流电流流经直流电压源时不产生任何交流压降。
-故:</p>
+      <h3>直流电压源内阻为零，交流电流流经直流电压源时不产生任何交流压降。
+故:</h3>
       <h3>直流电压源对交流相当于短路</h3>
       <h3>仅有交流电流流经的通路为交流通路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 46 页</div>
+      <div class="section-num">第 46 页</div>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <h3>2. 放大电路的直流通路和交流通路</h3>
       <h3>仅有交流电流流经的通路为交流通路</h3>
@@ -560,46 +600,46 @@ Cox ：栅极（与衬底间）氧化层单位面积电容</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 47 页</div>
+      <div class="section-num">第 47 页</div>
       <h3>3. 放大电路的静态工作点估算</h3>
       <h3>直流通路</h3>
       <h3>假设NMOS管工作于恒流区，则</h3>
-      <h3>VGSQ = VGG</h3>
-      <h3>VDSQ = VDD - IDQ Rd</h3>
-      <p>当已知VGG、VDD、VTN、Kn、和Rd 时，便可求得Q点（VGSQ、IDQ、VDSQ）。必须检验是否满足恒流区工作条件：VDSQ &gt; VGSQ - VTN &gt; 0。</p>
+      <h3>V<sub>GSQ</sub> = V<sub>GG</sub></h3>
+      <h3>V<sub>DSQ</sub> = V<sub>DD</sub> - I<sub>DQ</sub> Rd</h3>
+      <p>当已知V<sub>GG</sub>、V<sub>DD</sub>、V<sub>TN</sub>、K<sub>n</sub>、和Rd 时，便可求得Q点（V<sub>GSQ</sub>、I<sub>DQ</sub>、V<sub>DSQ</sub>）。必须检验是否满足恒流区工作条件：V<sub>DSQ</sub> &gt; V<sub>GSQ</sub> - V<sub>TN</sub> &gt; 0。</p>
       <h3>注意：电路结构不同，除FET特性方程外，其它电路方程将有差别</h3>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <p>如果初始假设是错误的，则必须作出新的假设，同时重新分析电路。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 48 页</div>
+      <div class="section-num">第 48 页</div>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <h3>例4.2.1</h3>
       <h3>假设NMOS管工作于恒流区，根据</h3>
-      <p>已知VGG=2V，VDD=5V，VTN=1V，Kn=0.2mA/V2，Rd =12k，求Q点。</p>
-      <p>求得：VGSQ=2V，IDQ=0.2mA，VDSQ=2.6V
-满足VDSQ &gt; VGSQ - VTN &gt; 0，MOS管工作在恒流区，假设成立，结果即为所求。</p>
+      <p>已知V<sub>GG</sub>=2V，V<sub>DD</sub>=5V，V<sub>TN</sub>=1V，K<sub>n</sub>=0.2mA/V2，Rd =12k✓，求Q点。</p>
+      <p>求得：V<sub>GSQ</sub>=2V，I<sub>DQ</sub>=0.2mA，V<sub>DSQ</sub>=2.6V
+满足V<sub>DSQ</sub> &gt; V<sub>GSQ</sub> - V<sub>TN</sub> &gt; 0，MOS管工作在恒流区，假设成立，结果即为所求。</p>
       <h3>解：</h3>
       <h3># 请归纳静态工作点的计算方法（包括其它管型）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 49 页</div>
+      <div class="section-num">第 49 页</div>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
       <h3>4. 放大电路的动态工作情况</h3>
       <h3>在静态基础上加入小信号vi</h3>
       <h3>此时电路中的总电压和电流为</h3>
-      <p>vGS = VGSQ + vi 
-iD = IDQ + id
-vDS = vDSQ + vds</p>
+      <h3>v<sub>GS</sub> = V<sub>GSQ</sub> + vi 
+i<sub>D</sub> = I<sub>DQ</sub> + id
+v<sub>DS</sub> = v<sub>DSQ</sub> + vds</h3>
       <h3>其中
 id和vds为交流量</h3>
-      <h3>vDS = VDD - iDRd</h3>
+      <h3>v<sub>DS</sub> = V<sub>DD</sub> - i<sub>DR</sub>d</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 50 页</div>
+      <div class="section-num">第 50 页</div>
       <h3>4.2  MOSFET基本共源极放大电路</h3>
       <h3>4.2.1  基本共源极放大电路的组成</h3>
       <h3>4.2.2  基本共源极放大电路的工作原理</h3>
@@ -607,13 +647,13 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 51 页</div>
+      <div class="section-num">第 51 页</div>
       <h3>4.2.3  放大电路的习惯画法</h3>
       <p>省略工作电源的直流电压符号，仅保留电压源非接“地”端子，并标注电压源名称。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 52 页</div>
+      <div class="section-num">第 52 页</div>
       <h3>4  场效应三极管及放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -626,62 +666,62 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 53 页</div>
+      <div class="section-num">第 53 页</div>
       <h3>4.3.1  用图解方法确定静态工作点Q</h3>
       <h3>4.3.2  动态工作情况的图解分析</h3>
       <h3>4.3  图解分析法</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 54 页</div>
+      <div class="section-num">第 54 页</div>
       <h3>4.3.1  用图解方法确定静态工作点Q</h3>
       <p>采用图解法分析静态工作点，必须已知FET的输出特性曲线。</p>
       <h3>静态：vi = 0</h3>
-      <h3>  输入回路</h3>
-      <h3>vGS = VGG = VGSQ</h3>
-      <h3>  输出回路</h3>
-      <h3>vDS = VDD－iDRd  
+      <h3>◆  输入回路</h3>
+      <h3>v<sub>GS</sub> = V<sub>GG</sub> = V<sub>GSQ</sub></h3>
+      <h3>◆  输出回路</h3>
+      <h3>v<sub>DS</sub> = V<sub>DD</sub>－i<sub>DR</sub>d  
 （直流负载线）</h3>
       <h3>输出回路左侧的FET端口可用输出特性曲线描述</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 55 页</div>
+      <div class="section-num">第 55 页</div>
       <h3>4.3.1  用图解方法确定静态工作点Q</h3>
-      <h3>vGS = VGG = VGSQ</h3>
-      <h3>直流负载线：   vDS = VDD－iDRd</h3>
+      <h3>v<sub>GS</sub> = V<sub>GG</sub> = V<sub>GSQ</sub></h3>
+      <h3>直流负载线：   v<sub>DS</sub> = V<sub>DD</sub>－i<sub>DR</sub>d</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 56 页</div>
+      <div class="section-num">第 56 页</div>
       <h3>4.3.1  用图解方法确定静态工作点Q</h3>
       <h3>4.3.2  动态工作情况的图解分析</h3>
       <h3>4.3  图解分析法</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 57 页</div>
+      <div class="section-num">第 57 页</div>
       <h3>4.3.2  动态工作情况的图解分析</h3>
       <h3>共源放大电路</h3>
-      <h3>vGS = VGSQ + vi</h3>
+      <h3>v<sub>GS</sub> = V<sub>GSQ</sub> + vi</h3>
       <h3>工作点沿负载线移动</h3>
       <h3>1. 正常工作情况</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 58 页</div>
+      <div class="section-num">第 58 页</div>
       <h3>4.3.2  动态工作情况的图解分析</h3>
       <p>图解分析可得如下结论：   
-      1. vi vGS iD vDS  |vds (vo)|   (vi正半周时)
+      1. vi→↓ v<sub>GS</sub>→↓ i<sub>D</sub>→↓ v<sub>DS</sub>↕ ↓ |vds (vo)| →  (vi正半周时)
        2. vds与vi相位相反；
        3. 可以测量出放大电路的电压放大倍数；
        4. 可以确定最大不失真输出幅度。</p>
-      <p># 动态工作时， iD的实际电流方向是否改变， vGS、 vDS的实际电压极性是否改变？</p>
+      <p># 动态工作时， i<sub>D</sub>的实际电流方向是否改变， v<sub>GS</sub>、 v<sub>DS</sub>的实际电压极性是否改变？</p>
       <h3>1. 正常工作情况</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 59 页</div>
+      <div class="section-num">第 59 页</div>
       <h3>4.3.2  动态工作情况的图解分析</h3>
       <h3>2. 静态工作点对波形失真的影响</h3>
       <h3>截止失真
@@ -689,7 +729,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 60 页</div>
+      <div class="section-num">第 60 页</div>
       <h3>4.3.2  动态工作情况的图解分析</h3>
       <h3>饱和失真
 （NMOS）</h3>
@@ -697,39 +737,39 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 61 页</div>
+      <div class="section-num">第 61 页</div>
       <p>？</p>
       <h3>思考题</h3>
       <h3>1.  试分析下列问题：</h3>
       <h3>（1）画出负载线</h3>
-      <p>（2）接入负载RL时，负载线将如何变化？Q点怎样变化？</p>
+      <p>（2）接入负载R<sub>L</sub>时，负载线将如何变化？Q点怎样变化？</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 62 页</div>
+      <div class="section-num">第 62 页</div>
       <p>？</p>
       <h3>思考题</h3>
       <h3>2.  试分析下列问题：</h3>
       <p>（1）增大Rd时，负载线将如何变化？Q点怎样变化？</p>
-      <p>（2）减小VDD时，负载线将如何变化？Q点怎样变化？</p>
+      <p>（2）减小V<sub>DD</sub>时，负载线将如何变化？Q点怎样变化？</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 63 页</div>
+      <div class="section-num">第 63 页</div>
       <h3>共源放大电路</h3>
-      <p>3.  放大电路如图所示。当测得FET的VDS 接近VDD的值时，问管子处于什么工作状态？可能的故障原因有哪些？</p>
+      <p>3.  放大电路如图所示。当测得FET的V<sub>DS</sub> 接近V<sub>DD</sub>的值时，问管子处于什么工作状态？可能的故障原因有哪些？</p>
       <h3>截止状态</h3>
       <h3>答：</h3>
       <h3>故障原因可能有：</h3>
-      <h3>• Rg1支路可能开路</h3>
-      <h3>• C1可能短路，	    VGS = 0 &lt; VTN</h3>
+      <h3>· Rg1支路可能开路</h3>
+      <h3>· C1可能短路，	    V<sub>GS</sub> = 0 &lt; V<sub>TN</sub></h3>
       <p>？</p>
       <h3>思考题</h3>
-      <p>vGS = 0 &lt; VTN， ID=0，     VDS= VDD – IDRd = VDD</p>
+      <h3>v<sub>GS</sub> = 0 &lt; V<sub>TN</sub>， I<sub>D</sub>=0，     V<sub>DS</sub>= V<sub>DD</sub> – I<sub>DR</sub>d = V<sub>DD</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 64 页</div>
+      <div class="section-num">第 64 页</div>
       <h3>4  场效应三极管及放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -742,7 +782,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 65 页</div>
+      <div class="section-num">第 65 页</div>
       <p>4.4.1  MOSFET的小信号模型
 4.4.2  用小信号模型分析共源极放大电路
 4.4.3  带源极电阻的共源极放大电路的分析</p>
@@ -750,7 +790,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 66 页</div>
+      <div class="section-num">第 66 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
       <h3>建立小信号模型的意义</h3>
       <h3>建立小信号模型的思路</h3>
@@ -759,9 +799,9 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 67 页</div>
+      <div class="section-num">第 67 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
-      <h3>1.  =0时</h3>
+      <h3>1. ● =0时</h3>
       <h3>在恒流区内有</h3>
       <h3>（以增强型NMOS管为例）</h3>
       <h3>FET双口网络</h3>
@@ -770,81 +810,81 @@ id和vds为交流量</h3>
       <h3>动态值
 （交流）</h3>
       <h3>非线性失真项</h3>
-      <p>当，vgs &lt;&lt; 2(VGSQ-VTN)时，</p>
+      <p>当，vgs &lt;&lt; 2(V<sub>GSQ</sub>-V<sub>TN</sub>)时，</p>
       <h3>其中</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 68 页</div>
+      <div class="section-num">第 68 页</div>
       <h3>纯交流</h3>
       <h3>电路模型</h3>
-      <p>  gmvgs 是受控源 ，且为电压控制电流源(VCCS)。
- 电流方向与vgs的极性是关联的。</p>
+      <p>◆  g<sub>m</sub>vgs 是受控源 ，且为电压控制电流源(V<sub>CCS</sub>)。
+◆ 电流方向与vgs的极性是关联的。</p>
       <h3>4.4.1  MOSFET的小信号模型</h3>
-      <h3>1.  =0时</h3>
+      <h3>1. ● =0时</h3>
       <h3>FET双口网络</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 69 页</div>
+      <div class="section-num">第 69 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
-      <h3>d、s端口看入有一电阻rds</h3>
+      <h3>d、s端口看入有一电阻r<sub>ds</sub></h3>
       <h3>电路模型</h3>
-      <h3>2.   0时</h3>
+      <h3>2. ● ● 0时</h3>
       <h3>FET双口网络</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 70 页</div>
+      <div class="section-num">第 70 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
-      <h3>gm —— 低频互导</h3>
+      <h3>g<sub>m</sub> —— 低频互导</h3>
       <h3>转移特性曲线Q点上切线的斜率</h3>
       <h3>3. 参数的物理意义</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 71 页</div>
+      <div class="section-num">第 71 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
       <h3>3. 参数的物理意义</h3>
-      <h3>rds —— 输出电阻</h3>
+      <h3>r<sub>ds</sub> —— 输出电阻</h3>
       <h3>输出特性曲线Q点上切线斜率的倒数</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 72 页</div>
+      <div class="section-num">第 72 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
       <h3>4. 模型应用的前提条件</h3>
-      <h3> =0</h3>
-      <h3> 0</h3>
-      <p> 参数都是小信号参数，即微变参数或交流参数。
- 与静态工作点有关。
+      <h3>● =0</h3>
+      <h3>● ●0</h3>
+      <p>◆ 参数都是小信号参数，即微变参数或交流参数。
+◆ 与静态工作点有关。
  只适合对交流信号（变化量）的分析。
  未包含结电容的影响，不能用于分析高频情况。</p>
-      <h3>vgs &lt;&lt; 2(VGSQ-VTN )</h3>
-      <h3>  小信号</h3>
+      <p>vgs &lt;&lt; 2(V<sub>GSQ</sub>-V<sub>TN</sub> )</p>
+      <h3>◆  小信号</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 73 页</div>
+      <div class="section-num">第 73 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
       <h3>5. 其它管型</h3>
-      <h3> 0</h3>
+      <h3>● ●0</h3>
       <h3>模型相同，参数类似</h3>
       <h3>耗尽型NMOS管</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 74 页</div>
+      <div class="section-num">第 74 页</div>
       <h3>4.4.1  MOSFET的小信号模型</h3>
       <h3>5. 其它管型</h3>
       <h3>模型相同，参数类似</h3>
-      <h3>增强型PMOS管</h3>
-      <h3>耗尽型PMOS管</h3>
-      <h3>gm始终为正数</h3>
+      <h3>增强型P<sub>MOS</sub>管</h3>
+      <h3>耗尽型P<sub>MOS</sub>管</h3>
+      <h3>g<sub>m</sub>始终为正数</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 75 页</div>
+      <div class="section-num">第 75 页</div>
       <p>4.4.1  MOSFET的小信号模型
 4.4.2  用小信号模型分析共源极放大电路
 4.4.3  带源极电阻的共源极放大电路的分析</p>
@@ -852,18 +892,18 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 76 页</div>
+      <div class="section-num">第 76 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
-      <p>由于小信号模型的参数是建立在静态工作点基础上的，所以分析时必须先求出电路的静态工作点</p>
-      <h3>例4.4.1   VTN=1V</h3>
-      <p>试确定电路的静态值，求MOS管工作于恒流区的小信号电压增益 Av 、输入电阻Ri和输出电阻 Ro 。</p>
+      <h3>由于小信号模型的参数是建立在静态工作点基础上的，所以分析时必须先求出电路的静态工作点</h3>
+      <h3>例4.4.1   V<sub>TN</sub>=1V</h3>
+      <p>试确定电路的静态值，求MOS管工作于恒流区的小信号电压增益 A<sub>v</sub> 、输入电阻Ri和输出电阻 Ro 。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 77 页</div>
+      <div class="section-num">第 77 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
       <h3>例1</h3>
-      <h3>VTN=1V</h3>
+      <h3>V<sub>TN</sub>=1V</h3>
       <h3>解：（1）静态工作点</h3>
       <p>增强型？耗尽型？</p>
       <p>栅源加什么极性偏置电压？</p>
@@ -871,61 +911,61 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 78 页</div>
+      <div class="section-num">第 78 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
       <h3>直流通路</h3>
       <h3>假设工作在恒流区</h3>
       <p>假设成立，结果即为所求。</p>
       <h3>例1</h3>
-      <h3>VTN=1V</h3>
+      <h3>V<sub>TN</sub>=1V</h3>
       <h3>解：（1）静态工作点</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 79 页</div>
+      <div class="section-num">第 79 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
       <h3>解：（2）动态指标</h3>
       <h3>小信号等效电路</h3>
       <h3>电容和直流电压源对交流相当于短路</h3>
       <h3>例1</h3>
-      <h3>VTN=1V</h3>
+      <h3>V<sub>TN</sub>=1V</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 80 页</div>
+      <div class="section-num">第 80 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
       <h3>例1</h3>
-      <h3>VTN=1V</h3>
+      <h3>V<sub>TN</sub>=1V</h3>
       <h3>解：（2）动态指标</h3>
       <h3>小信号等效电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 81 页</div>
+      <div class="section-num">第 81 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
       <h3>模型参数</h3>
       <h3>电压增益</h3>
       <h3>经常当作公式使用</h3>
       <h3>解：（2）动态指标</h3>
       <h3>例1</h3>
-      <h3>VTN=1V</h3>
+      <h3>V<sub>TN</sub>=1V</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 82 页</div>
+      <div class="section-num">第 82 页</div>
       <h3>4.4.2  用小信号模型分析共源极放大电路</h3>
       <h3>输入电阻</h3>
       <h3>输出电阻</h3>
-      <h3>=24 k</h3>
-      <h3>=3.9 k</h3>
+      <h3>=24 k✓</h3>
+      <h3>=3.9 k✓</h3>
       <h3>受静态偏置电路的影响，栅极绝缘的特性并未充分表现出来</h3>
       <h3>解：（2）动态指标</h3>
       <h3>例1</h3>
-      <h3>VTN=1V</h3>
+      <h3>V<sub>TN</sub>=1V</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 83 页</div>
+      <div class="section-num">第 83 页</div>
       <p>4.4.1  MOSFET的小信号模型
 4.4.2  用小信号模型分析共源极放大电路
 4.4.3  带源极电阻的共源极放大电路的分析</p>
@@ -933,101 +973,101 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 84 页</div>
+      <div class="section-num">第 84 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 85 页</div>
+      <div class="section-num">第 85 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>静态工作点稳定原理</h3>
-      <h3>IDQ</h3>
-      <h3> VS </h3>
-      <h3>IDQ</h3>
+      <h3>I<sub>DQ</sub>↕</h3>
+      <h3>↓ V<sub>S</sub> ↕</h3>
+      <h3>I<sub>DQ</sub>→</h3>
       <h3>（反馈控制）</h3>
-      <h3>假设温度变化导致IDQ减小，电路通过如下过程可以稳定IDQ</h3>
-      <h3>VGSQ </h3>
+      <h3>假设温度变化导致I<sub>DQ</sub>减小，电路通过如下过程可以稳定I<sub>DQ</sub></h3>
+      <h3>V<sub>GSQ</sub> →</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 86 页</div>
+      <div class="section-num">第 86 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>假设在恒流区，根据</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
       <h3>解：（1）静态工作点</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 87 页</div>
+      <div class="section-num">第 87 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>求得</h3>
       <h3>验证</h3>
       <h3>工作在恒流区</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
       <h3>解：（1）静态工作点</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 88 页</div>
+      <div class="section-num">第 88 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>小信号等效电路</h3>
       <h3>解：（2）动态指标</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 89 页</div>
+      <div class="section-num">第 89 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>小信号等效电路</h3>
       <h3>解：（2）动态指标</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 90 页</div>
+      <div class="section-num">第 90 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>解：（2）动态指标</h3>
       <h3>电压增益</h3>
       <h3>输入电阻</h3>
-      <h3>35.79 k</h3>
+      <h3>▲35.79 k✓</h3>
       <h3>源电压增益</h3>
       <h3>放大电路的输入电阻不包含信号源的内阻</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 91 页</div>
+      <div class="section-num">第 91 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>输出电阻</h3>
-      <h3>为便于分析，先考虑0时的情况</h3>
+      <h3>为便于分析，先考虑●●0时的情况</h3>
       <h3>解：（2）动态指标</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 92 页</div>
+      <div class="section-num">第 92 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>输出电阻</h3>
-      <h3>为便于分析，先考虑0时的情况</h3>
+      <h3>为便于分析，先考虑●●0时的情况</h3>
       <h3>解：（2）动态指标</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
-      <p>所以当=0时，</p>
-      <h3>当0时，若rds &gt;&gt; Rd ，  则</h3>
-      <h3>&gt; rds</h3>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
+      <p>所以当●=0时，</p>
+      <h3>当●●0时，若r<sub>ds</sub> &gt;&gt; Rd ，  则</h3>
+      <h3>&gt; r<sub>ds</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 93 页</div>
+      <div class="section-num">第 93 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
-      <p>例2    VTN=1V，Kn=0.5mA/V2，=0，VDD=VSS=5V， Rd=10k， Rs=0.5k， Rsi=4k，Rg1=150k， Rg2=47k，确定静态工作点，求动态指标。</p>
+      <p>例2    V<sub>TN</sub>=1V，K<sub>n</sub>=0.5mA/V2，●=0，V<sub>DD</sub>=V<sub>SS</sub>=5V， Rd=10k✓， Rs=0.5k✓， Rsi=4k✓，Rg1=150k✓， Rg2=47k✓，确定静态工作点，求动态指标。</p>
       <h3>电压增益</h3>
       <p>能否进一步提高增益？</p>
       <h3>解：（2）动态指标</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 94 页</div>
+      <div class="section-num">第 94 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>电压增益</h3>
       <p>能否进一步提高增益？</p>
@@ -1035,20 +1075,20 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 95 页</div>
+      <div class="section-num">第 95 页</div>
       <h3>4.4.3  带源极电阻的共源极放大电路的分析</h3>
       <h3>例3    双电源供电，电流源偏置</h3>
-      <h3>静态时，vI＝0，VG ＝0，IDQ ＝I</h3>
-      <h3>又    VS＝VG－VGSQ</h3>
+      <div class="formula">静态时，v<sub>I</sub>＝0，V<sub>G</sub> ＝0，I<sub>DQ</sub> ＝I</div>
+      <div class="formula">又    V<sub>S</sub>＝V<sub>G</sub>－V<sub>GSQ</sub></div>
       <h3>根据</h3>
-      <h3>可求得 VGSQ</h3>
+      <h3>可求得 V<sub>GSQ</sub></h3>
       <h3>则</h3>
       <h3>（恒流区）</h3>
       <h3>动态时</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 96 页</div>
+      <div class="section-num">第 96 页</div>
       <p>1.  MOSFET小信号模型是在什么条件下建立的？</p>
       <p>？</p>
       <h3>思考题</h3>
@@ -1056,34 +1096,34 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 97 页</div>
+      <div class="section-num">第 97 页</div>
       <p>能正常放大信号吗？</p>
       <h3>增强型NMOS</h3>
       <h3>耗尽型NMOS</h3>
-      <h3></h3>
+      <h3>✓</h3>
       <p>？</p>
       <h3>思考题</h3>
       <h3>自偏压共源放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 98 页</div>
+      <div class="section-num">第 98 页</div>
       <h3>耗尽型NOMS</h3>
-      <p>导电沟道已经存在，VTN &lt; 0 ，栅极绝缘。</p>
-      <h3>VG = 0</h3>
-      <h3>VS = RsIDQ</h3>
-      <h3>VGSQ = VG -VS = - RsIDQ</h3>
-      <h3>VDSQ = VDD – IDQ(Rd + Rs)</h3>
+      <p>导电沟道已经存在，V<sub>TN</sub> &lt; 0 ，栅极绝缘。</p>
+      <h3>V<sub>G</sub> = 0</h3>
+      <h3>V<sub>S</sub> = RsI<sub>DQ</sub></h3>
+      <h3>V<sub>GSQ</sub> = V<sub>G</sub> -V<sub>S</sub> = - RsI<sub>DQ</sub></h3>
+      <p>V<sub>DSQ</sub> = V<sub>DD</sub> – I<sub>DQ</sub>(Rd + Rs)</p>
       <h3>静态分析</h3>
-      <p>已知VDD、VTN、Kn、Rd和Rs 
-可求得Q点：VGSQ、IDQ、VDSQ</p>
-      <p>必须检验是否满足恒流区工作条件：VDSQ &gt; VGSQ - VTN &gt; 0。</p>
+      <h3>已知V<sub>DD</sub>、V<sub>TN</sub>、K<sub>n</sub>、Rd和Rs 
+可求得Q点：V<sub>GSQ</sub>、I<sub>DQ</sub>、V<sub>DSQ</sub></h3>
+      <p>必须检验是否满足恒流区工作条件：V<sub>DSQ</sub> &gt; V<sub>GSQ</sub> - V<sub>TN</sub> &gt; 0。</p>
       <p>？</p>
       <h3>思考题</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 99 页</div>
+      <div class="section-num">第 99 页</div>
       <h3>4  场效应三极管及放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -1096,7 +1136,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 100 页</div>
+      <div class="section-num">第 100 页</div>
       <p>4.5.1  共漏极（源极跟随器）放大电路
 4.5.2  共栅极放大电路
 4.5.3  MOSFET放大电路三种组态的总结和比较</p>
@@ -1104,7 +1144,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 101 页</div>
+      <div class="section-num">第 101 页</div>
       <h3>共源</h3>
       <h3>共漏</h3>
       <h3>共栅</h3>
@@ -1118,7 +1158,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 102 页</div>
+      <div class="section-num">第 102 页</div>
       <h3>4.5.1  共漏极（源极跟随器）放大电路</h3>
       <h3>1.  静态分析</h3>
       <h3>设MOS管工作于恒流区</h3>
@@ -1126,17 +1166,17 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 103 页</div>
+      <div class="section-num">第 103 页</div>
       <h3>4.5.1  共漏极（源极跟随器）放大电路</h3>
       <h3>2.  动态分析</h3>
-      <h3>根据静态工作点可求得 gm</h3>
+      <h3>根据静态工作点可求得 g<sub>m</sub></h3>
       <h3>小信号等效电路</h3>
       <h3>电压增益</h3>
       <h3>输出与输入同相，且增益小于等于1</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 104 页</div>
+      <div class="section-num">第 104 页</div>
       <h3>4.5.1  共漏极（源极跟随器）放大电路</h3>
       <h3>2.  动态分析</h3>
       <h3>源电压增益</h3>
@@ -1145,7 +1185,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 105 页</div>
+      <div class="section-num">第 105 页</div>
       <h3>4.5.1  共漏极（源极跟随器）放大电路</h3>
       <h3>2.  动态分析</h3>
       <h3>输出电阻</h3>
@@ -1153,7 +1193,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 106 页</div>
+      <div class="section-num">第 106 页</div>
       <p>4.5.1  共漏极（源极跟随器）放大电路
 4.5.2  共栅极放大电路
 4.5.3  MOSFET放大电路三种组态的总结和比较</p>
@@ -1161,43 +1201,43 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 107 页</div>
+      <div class="section-num">第 107 页</div>
       <h3>4.5.2  共栅极放大电路</h3>
       <h3>1.  静态分析</h3>
       <h3>根据直流通路有</h3>
       <h3>由</h3>
-      <h3>可得  VGSQ</h3>
-      <h3>又  VS = -VGSQ</h3>
+      <h3>可得  V<sub>GSQ</sub></h3>
+      <h3>又  V<sub>S</sub> = -V<sub>GSQ</sub></h3>
       <h3>所以</h3>
-      <p>VDSQ = VD - VS 
-              = VDD -IDQ Rd + VGSQ</p>
+      <h3>V<sub>DSQ</sub> = V<sub>D</sub> - V<sub>S</sub> 
+              = V<sub>DD</sub> -I<sub>DQ</sub> Rd + V<sub>GSQ</sub></h3>
       <h3>需验证是否工作在恒流区</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 108 页</div>
+      <div class="section-num">第 108 页</div>
       <h3>4.5.2  共栅极放大电路</h3>
       <h3>2.  动态分析</h3>
       <h3>电压增益</h3>
       <h3>输出与输入同相</h3>
-      <h3>设=0</h3>
+      <h3>设●=0</h3>
       <h3>源电压增益</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 109 页</div>
+      <div class="section-num">第 109 页</div>
       <h3>4.5.2  共栅极放大电路</h3>
       <h3>2.  动态分析</h3>
       <h3>输入电阻</h3>
       <h3>与共源电路同相</h3>
       <h3>输出电阻</h3>
       <h3>输入电阻远小于其它两种组态</h3>
-      <p>当rds &gt;&gt; Rd 和 rds &gt;&gt; Rsi时</p>
-      <h3>Ro  Rd</h3>
+      <h3>当r<sub>ds</sub> &gt;&gt; Rd 和 r<sub>ds</sub> &gt;&gt; Rsi时</h3>
+      <h3>Ro ▲ Rd</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 110 页</div>
+      <div class="section-num">第 110 页</div>
       <p>4.5.1  共漏极（源极跟随器）放大电路
 4.5.2  共栅极放大电路
 4.5.3  MOSFET放大电路三种组态的总结和比较</p>
@@ -1205,16 +1245,16 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 111 页</div>
+      <div class="section-num">第 111 页</div>
       <h3>4.5.3  MOSFET放大电路三种组态的总结和比较</h3>
       <h3>很高</h3>
       <h3>很高</h3>
-      <h3>Ro  Rd</h3>
-      <h3>Ro  Rd</h3>
+      <h3>Ro ▲ Rd</h3>
+      <h3>Ro ▲ Rd</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 112 页</div>
+      <div class="section-num">第 112 页</div>
       <h3>4  场效应三极管及放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -1227,29 +1267,29 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 113 页</div>
+      <div class="section-num">第 113 页</div>
       <h3>4.6  MOSFET大信号工作及开关应用</h3>
       <h3>1.  共源极电路的大信号工作分析</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 114 页</div>
+      <div class="section-num">第 114 页</div>
       <h3>4.6  MOSFET大信号工作及开关应用</h3>
       <h3>2.  MOSFET开关应用</h3>
-      <h3>Rd和rdso的大小影响导通后vO的低电平</h3>
+      <h3>Rd和r<sub>dso</sub>的大小影响导通后v<sub>O</sub>的低电平</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 115 页</div>
+      <div class="section-num">第 115 页</div>
       <h3>4.6  MOSFET大信号工作及开关应用</h3>
       <h3>2.  MOSFET开关应用</h3>
-      <p>例4.6.2  现有某增强型NMOS管一只，相关参数为：最大漏极电流2A，最大栅源工作电压8V，漏源击穿电压20V，最大耗散功率0.5W，VTN=0.55V，导通电阻rdso=0.05，截止时漏源之间漏电流10A。试用其设计一个能控制0.5W LED灯珠亮灭的驱动电路，当控制电压为高电平时，点亮LED，否则LED熄灭。已知LED灯珠工作电流为150mA，工作电压为3.2~3.5V。 (1) 确定电路结构、电源电压和控制电压大小；(2) 计算电路相关参数，并确定MOS管实际的耗散功率。</p>
+      <p>例4.6.2  现有某增强型NMOS管一只，相关参数为：最大漏极电流2A，最大栅源工作电压↵8V，漏源击穿电压20V，最大耗散功率0.5W，V<sub>TN</sub>=0.55V，导通电阻r<sub>dso</sub>=0.05✓，截止时漏源之间漏电流10★A。试用其设计一个能控制0.5W LED灯珠亮灭的驱动电路，当控制电压为高电平时，点亮LED，否则LED熄灭。已知LED灯珠工作电流为150mA，工作电压为3.2~3.5V。 (1) 确定电路结构、电源电压和控制电压大小；(2) 计算电路相关参数，并确定MOS管实际的耗散功率。</p>
       <p>可否？</p>
       <p>可否？</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 116 页</div>
+      <div class="section-num">第 116 页</div>
       <h3>4  场效应三极管及放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -1262,15 +1302,15 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 117 页</div>
-      <p>4.7.1  共源-共漏放大电路
+      <div class="section-num">第 117 页</div>
+      <h3>4.7.1  共源-共漏放大电路
 4.7.2  多级放大电路讨论
-4.7.3  共源-共栅放大电路</p>
+4.7.3  共源-共栅放大电路</h3>
       <h3>4.7  组合放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 118 页</div>
+      <div class="section-num">第 118 页</div>
       <h3>4.7.1  共源-共漏放大电路</h3>
       <h3>1.  静态分析</h3>
       <h3>直流通路</h3>
@@ -1278,7 +1318,7 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 119 页</div>
+      <div class="section-num">第 119 页</div>
       <h3>4.7.1  共源-共漏放大电路</h3>
       <h3>两管栅极均无电流，假设工作在恒流区</h3>
       <h3>需验证是否工作在恒流区</h3>
@@ -1288,53 +1328,53 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 120 页</div>
+      <div class="section-num">第 120 页</div>
       <h3>4.7.1  共源-共漏放大电路</h3>
       <h3>将具体参数值代入，计算得</h3>
       <h3>可验证两管均工作在恒流区</h3>
-      <h3>VGSQ1 = 1.84 V</h3>
-      <h3>IDQ1 = 0.2 mA</h3>
-      <h3>VDSQ1 = 6.02 V</h3>
-      <h3>IDQ2  0.49 mA</h3>
-      <h3>VGSQ2 = 2.78 V</h3>
-      <h3>VDSQ2 = 5.98 V</h3>
-      <h3>由于VTN1 = VTN2 = 1.2 V</h3>
+      <h3>V<sub>GSQ1</sub> = 1.84 V</h3>
+      <h3>I<sub>DQ1</sub> = 0.2 mA</h3>
+      <h3>V<sub>DSQ1</sub> = 6.02 V</h3>
+      <h3>I<sub>DQ2</sub> ▲ 0.49 mA</h3>
+      <h3>V<sub>GSQ2</sub> = 2.78 V</h3>
+      <h3>V<sub>DSQ2</sub> = 5.98 V</h3>
+      <h3>由于V<sub>TN1</sub> = V<sub>TN2</sub> = 1.2 V</h3>
       <h3>1.  静态分析</h3>
       <h3>例1</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 121 页</div>
+      <div class="section-num">第 121 页</div>
       <h3>4.7.1  共源-共漏放大电路</h3>
       <h3>2.  动态分析</h3>
       <h3>根据</h3>
       <h3>小信号等效电路</h3>
       <h3>电压增益</h3>
-      <h3>可求得 gm</h3>
+      <h3>可求得 g<sub>m</sub></h3>
       <h3>例1</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 122 页</div>
+      <div class="section-num">第 122 页</div>
       <h3>4.7.1  共源-共漏放大电路</h3>
       <h3>源电压增益</h3>
       <h3>输入电阻</h3>
       <h3>输出电阻就是后一级共漏电路的输出电阻</h3>
-      <h3>(2 = 0)</h3>
+      <p>(●2 = 0)</p>
       <h3>2.  动态分析</h3>
       <h3>例1</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 123 页</div>
+      <div class="section-num">第 123 页</div>
       <h3>4.7  组合放大电路</h3>
-      <p>4.7.1  共源-共漏放大电路
+      <h3>4.7.1  共源-共漏放大电路
 4.7.2  多级放大电路讨论
-4.7.3  共源-共栅放大电路</p>
+4.7.3  共源-共栅放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 124 页</div>
+      <div class="section-num">第 124 页</div>
       <h3>4.7.2  多级放大电路讨论</h3>
       <h3>1.  静态分析</h3>
       <p>级与级之间直接连接（无隔直电容）：
@@ -1346,30 +1386,30 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 125 页</div>
+      <div class="section-num">第 125 页</div>
       <h3>4.7  组合放大电路</h3>
-      <p>4.7.1  共源-共漏放大电路
+      <h3>4.7.1  共源-共漏放大电路
 4.7.2  多级放大电路讨论
-4.7.3  共源-共栅放大电路</p>
+4.7.3  共源-共栅放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 126 页</div>
+      <div class="section-num">第 126 页</div>
       <h3>4.7.3  共源-共栅放大电路</h3>
       <h3>1.  Cascode 放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 127 页</div>
+      <div class="section-num">第 127 页</div>
       <h3>4.7.3  共源-共栅放大电路</h3>
       <h3>2. 折叠式 cascade 放大电路</h3>
       <p>折叠式 cascode 放大电路更适合在低电源电压下工作。
-这种由N沟道和P沟道互补型MOS管构成的放大电路也称为CMOS（Complementary MOS）放大电路。
+这种由N沟道和P沟道互补型MOS管构成的放大电路也称为CMOS（Complementar<sub>y</sub> MOS）放大电路。
 折叠式cascode是CMOS放大电路中一种非常流行的结构。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 128 页</div>
+      <div class="section-num">第 128 页</div>
       <h3>4  场效应三极管及其放大电路</h3>
       <p>4.1  金属-氧化物-半导体（MOS）场效应三极管
 4.2  MOSFET基本共源极放大电路
@@ -1382,20 +1422,18 @@ id和vds为交流量</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 129 页</div>
+      <div class="section-num">第 129 页</div>
       <h3>4.9  各种FET的特性及使用注意事项</h3>
       <h3>end</h3>
     </div>
   <div class="nav-links">
-    <a href="index.html">← 返回首页</a>
-    <a href="ch03.html">← 第3章 二极管及其基本电路</a>
-    <a href="ch05.html">第5章 双极结型三极管(BJT)及其放大电路 →</a>
+    <a href="index.html">&larr; 返回首页</a>
+    <a href="ch03.html">&larr; 第3章 二极管及其基本电路</a>
+    <a href="ch05.html">第5章 双极结型三极管(BJT)及其放大电路 &rarr;</a>
   </div>
 </div>
-
 <div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT · 第4章 MOS场效应管及其放大电路</p>
+  <p>内容来源: 模拟电子技术课程PPT &middot; 第4章 MOS场效应管及其放大电路</p>
 </div>
-
 </body>
 </html>

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate analog electronics review website - v2"""
-import json
+"""Generate analog electronics review website v3 - following updated workflow."""
+import json, re
 
-with open('_ppt_data.json', 'r', encoding='utf-8') as f:
-    chapters = json.load(f)
+with open('_ppt_full.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
 
 CHAPTER_INFO = {
     'ch01.pptx': {'num': '1', 'title': '绪论', 'desc': '信号与频谱 · 放大电路模型 · 性能指标', 'tags': ['基础知识'], 'color': '#2d7fc1'},
@@ -25,29 +25,121 @@ CHAPTER_SHORT = {
     'ch07.pptx': 'ch07', 'ch08.pptx': 'ch08', 'ch09.pptx': 'ch09'
 }
 
-# ===== Generate index.html =====
-def gen_index():
-    cards = []
-    for fname in CHAPTER_ORDER:
-        info = CHAPTER_INFO[fname]
-        fshort = CHAPTER_SHORT[fname]
-        tags = ''.join('<span class="tag" style="background:#e8f4fd;color:%s;">%s</span>' % (info['color'], t) for t in info['tags'])
-        card = '''
-      <a href="%s.html" class="chapter-card" style="border-left-color:%s;">
-        <div class="num">第%s章</div>
-        <h3>%s</h3>
-        <div class="desc">%s</div>
-        <div style="margin-top:10px;">%s</div>
-      </a>''' % (fshort, info['color'], info['num'], info['title'], info['desc'], tags)
-        cards.append(card)
+# ===== Text processing helpers =====
 
-    html = '''<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>模拟电子技术 - 复习系统</title>
-<style>
+PUA_MAP = {
+    # PPT private-use-area symbols → readable alternatives
+    0xF02D: '◆', 0xF044: '●', 0xF057: '✓', 0xF05E: '▲',
+    0xF061: '▶', 0xF062: '▼', 0xF068: '▲', 0xF06A: '◆',
+    0xF06C: '●', 0xF06D: '★', 0xF070: '□', 0xF074: '▪',
+    0xF077: '◇', 0xF07E: '▪', 0xF0A2: '▶', 0xF0A3: '◀',
+    0xF0AB: '↑', 0xF0AD: '→', 0xF0AE: '↓', 0xF0AF: '↕',
+    0xF0B0: '↔', 0xF0B1: '↵', 0xF0B3: '↗', 0xF0B7: '◆',
+    0xF0B9: '●', 0xF0BB: '▲', 0xF0BD: '▼', 0xF0D6: '✓',
+    0xF0D7: '✗',
+}
+
+GREEK_MAP = {
+    0x00B5: 'μ', 0x0394: 'Δ', 0x03A9: 'Ω', 0x03BC: 'μ',
+    0x03C0: 'π', 0x03C9: 'ω',
+}
+
+def fmt_text(text):
+    """Apply subscript/superscript formatting and escape HTML."""
+    text = text.replace('<', '&lt;').replace('>', '&gt;')
+    text = text.replace('−', '−').replace('×', '×').replace('≈', '≈').replace('≥', '≥').replace('≤', '≤')
+    text = text.replace('→', '→').replace('±', '±').replace('·', '·')
+    text = text.replace('–', '–').replace('—', '—')
+    text = text.replace('"', '&ldquo;').replace('"', '&rdquo;')
+    text = text.replace('•', '·')
+
+    # Replace PUA characters
+    chars = list(text)
+    for i, c in enumerate(chars):
+        code = ord(c)
+        if code in PUA_MAP:
+            chars[i] = PUA_MAP[code]
+        elif code in GREEK_MAP:
+            chars[i] = GREEK_MAP[code]
+    text = ''.join(chars)
+
+    # Process subscript patterns:
+    # VGS, VDS, VGSQ, VTN, VTP, VBE, VCE, VCC, VDD, VSS, VGG, IDQ, IC, IB, IE, iD, iC, iB, vGS, vDS, vBE, vCE
+    # Pattern: optional lowercase prefix + capital letter(s) + capital/number suffix
+    sub_terms = [
+        (r'V(\s*)([A-Z]+[0-9]*)', r'V\1<sub>\2</sub>'),
+        (r'I(\s*)([A-Z]+[0-9]*)', r'I\1<sub>\2</sub>'),
+        (r'i(\s*)([A-Z]+[0-9]*)', r'i\1<sub>\2</sub>'),
+        (r'v(\s*)([A-Z]+[0-9]*)', r'v\1<sub>\2</sub>'),
+        (r'P(\s*)([A-Z]+)', r'P\1<sub>\2</sub>'),
+        (r'R(\s*)([A-Z0-9]+)', r'R\1<sub>\2</sub>'),
+        (r'r(\s*)([a-z0-9]+)', r'r\1<sub>\2</sub>'),
+        (r'g(\s*)(m)', r'g\1<sub>\2</sub>'),
+        (r'A(\s*)(vo|vf|i|v|r|g)', r'A\1<sub>\2</sub>'),
+        (r'K(\s*)(CMR|n)', r'K\1<sub>\2</sub>'),
+        (r'B(\s*)(WG)', r'B\1<sub>\2</sub>'),
+        (r'V(\s*)(BR)', r'V\1<sub>\2</sub>'),
+    ]
+    for pattern, replacement in sub_terms:
+        text = re.sub(pattern, replacement, text)
+
+    # Degree symbol
+    text = text.replace('°', '°')
+
+    return text
+
+
+def is_heading(text):
+    """Check if text looks like a heading (short, no period end)."""
+    if len(text) > 60:
+        return False
+    end_chars = text[-1] if text else ''
+    if end_chars in '。；，？！)]':
+        return False
+    if text.startswith('图') or text.startswith('表'):
+        return False
+    if any(c in text for c in '＝≈≥≤'):
+        return False
+    return True
+
+
+def is_formula(text):
+    """Check if text contains mathematical formula patterns."""
+    if any(c in text for c in ('＝', '≈', '≥', '≤', '∫', '∑', '∂', 'π')):
+        return True
+    if re.search(r'[A-Za-z]\s*[＝≈≥≤]', text):
+        return True
+    return False
+
+
+def fmt_text_paragraph(text):
+    """Format a text paragraph with proper HTML."""
+    text_f = fmt_text(text)
+    if is_formula(text):
+        return '      <div class="formula">%s</div>' % text_f
+    elif is_heading(text):
+        return '      <h3>%s</h3>' % text_f
+    else:
+        return '      <p>%s</p>' % text_f
+
+
+def fmt_table(rows):
+    """Format table data as HTML table."""
+    if not rows:
+        return ''
+    ncols = max(len(r) for r in rows)
+    html = '      <table>\n'
+    for ri, row in enumerate(rows):
+        padded = row + [''] * (ncols - len(row))
+        tag = 'th' if ri == 0 else 'td'
+        cells = ''.join('        <%s>%s</%s>\n' % (tag, fmt_text(c), tag) for c in padded)
+        html += '      <tr>\n%s      </tr>\n' % cells
+    html += '      </table>'
+    return html
+
+
+# ===== CSS template (used by both index and chapter) =====
+INDEX_CSS = '''
   :root {
     --primary: #1a3a5c;
     --accent: #2d7fc1;
@@ -141,114 +233,9 @@ def gen_index():
     .header h1 { font-size: 1.6em; }
     .chapter-grid { grid-template-columns: 1fr; }
   }
-</style>
-</head>
-<body>
+'''
 
-<div class="header">
-  <h1>\U0001f4d8 模拟电子技术</h1>
-  <p>Analog Electronics · 课程复习笔记</p>
-</div>
-
-<div class="container">
-
-  <div class="info-card">
-    <h2>课程说明</h2>
-    <p>本复习网站基于课程 PPT 内容整理，涵盖模拟电子技术的核心知识点。</p>
-    <p>内容均来源于 PPT 原话，适合考前复习与知识梳理。</p>
-  </div>
-
-  <div class="info-card">
-    <h2>\U0001f4c2 章节导航</h2>
-    <div class="chapter-grid">
-%s
-    </div>
-  </div>
-
-</div>
-
-<div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT</p>
-  <p><a href="https://github.com/Jacky4212/review-system.git">GitHub: Jacky4212/review-system</a></p>
-</div>
-
-</body>
-</html>''' % '\n'.join(cards)
-
-    with open('index.html', 'w', encoding='utf-8') as f:
-        f.write(html)
-    print('Generated: index.html')
-
-
-# ===== Generate chapter pages =====
-def gen_chapter(fname, ch_data):
-    info = CHAPTER_INFO[fname]
-    fshort = CHAPTER_SHORT[fname]
-    color = info['color']
-
-    # Find prev/next
-    idx = CHAPTER_ORDER.index(fname)
-    prev_ch = CHAPTER_ORDER[idx-1] if idx > 0 else None
-    next_ch = CHAPTER_ORDER[idx+1] if idx < len(CHAPTER_ORDER)-1 else None
-
-    # Build prev/next links
-    nav_items = []
-    nav_items.append('<a href="index.html">← 返回首页</a>')
-    if prev_ch:
-        pshort = CHAPTER_SHORT[prev_ch]
-        pt = CHAPTER_INFO[prev_ch]['title']
-        pn = CHAPTER_INFO[prev_ch]['num']
-        nav_items.append('<a href="%s.html">← 第%s章 %s</a>' % (pshort, pn, pt))
-    else:
-        nav_items.append('<span></span>')
-    if next_ch:
-        nshort = CHAPTER_SHORT[next_ch]
-        nt = CHAPTER_INFO[next_ch]['title']
-        nn = CHAPTER_INFO[next_ch]['num']
-        nav_items.append('<a href="%s.html">第%s章 %s →</a>' % (nshort, nn, nt))
-
-    nav_html = '\n    '.join(nav_items)
-
-    # Topbar next link
-    if next_ch:
-        nshort = CHAPTER_SHORT[next_ch]
-        nt = CHAPTER_INFO[next_ch]['title']
-        nn = CHAPTER_INFO[next_ch]['num']
-        topbar_next = '第%s章 %s →' % (nn, nt)
-        topbar_next_href = '%s.html' % nshort
-    else:
-        topbar_next = '返回首页'
-        topbar_next_href = 'index.html'
-
-    # Build slide content
-    slides_html = []
-    for s in ch_data['slides']:
-        texts = s['content']
-        parts = []
-        for t in texts:
-            t = t.replace('<', '&lt;').replace('>', '&gt;')
-            if len(t) < 35 and t[-1:] not in ['。','；','，','？','!',':']:
-                parts.append('      <h3>%s</h3>' % t)
-            else:
-                parts.append('      <p>%s</p>' % t)
-        if parts:
-            snum = s['slide']
-            block = '''
-    <div class="section">
-      <div class="slide-num">第 %d 页</div>
-%s
-    </div>''' % (snum, '\n'.join(parts))
-            slides_html.append(block)
-
-    slides_str = '\n'.join(slides_html)
-
-    html = '''<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第%s章 %s - 模拟电子技术</title>
-<style>
+CHAPTER_CSS = '''
   :root {
     --primary: #1a3a5c;
     --accent: %s;
@@ -295,13 +282,13 @@ def gen_chapter(fname, ch_data):
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-  .slide-num {
+  .section-num {
     font-size: 0.8rem;
     color: var(--text-light);
     font-weight: 600;
     letter-spacing: 0.5px;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
   }
   .section h3 {
@@ -313,8 +300,49 @@ def gen_chapter(fname, ch_data):
   }
   .section h3:first-of-type { margin-top: 0; }
   .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section ul { margin: 6px 0 10px 20px; }
-  .section li { margin-bottom: 4px; font-size: 0.95em; }
+  .section p:last-child { margin-bottom: 0; }
+  .highlight {
+    background: #fffbe6;
+    border-left: 3px solid #f0c040;
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  .def-box {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .formula {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  table {
+    width: 100%%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.95em;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: center;
+  }
+  th {
+    background: var(--code-bg);
+    font-weight: 600;
+    color: var(--primary);
+  }
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   .nav-links a {
     display: inline-block;
@@ -333,35 +361,152 @@ def gen_chapter(fname, ch_data):
   @media (max-width: 640px) {
     .section { padding: 16px; }
     .topbar h2 { font-size: 1em; }
+    table { font-size: 0.85em; }
+    th, td { padding: 6px 8px; }
   }
-</style>
+'''
+
+
+# ===== Index page =====
+def gen_index():
+    cards = []
+    for fname in CHAPTER_ORDER:
+        info = CHAPTER_INFO[fname]
+        fshort = CHAPTER_SHORT[fname]
+        tags = ''.join('<span class="tag" style="background:#e8f4fd;color:%s;">%s</span>' % (info['color'], t) for t in info['tags'])
+        card = '''
+      <a href="%s.html" class="chapter-card" style="border-left-color:%s;">
+        <div class="num">第%s章</div>
+        <h3>%s</h3>
+        <div class="desc">%s</div>
+        <div style="margin-top:10px;">%s</div>
+      </a>''' % (fshort, info['color'], info['num'], info['title'], info['desc'], tags)
+        cards.append(card)
+
+    html = '''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模拟电子技术 - 复习系统</title>
+<style>%s</style>
 </head>
 <body>
+<div class="header">
+  <h1>&#x1F4D8; 模拟电子技术</h1>
+  <p>Analog Electronics &middot; 课程复习笔记</p>
+</div>
+<div class="container">
+  <div class="info-card">
+    <h2>课程说明</h2>
+    <p>本复习网站基于课程 PPT 内容整理，涵盖模拟电子技术的核心知识点。</p>
+    <p>内容均来源于 PPT 原话，适合考前复习与知识梳理。</p>
+  </div>
+  <div class="info-card">
+    <h2>&#x1F4C2; 章节导航</h2>
+    <div class="chapter-grid">%s
+    </div>
+  </div>
+</div>
+<div class="footer">
+  <p>内容来源: 模拟电子技术课程PPT</p>
+  <p><a href="https://github.com/Jacky4212/review-system.git">GitHub: Jacky4212/review-system</a></p>
+</div>
+</body>
+</html>''' % (INDEX_CSS, '\n'.join(cards))
 
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(html)
+    print('Generated: index.html')
+
+
+# ===== Chapter pages =====
+def gen_chapter(fname, info, slides):
+    color = info['color']
+    fshort = CHAPTER_SHORT[fname]
+    idx = CHAPTER_ORDER.index(fname)
+    prev_ch = CHAPTER_ORDER[idx-1] if idx > 0 else None
+    next_ch = CHAPTER_ORDER[idx+1] if idx < len(CHAPTER_ORDER)-1 else None
+
+    # Navigation
+    nav_items = ['<a href="index.html">&larr; 返回首页</a>']
+    if prev_ch:
+        pshort = CHAPTER_SHORT[prev_ch]
+        pt = CHAPTER_INFO[prev_ch]['title']
+        pn = CHAPTER_INFO[prev_ch]['num']
+        nav_items.append('<a href="%s.html">&larr; 第%s章 %s</a>' % (pshort, pn, pt))
+    else:
+        nav_items.append('<span></span>')
+    if next_ch:
+        nshort = CHAPTER_SHORT[next_ch]
+        nt = CHAPTER_INFO[next_ch]['title']
+        nn = CHAPTER_INFO[next_ch]['num']
+        nav_items.append('<a href="%s.html">第%s章 %s &rarr;</a>' % (nshort, nn, nt))
+    nav_html = '\n    '.join(nav_items)
+
+    # Topbar next link
+    if next_ch:
+        nshort = CHAPTER_SHORT[next_ch]
+        nt = CHAPTER_INFO[next_ch]['title']
+        nn = CHAPTER_INFO[next_ch]['num']
+        topbar_next = '第%s章 %s &rarr;' % (nn, nt)
+        topbar_next_href = '%s.html' % nshort
+    else:
+        topbar_next = '返回首页'
+        topbar_next_href = 'index.html'
+
+    # Build content sections
+    sections = []
+    for s in slides:
+        parts = []
+        for item in s['items']:
+            if item['type'] == 'table':
+                parts.append(fmt_table(item['rows']))
+            else:
+                text = item['text']
+                if not text.strip():
+                    continue
+                parts.append(fmt_text_paragraph(text))
+        if parts:
+            block = '''
+    <div class="section">
+      <div class="section-num">第 %d 页</div>
+%s
+    </div>''' % (s['slide'], '\n'.join(parts))
+            sections.append(block)
+
+    content_str = '\n'.join(sections)
+    css = CHAPTER_CSS % color
+
+    html = '''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第%s章 %s - 模拟电子技术</title>
+<style>%s</style>
+</head>
+<body>
 <div class="topbar">
   <div class="topbar-inner">
-    <a href="index.html">← 返回首页</a>
+    <a href="index.html">&larr; 返回首页</a>
     <h2>第%s章 %s</h2>
     <a href="%s">%s</a>
   </div>
 </div>
-
-<div class="container">
-%s
+<div class="container">%s
   <div class="nav-links">
     %s
   </div>
 </div>
-
 <div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT · 第%s章 %s</p>
+  <p>内容来源: 模拟电子技术课程PPT &middot; 第%s章 %s</p>
 </div>
-
 </body>
-</html>''' % (info['num'], info['title'], color,
+</html>''' % (info['num'], info['title'], css,
               info['num'], info['title'],
               topbar_next_href, topbar_next,
-              slides_str, nav_html,
+              content_str, nav_html,
               info['num'], info['title'])
 
     out_name = '%s.html' % fshort
@@ -373,6 +518,8 @@ def gen_chapter(fname, ch_data):
 # ===== Main =====
 if __name__ == '__main__':
     gen_index()
-    for ch in chapters:
-        gen_chapter(ch['file'], ch)
+    for fname in CHAPTER_ORDER:
+        info = CHAPTER_INFO[fname]
+        slides = data.get(fname, [])
+        gen_chapter(fname, info, slides)
     print('All done!')

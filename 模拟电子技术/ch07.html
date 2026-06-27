@@ -51,13 +51,13 @@
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-  .slide-num {
+  .section-num {
     font-size: 0.8rem;
     color: var(--text-light);
     font-weight: 600;
     letter-spacing: 0.5px;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
   }
   .section h3 {
@@ -69,8 +69,49 @@
   }
   .section h3:first-of-type { margin-top: 0; }
   .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section ul { margin: 6px 0 10px 20px; }
-  .section li { margin-bottom: 4px; font-size: 0.95em; }
+  .section p:last-child { margin-bottom: 0; }
+  .highlight {
+    background: #fffbe6;
+    border-left: 3px solid #f0c040;
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  .def-box {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .formula {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.95em;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: center;
+  }
+  th {
+    background: var(--code-bg);
+    font-weight: 600;
+    color: var(--primary);
+  }
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   .nav-links a {
     display: inline-block;
@@ -89,23 +130,22 @@
   @media (max-width: 640px) {
     .section { padding: 16px; }
     .topbar h2 { font-size: 1em; }
+    table { font-size: 0.85em; }
+    th, td { padding: 6px 8px; }
   }
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="topbar-inner">
-    <a href="index.html">← 返回首页</a>
+    <a href="index.html">&larr; 返回首页</a>
     <h2>第7章 模拟集成电路</h2>
-    <a href="ch08.html">第8章 反馈放大电路 →</a>
+    <a href="ch08.html">第8章 反馈放大电路 &rarr;</a>
   </div>
 </div>
-
 <div class="container">
-
     <div class="section">
-      <div class="slide-num">第 1 页</div>
+      <div class="section-num">第 1 页</div>
       <h3>7  模拟集成电路</h3>
       <p>7.1 模拟集成电路中的直流偏置技术
 7.2 差分式放大电路 
@@ -115,36 +155,36 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 2 页</div>
+      <div class="section-num">第 2 页</div>
       <h3>7.1.1  MOSFET电流源
 7.1.2  BJT电流源</h3>
       <h3>7.1  模拟集成电路中的直流偏置技术</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 3 页</div>
+      <div class="section-num">第 3 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <h3>1. 镜像电流源</h3>
       <h3>T1、T2的参数全同</h3>
-      <h3>只要满足 VGS &gt; VTN</h3>
-      <h3>必有 VDS1 &gt; VGS-VTN</h3>
+      <h3>只要满足 V<sub>GS</sub> &gt; V<sub>TN</sub></h3>
+      <h3>必有 V<sub>DS1</sub> &gt; V<sub>GS</sub>-V<sub>TN</sub></h3>
       <h3>T1一定工作在恒流区</h3>
-      <h3>又因为 VGS2 = VGS1 = VGS</h3>
-      <p>T2漏极接负载构成回路后，只要满足VDS2 &gt; VGS-VTN ，就一定工作在恒流区，且有</p>
+      <h3>又因为 V<sub>GS2</sub> = V<sub>GS1</sub> = V<sub>GS</sub></h3>
+      <h3>T2漏极接负载构成回路后，只要满足V<sub>DS2</sub> &gt; V<sub>GS</sub>-V<sub>TN</sub> ，就一定工作在恒流区，且有</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 4 页</div>
+      <div class="section-num">第 4 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <h3>再根据</h3>
-      <p>便可求出IO的电流值。</p>
-      <p>IO的电流值与负载无关。</p>
-      <p>负载在一定范围内变化时（保证VDS2 &gt; VGS-VTN），IO的电流值将保持不变，反映出IO的恒流特性。</p>
+      <p>便可求出I<sub>O</sub>的电流值。</p>
+      <p>I<sub>O</sub>的电流值与负载无关。</p>
+      <p>负载在一定范围内变化时（保证V<sub>DS2</sub> &gt; V<sub>GS</sub>-V<sub>TN</sub>），I<sub>O</sub>的电流值将保持不变，反映出I<sub>O</sub>的恒流特性。</p>
       <h3>1. 镜像电流源</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 5 页</div>
+      <div class="section-num">第 5 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <h3>MOS管分别处于放大和恒流状态时的图解</h3>
       <h3>放大时</h3>
@@ -153,17 +193,17 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 6 页</div>
+      <div class="section-num">第 6 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <h3>当器件具有不同的宽长比时</h3>
-      <h3>动态电阻(交流电阻)</h3>
+      <p>动态电阻(交流电阻)</p>
       <h3>输出特性</h3>
       <h3>代表符号</h3>
       <h3>1. 镜像电流源</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 7 页</div>
+      <div class="section-num">第 7 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <h3>若用T3代替R，且T1~T3特性相同</h3>
       <h3>T1~T3便可工作在恒流区</h3>
@@ -176,7 +216,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 8 页</div>
+      <div class="section-num">第 8 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <h3>2. 多路电流源电路</h3>
       <h3>除宽长比外，T0~T3特性相同， T4、T5特性相同</h3>
@@ -184,54 +224,54 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 9 页</div>
+      <div class="section-num">第 9 页</div>
       <h3>7.1.1  MOSFET电流源</h3>
       <p>是电流源吗？</p>
-      <h3>注意：N沟道耗尽型管的夹断电压VPN&lt; 0</h3>
+      <h3>注意：N沟道耗尽型管的夹断电压V<sub>P<sub>N</sub></sub>&lt; 0</h3>
       <h3>需保证</h3>
       <h3>电流源内阻</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 10 页</div>
+      <div class="section-num">第 10 页</div>
       <h3>7.1.1  MOSFET电流源
 7.1.2  BJT电流源</h3>
       <h3>7.1  模拟集成电路中的直流偏置技术</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 11 页</div>
+      <div class="section-num">第 11 页</div>
       <h3>1. 镜像电流源</h3>
       <h3>7.1.2  BJT电流源</h3>
-      <p>IO在一定范围内与负载无关。</p>
+      <p>I<sub>O</sub>在一定范围内与负载无关。</p>
       <h3>T1、T2的参数全同</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 12 页</div>
+      <div class="section-num">第 12 页</div>
       <h3>1. 镜像电流源</h3>
       <h3>7.1.2  BJT电流源</h3>
       <h3>动态电阻</h3>
-      <h3>一般ro在几百千欧以上</h3>
+      <h3>一般r<sub>o</sub>在几百千欧以上</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 13 页</div>
+      <div class="section-num">第 13 页</div>
       <h3>2. 微电流源</h3>
       <h3>7.1.2  BJT电流源</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 14 页</div>
+      <div class="section-num">第 14 页</div>
       <h3>3. 多路电流源</h3>
       <h3>7.1.2  BJT电流源</h3>
-      <h3>T1、R1 和T4支路产生基准电流IREF</h3>
+      <h3>T1、R<sub>1</sub> 和T4支路产生基准电流I<sub>R<sub>EF</sub></sub></h3>
       <h3>T1和T2、T4和T5构成镜像电流源</h3>
       <h3>T1和T3，T4和T6构成了微电流源</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 15 页</div>
+      <div class="section-num">第 15 页</div>
       <h3>7  模拟集成电路</h3>
       <p>7.1 模拟集成电路中的直流偏置技术
 7.2 差分式放大电路 
@@ -241,47 +281,47 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 16 页</div>
-      <p>7.2.1  MOSFET差分式放大电路
+      <div class="section-num">第 16 页</div>
+      <h3>7.2.1  MOSFET差分式放大电路
 7.2.2  BJT差分式放大电路
-7.2.3  差分式放大电路的传输特性</p>
+7.2.3  差分式放大电路的传输特性</h3>
       <h3>7.2  差分式放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 17 页</div>
+      <div class="section-num">第 17 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>回顾</h3>
-      <h3>要能够放大直流！</h3>
+      <p>要能够放大直流！</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 18 页</div>
+      <div class="section-num">第 18 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>共源放大电路</h3>
       <h3>差分式放大电路</h3>
       <h3>方便调整Q点
 有稳定Q点作用</h3>
       <h3>温度稳定性很好的电流源
-其动态电阻为ro</h3>
+其动态电阻为r<sub>o</sub></h3>
       <h3>但增益太小</h3>
       <h3>——直接耦合</h3>
       <h3>电路组成</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 19 页</div>
+      <div class="section-num">第 19 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>电路组成</h3>
       <h3>两个输入端：vi1和vi2 
-两个输出端：vO1和vO2</h3>
+两个输出端：v<sub>O1</sub>和v<sub>O2</sub></h3>
       <h3>工作方式：双入双出、双入单出、单入双出、单入单出</h3>
       <h3>源极耦合差分式放大电路</h3>
       <h3>源极共用电流源支路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 20 页</div>
+      <div class="section-num">第 20 页</div>
       <p>两输入端中的共模信号大小相等，相位相同；
 两输入端中的差模信号大小相等，相位相反。</p>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
@@ -289,25 +329,25 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 21 页</div>
+      <div class="section-num">第 21 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>直流通路</h3>
       <h3>静态分析</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 22 页</div>
+      <div class="section-num">第 22 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>静态分析</h3>
       <h3>再由</h3>
-      <h3>可求得  VGSQ</h3>
+      <h3>可求得  V<sub>GSQ</sub></h3>
       <h3>最后需要校验是否工作在恒流区</h3>
-      <h3>静态时有     vo＝VD1Q - VD2Q＝0</h3>
-      <h3>( Rd1=Rd2 =Rd )</h3>
+      <div class="formula">静态时有     vo＝V<sub>D1</sub>Q - V<sub>D2</sub>Q＝0</div>
+      <p>( Rd1=Rd2 =Rd )</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 23 页</div>
+      <div class="section-num">第 23 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
@@ -315,17 +355,17 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 24 页</div>
+      <div class="section-num">第 24 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
-      <p>vi1和vi2大小相等，相位相反。is1的增加量等于is2的减小量，ro中无交流电流流过，vs = 0，意味着源极相当于对地短路。</p>
+      <p>vi1和vi2大小相等，相位相反。is1的增加量等于is2的减小量，r<sub>o</sub>中无交流电流流过，vs = 0，意味着源极相当于对地短路。</p>
       <p>表明在差模信号作用下，源极公共支路相当于短路。</p>
       <h3>差模信号作用情况</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 25 页</div>
+      <div class="section-num">第 25 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
@@ -333,32 +373,32 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 26 页</div>
+      <div class="section-num">第 26 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
       <h3>等效的交流通路</h3>
       <p>单边就是标准的共源电路，但输入信号是vid 。</p>
-      <p>若  0，</p>
+      <p>若● ● 0，</p>
       <h3>① 单端输出时的差模电压增益</h3>
-      <h3>只是相位相反(电路对称)</h3>
+      <p>只是相位相反(电路对称)</p>
       <h3>单端输出差模电压增益（T1漏极输出，Rd1=Rd2=Rd）</h3>
       <h3>若由T2漏极输出，则</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 27 页</div>
+      <div class="section-num">第 27 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
       <h3>等效的交流通路</h3>
-      <h3>若  0</h3>
+      <h3>若● ● 0</h3>
       <h3>① 单端输出时的差模电压增益</h3>
-      <h3>带RL时</h3>
+      <h3>带R<sub>L</sub>时</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 28 页</div>
+      <div class="section-num">第 28 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
@@ -371,17 +411,17 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 29 页</div>
+      <div class="section-num">第 29 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入差模信号时</h3>
       <h3>等效的交流通路</h3>
       <h3>② 双端输出时的差模电压增益</h3>
-      <h3>带RL时</h3>
+      <h3>带R<sub>L</sub>时</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 30 页</div>
+      <div class="section-num">第 30 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>单端输入（不对称输入）时</h3>
@@ -389,7 +429,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 31 页</div>
+      <div class="section-num">第 31 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>单端输入（不对称输入）时</h3>
@@ -400,14 +440,14 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 32 页</div>
+      <div class="section-num">第 32 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入共模信号时</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 33 页</div>
+      <div class="section-num">第 33 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入共模信号时</h3>
@@ -415,17 +455,17 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 34 页</div>
+      <div class="section-num">第 34 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入共模信号时</h3>
       <h3>共模信号作用情况</h3>
-      <p>vi1和vi2大小相等，相位相同。is1和is2同时等量增加或等量减小，ro中流过双倍的单边交流电流，vs  0。</p>
-      <p>将ro折算到T1和T2各自源极支路上，其阻值相当于原来的两倍。</p>
+      <p>vi1和vi2大小相等，相位相同。is1和is2同时等量增加或等量减小，r<sub>o</sub>中流过双倍的单边交流电流，vs ● 0。</p>
+      <p>将r<sub>o</sub>折算到T1和T2各自源极支路上，其阻值相当于原来的两倍。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 35 页</div>
+      <div class="section-num">第 35 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入共模信号时</h3>
@@ -433,20 +473,20 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 36 页</div>
+      <div class="section-num">第 36 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入共模信号时</h3>
       <h3>③ 单端输出时的共模电压增益</h3>
       <p>电路左右两边完全对称，可看作两个独立的共源放大电路，两边单端输出完全相同。</p>
-      <h3>ro 是电流源的动态电阻（内阻）</h3>
+      <h3>r<sub>o</sub> 是电流源的动态电阻（内阻）</h3>
       <p>无论由哪个漏极输出，共模输出电压总是与共模输入电压反相。</p>
       <h3>远小于差模增益</h3>
       <p>共模时有单端输入和双端输入之分吗？</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 37 页</div>
+      <div class="section-num">第 37 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>仅输入共模信号时</h3>
@@ -457,7 +497,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 38 页</div>
+      <div class="section-num">第 38 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <p>温度变化和电源电压波动，都将使两个漏极电流产生变化，且变化大小和趋势相同。</p>
@@ -468,7 +508,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 39 页</div>
+      <div class="section-num">第 39 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>⑤共模抑制比</h3>
@@ -480,7 +520,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 40 页</div>
+      <div class="section-num">第 40 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
       <h3>⑥输入电阻</h3>
@@ -490,7 +530,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 41 页</div>
+      <div class="section-num">第 41 页</div>
       <h3>输出电阻无差模和共模之分</h3>
       <h3>⑦输出电阻</h3>
       <h3>双端输出  Ro = Rd1 + Rd2 = 2Rd</h3>
@@ -500,7 +540,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 42 页</div>
+      <div class="section-num">第 42 页</div>
       <h3>⑧频率响应</h3>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <h3>动态小信号分析</h3>
@@ -511,7 +551,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 43 页</div>
+      <div class="section-num">第 43 页</div>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
       <p>为什么对差模信号放大和对共模信号放大不同？</p>
       <h3>差模</h3>
@@ -522,24 +562,24 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 44 页</div>
+      <div class="section-num">第 44 页</div>
       <h3>差分式放大电路的分析方法</h3>
-      <p>静态、动态等与之前放大电路分析方法相同
- 动态分析时，利用叠加原理，将差模和共模分开分析是有效手段</p>
+      <h3>静态、动态等与之前放大电路分析方法相同
+ 动态分析时，利用叠加原理，将差模和共模分开分析是有效手段</h3>
       <h3>7.2.1  MOSFET差分式放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 45 页</div>
+      <div class="section-num">第 45 页</div>
       <h3>差分式放大电路如图所示。分析下列输入和输出的相位关系：</h3>
       <h3>反相</h3>
-      <h3>vO1与vi1</h3>
+      <h3>v<sub>O1</sub>与vi1</h3>
       <h3>同相</h3>
-      <h3>vO2与vi1</h3>
+      <h3>v<sub>O2</sub>与vi1</h3>
       <h3>同相</h3>
-      <h3>vO1与vi2</h3>
+      <h3>v<sub>O1</sub>与vi2</h3>
       <h3>反相</h3>
-      <h3>vO2与vi2</h3>
+      <h3>v<sub>O2</sub>与vi2</h3>
       <h3>反相</h3>
       <h3>vo与vi1</h3>
       <h3>同相</h3>
@@ -549,15 +589,15 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 46 页</div>
+      <div class="section-num">第 46 页</div>
       <h3>7.2  差分式放大电路</h3>
-      <p>7.2.1  MOSFET差分式放大电路
+      <h3>7.2.1  MOSFET差分式放大电路
 7.2.2  BJT差分式放大电路
-7.2.3  差分式放大电路的传输特性</p>
+7.2.3  差分式放大电路的传输特性</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 47 页</div>
+      <div class="section-num">第 47 页</div>
       <h3>7.2.2  BJT差分式放大电路</h3>
       <h3>电路分析与MOSFET类似</h3>
       <p>差模电压和共模电压增益可由共射放大电路结论得到，两者的差别仅在分母中是否包含电流源动态电阻。</p>
@@ -565,30 +605,30 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 48 页</div>
+      <div class="section-num">第 48 页</div>
       <h3>7.2  差分式放大电路</h3>
-      <p>7.2.1  MOSFET差分式放大电路
+      <h3>7.2.1  MOSFET差分式放大电路
 7.2.2  BJT差分式放大电路
-7.2.3  差分式放大电路的传输特性</p>
+7.2.3  差分式放大电路的传输特性</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 49 页</div>
+      <div class="section-num">第 49 页</div>
       <h3>7.2.3  MOSFET差分式放大电路的传输特性</h3>
       <h3>根据</h3>
-      <h3>vid= vGS1- vGS2</h3>
-      <h3>可得传输特性曲线
-       iD1，iD2＝f（vid）</h3>
+      <h3>vid= v<sub>GS1</sub>- v<sub>GS2</sub></h3>
+      <div class="formula">可得传输特性曲线
+       i<sub>D1</sub>，i<sub>D2</sub>＝f（vid）</div>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 50 页</div>
+      <div class="section-num">第 50 页</div>
       <h3>纵轴归一化传输特性</h3>
       <h3>7.2.3  MOSFET差分式放大电路的传输特性</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 51 页</div>
+      <div class="section-num">第 51 页</div>
       <h3>7  模拟集成电路</h3>
       <p>7.1 模拟集成电路中的直流偏置技术
 7.2 差分式放大电路 
@@ -598,60 +638,60 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 52 页</div>
+      <div class="section-num">第 52 页</div>
       <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
       <h3>1.  基本电路</h3>
       <h3>2.  静态分析</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 53 页</div>
+      <div class="section-num">第 53 页</div>
       <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
       <h3>3.  动态指标</h3>
       <h3>输入差模电压时的交流通路</h3>
       <h3>id3 = id1</h3>
-      <h3>id1= gmvid /2</h3>
-      <h3>id4= id1= gmvid /2</h3>
-      <h3>id2= - gmvid /2</h3>
+      <h3>id1= g<sub>m</sub>vid /2</h3>
+      <h3>id4= id1= g<sub>m</sub>vid /2</h3>
+      <h3>id2= - g<sub>m</sub>vid /2</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 54 页</div>
+      <div class="section-num">第 54 页</div>
       <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
       <h3>3.  动态指标</h3>
-      <h3>  0时，可得T2、 T4支路的小信号等效电路</h3>
+      <h3>● ● 0时，可得T2、 T4支路的小信号等效电路</h3>
       <h3>id3 = id1</h3>
-      <h3>id1= gmvid /2</h3>
-      <h3>id4= id1= gmvid /2</h3>
-      <h3>id2= - gmvid /2</h3>
+      <h3>id1= g<sub>m</sub>vid /2</h3>
+      <h3>id4= id1= g<sub>m</sub>vid /2</h3>
+      <h3>id2= - g<sub>m</sub>vid /2</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 55 页</div>
+      <div class="section-num">第 55 页</div>
       <h3>3.  动态指标</h3>
       <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>  0时，可得T2、 T4支路的小信号等效电路</h3>
+      <h3>● ● 0时，可得T2、 T4支路的小信号等效电路</h3>
       <h3>节点d2（d4）的KCL方程为</h3>
-      <h3>若接负载 RL，则电压增益为</h3>
+      <h3>若接负载 R<sub>L</sub>，则电压增益为</h3>
       <h3>得差模电压增益</h3>
       <h3>其中</h3>
       <p>带有源负载的差分放大电路单端输出的差模电压增益不再是双端输出增益的一半，而是与双端输出电压增益相同，即单端输出等效于双端输出。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 56 页</div>
+      <div class="section-num">第 56 页</div>
       <h3>3.  动态指标</h3>
       <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>  0时，可得T2、 T4支路的小信号等效电路</h3>
-      <p>以上分析结果的前提条件是假设T1 ~T4的互导相同，即
-          Kn1＝Kn2＝Kp3＝Kp4＝K
-         gm1＝gm2＝gm3＝gm4＝gm</p>
+      <h3>● ● 0时，可得T2、 T4支路的小信号等效电路</h3>
+      <div class="formula">以上分析结果的前提条件是假设T1 ~T4的互导相同，即
+          K<sub>n</sub>1＝K<sub>n</sub>2＝Kp3＝Kp4＝K
+         g<sub>m</sub>1＝g<sub>m</sub>2＝g<sub>m</sub>3＝g<sub>m</sub>4＝g<sub>m</sub></div>
       <h3>电路的共模电压增益仍然很小，共模抑制很高</h3>
       <h3>参数不同时，结果将有所变化</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 57 页</div>
+      <div class="section-num">第 57 页</div>
       <p>7.1 模拟集成电路中的直流偏置技术
 7.2 差分式放大电路 
 *7.3 带有源负载的差分式放大电路
@@ -661,7 +701,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 58 页</div>
+      <div class="section-num">第 58 页</div>
       <p>7.4.1  两级CMOS运算放大器
 7.4.2  全差分运算放大器
 7.4.3  BJT型LM741集成运算放大器
@@ -670,21 +710,21 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 59 页</div>
+      <div class="section-num">第 59 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>1. 电路结构及工作原理</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 60 页</div>
+      <div class="section-num">第 60 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
-      <h3>设 gm1 = gm2 = gm</h3>
+      <h3>设 g<sub>m</sub>1 = g<sub>m</sub>2 = g<sub>m</sub></h3>
       <h3>小信号差模电压增益</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 61 页</div>
+      <div class="section-num">第 61 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>共模抑制比</h3>
@@ -692,7 +732,7 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 62 页</div>
+      <div class="section-num">第 62 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输入电阻</h3>
@@ -700,29 +740,29 @@
     </div>
 
     <div class="section">
-      <div class="slide-num">第 63 页</div>
+      <div class="section-num">第 63 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输出电阻</h3>
-      <h3>Ro=rds7 // rds8</h3>
+      <h3>Ro=r<sub>ds7</sub> // r<sub>ds8</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 64 页</div>
+      <div class="section-num">第 64 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输入失调电压</h3>
-      <h3>vP=vN=0时
-应该有   vO=0
-实际常有   vO0</h3>
-      <h3>VIO是导致运放电路零点漂移的重要原因</h3>
-      <p>在输入端加校正电压VIO，使vO=0。
-VIO——失调电压
-温度也会影响VIO</p>
+      <h3>v<sub>P</sub>=v<sub>N</sub>=0时
+应该有   v<sub>O</sub>=0
+实际常有   v<sub>O</sub>●0</h3>
+      <h3>V<sub>I<sub>O</sub></sub>是导致运放电路零点漂移的重要原因</h3>
+      <h3>在输入端加校正电压V<sub>I<sub>O</sub></sub>，使v<sub>O</sub>=0。
+V<sub>I<sub>O</sub></sub>——失调电压
+温度也会影响V<sub>I<sub>O</sub></sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 65 页</div>
+      <div class="section-num">第 65 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输入偏置电流和失调电流</h3>
@@ -731,7 +771,7 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 66 页</div>
+      <div class="section-num">第 66 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输入偏置电流和失调电流</h3>
@@ -739,19 +779,19 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 67 页</div>
+      <div class="section-num">第 67 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输入偏置电流和失调电流</h3>
-      <p>vP=vN=0时，由于二极管的漏电流不完全相等，从而使两输入端有电流IBP和IBN。</p>
-      <p>定义：
-    IIB= (IBP+IBN)/2 ——偏置电流
-    IIO= |IBP-IBN|  ——失调电流</p>
+      <p>v<sub>P</sub>=v<sub>N</sub>=0时，由于二极管的漏电流不完全相等，从而使两输入端有电流I<sub>BP</sub>和I<sub>BN</sub>。</p>
+      <h3>定义：
+    I<sub>IB</sub>= (I<sub>BP</sub>+I<sub>BN</sub>)/2 ——偏置电流
+    I<sub>IO</sub>= |I<sub>BP</sub>-I<sub>BN</sub>|  ——失调电流</h3>
       <h3>输入端内是BJT时必有电流</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 68 页</div>
+      <div class="section-num">第 68 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输入偏置电流和失调电流</h3>
@@ -762,43 +802,43 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 69 页</div>
+      <div class="section-num">第 69 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>共模输入电压范围</h3>
       <h3>共模输入电压</h3>
-      <h3>vic= (vP + vN)/2  vP  vN  vi</h3>
+      <h3>vic= (v<sub>P</sub> + v<sub>N</sub>)/2 ▲ v<sub>P</sub> ▲ v<sub>N</sub> ▲ vi</h3>
       <h3>当vic增大，使T1、T2的源极电压</h3>
-      <p>升高(因ID6恒定, ID1= ID2, 故VGS基本不变)，|vDS6|减小，导致T6工作点进入夹断点轨迹时（|vDS6|min=|VGS6Q-VTP6|），vic达到最大值：</p>
-      <p>Vicmax = VDD -|vDS6|min-|VGS1Q|= VDD -|VGS6Q- VTP6|-|VGS1Q|</p>
+      <p>升高(因I<sub>D6</sub>恒定, I<sub>D1</sub>= I<sub>D2</sub>, 故V<sub>GS</sub>基本不变)，|v<sub>DS6</sub>|减小，导致T6工作点进入夹断点轨迹时（|v<sub>DS6</sub>|min=|V<sub>GS6</sub>Q-V<sub>TP6</sub>|），vic达到最大值：</p>
+      <h3>Vicmax = V<sub>DD</sub> -|v<sub>DS6</sub>|min-|V<sub>GS1</sub>Q|= V<sub>DD</sub> -|V<sub>GS6</sub>Q- V<sub>TP6</sub>|-|V<sub>GS1</sub>Q|</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 70 页</div>
+      <div class="section-num">第 70 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>共模输入电压范围</h3>
-      <p>当vic减小，使T1、T2的源极电压降低，|vDS1|和|vDS2|减小，导致T1和T2工作点进入夹断点轨迹时，vic达到最小值。计算单边即可。
+      <p>当vic减小，使T1、T2的源极电压降低，|v<sub>DS1</sub>|和|v<sub>DS2</sub>|减小，导致T1和T2工作点进入夹断点轨迹时，vic达到最小值。计算单边即可。
 此时的T1有
-      VDS1pop =VGS1Q-VTP1</p>
-      <h3>则  VGD1min=VGS1Q-VDS1pop=VTP1</h3>
-      <p>由于iD3=ID3Q不变，所以vDS3 =VDS3Q =VGS3Q也不变，则</p>
-      <p>Vicmin = -VSS +VDS3Q+VGD1min= -VSS +VGS3Q+VTP1</p>
+      V<sub>DS1</sub>pop =V<sub>GS1</sub>Q-V<sub>TP1</sub></p>
+      <h3>则  V<sub>GD1</sub>min=V<sub>GS1</sub>Q-V<sub>DS1</sub>pop=V<sub>TP1</sub></h3>
+      <h3>由于i<sub>D3</sub>=I<sub>D3</sub>Q不变，所以v<sub>DS3</sub> =V<sub>DS3</sub>Q =V<sub>GS3</sub>Q也不变，则</h3>
+      <h3>Vicmin = -V<sub>SS</sub> +V<sub>DS3</sub>Q+V<sub>GD1</sub>min= -V<sub>SS</sub> +V<sub>GS3</sub>Q+V<sub>TP1</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 71 页</div>
+      <div class="section-num">第 71 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>输出电压摆幅</h3>
-      <p>Vomax = VDD -|VDS8pop| 
-          VDD -|VGS8Q -VTP8|</p>
-      <p>Vomin = -VSS +VDS7pop 
-              -VSS + VGS7Q -VTN7</p>
+      <h3>Vomax = V<sub>DD</sub> -|V<sub>DS8</sub>pop| 
+         ▲ V<sub>DD</sub> -|V<sub>GS8</sub>Q -V<sub>TP8</sub>|</h3>
+      <h3>Vomin = -V<sub>SS</sub> +V<sub>DS7</sub>pop 
+             ▲ -V<sub>SS</sub> + V<sub>GS7</sub>Q -V<sub>TN7</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 72 页</div>
+      <div class="section-num">第 72 页</div>
       <h3>7.4.1  两级CMOS运算放大器</h3>
       <h3>2. 电路性能指标</h3>
       <h3>频率响应</h3>
@@ -808,7 +848,7 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 73 页</div>
+      <div class="section-num">第 73 页</div>
       <p>7.4.1  两级CMOS运算放大器
 7.4.2  全差分运算放大器
 7.4.3  BJT型LM741集成运算放大器
@@ -817,16 +857,16 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 74 页</div>
+      <div class="section-num">第 74 页</div>
       <h3>7.4.2  全差分型运算放大器</h3>
       <h3>与标准运放的差别</h3>
-      <p>有2个互逆的输出端
-有1个输出共模电压控制端VOC(set)
-应用时需要两条完全对称的反馈通路</p>
+      <h3>有2个互逆的输出端
+有1个输出共模电压控制端V<sub>OC</sub>(set)
+应用时需要两条完全对称的反馈通路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 75 页</div>
+      <div class="section-num">第 75 页</div>
       <p>7.4.1  两级CMOS运算放大器
 7.4.2  全差分运算放大器
 7.4.3  BJT型LM741集成运算放大器
@@ -835,24 +875,24 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 76 页</div>
+      <div class="section-num">第 76 页</div>
       <h3>7.4.3  BJT型LM741集成运算放大器</h3>
       <h3>外接调零电阻</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 77 页</div>
+      <div class="section-num">第 77 页</div>
       <h3>7.4.3  BJT型LM741集成运算放大器</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 78 页</div>
+      <div class="section-num">第 78 页</div>
       <h3>简化电路</h3>
       <h3>7.4.3  BJT型LM741集成运算放大器</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 79 页</div>
+      <div class="section-num">第 79 页</div>
       <p>7.4.1  两级CMOS运算放大器
 7.4.2  全差分运算放大器
 7.4.3  BJT型LM741集成运算放大器
@@ -861,34 +901,34 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 80 页</div>
+      <div class="section-num">第 80 页</div>
       <h3>7.4.4  电流反馈集成运算放大器</h3>
       <h3>简化电路</h3>
       <p>发射极作为反相输入端，输入电阻较小，不再具有虚断特征。</p>
-      <h3>对地的等效电阻为req</h3>
-      <h3>vO=iqreq</h3>
+      <h3>对地的等效电阻为r<sub>eq</sub></h3>
+      <h3>v<sub>O</sub>=iqr<sub>eq</sub></h3>
       <h3>互阻增益</h3>
-      <h3>vP=vN</h3>
+      <h3>v<sub>P</sub>=v<sub>N</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 81 页</div>
+      <div class="section-num">第 81 页</div>
       <h3>7.4.4  电流反馈集成运算放大器</h3>
       <h3>简化电路</h3>
-      <h3>vO=iqreq</h3>
+      <h3>v<sub>O</sub>=iqr<sub>eq</sub></h3>
       <h3>互阻增益</h3>
-      <h3>vP=vN</h3>
+      <h3>v<sub>P</sub>=v<sub>N</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 82 页</div>
+      <div class="section-num">第 82 页</div>
       <h3>7.4.4  电流反馈集成运算放大器</h3>
       <h3>应用</h3>
       <p>相比标准运放，电流反馈运放不遵循增益带宽积为常数的规律。它特别适合高频、宽带信号的放大。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 83 页</div>
+      <div class="section-num">第 83 页</div>
       <p>7.1 模拟集成电路中的直流偏置技术
 7.2 差分式放大电路 
 *7.3 带有源负载的差分式放大电路
@@ -898,7 +938,7 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 84 页</div>
+      <div class="section-num">第 84 页</div>
       <p>7.5.1 输入直流误差特性（输入失调特性）
 7.5.2 差模特性
 7.5.3 共模特性
@@ -909,40 +949,40 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 85 页</div>
+      <div class="section-num">第 85 页</div>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 86 页</div>
+      <div class="section-num">第 86 页</div>
       <h3>输入信号为零时</h3>
       <h3>应有</h3>
       <p>但由于失调电压、失调电流、偏置电流的存在使输出电压不为0。</p>
       <p>为什么需要这个电阻？</p>
       <p>为什么需要这个电阻？</p>
-      <h3>失调电压VIO、失调电流IIO和偏置电流IIB带来的误差</h3>
+      <h3>失调电压V<sub>I<sub>O</sub></sub>、失调电流I<sub>IO</sub>和偏置电流I<sub>IB</sub>带来的误差</h3>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 87 页</div>
-      <h3>失调电压VIO、失调电流IIO和偏置电流IIB带来的误差</h3>
+      <div class="section-num">第 87 页</div>
+      <h3>失调电压V<sub>I<sub>O</sub></sub>、失调电流I<sub>IO</sub>和偏置电流I<sub>IB</sub>带来的误差</h3>
       <h3>输入为零时的等效电路</h3>
       <h3>解得误差电压</h3>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 88 页</div>
-      <h3>失调电压VIO、失调电流IIO和偏置电流IIB带来的误差</h3>
-      <p>当 R2 = R1//Rf 时，可以消除偏置电流IIB引起的误差，此时</p>
-      <h3>R2=R1//Rf常称为输入端电阻平衡条件</h3>
-      <p>（1＋Rf /R1）和Rf 越大，VIO和IIO引起的输出误差电压也越大。</p>
+      <div class="section-num">第 88 页</div>
+      <h3>失调电压V<sub>I<sub>O</sub></sub>、失调电流I<sub>IO</sub>和偏置电流I<sub>IB</sub>带来的误差</h3>
+      <h3>当 R<sub>2</sub> = R<sub>1</sub>//Rf 时，可以消除偏置电流I<sub>IB</sub>引起的误差，此时</h3>
+      <h3>R<sub>2</sub>=R<sub>1</sub>//Rf常称为输入端电阻平衡条件</h3>
+      <p>（1＋Rf /R<sub>1</sub>）和Rf 越大，V<sub>I<sub>O</sub></sub>和I<sub>IO</sub>引起的输出误差电压也越大。</p>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 89 页</div>
+      <div class="section-num">第 89 页</div>
       <h3>关于调零</h3>
       <h3>调零补偿</h3>
       <h3>调零电路</h3>
@@ -950,47 +990,47 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 90 页</div>
+      <div class="section-num">第 90 页</div>
       <h3>741中的调零电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 91 页</div>
+      <div class="section-num">第 91 页</div>
       <h3>调零补偿</h3>
-      <p>由于目前高精度运放的VIO、 IIO 、 IIB都非常小，所以大都不再提供调零端了。</p>
+      <p>由于目前高精度运放的V<sub>I<sub>O</sub></sub>、 I<sub>IO</sub> 、 I<sub>IB</sub>都非常小，所以大都不再提供调零端了。</p>
       <h3>反相端加入补偿电路</h3>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-      <p>上述的调零方法都无法消除因温度变化由ΔVIO/ΔT和ΔIIO/ΔT引起的输出误差。</p>
+      <p>上述的调零方法都无法消除因温度变化由ΔV<sub>I<sub>O</sub></sub>/ΔT和ΔI<sub>IO</sub>/ΔT引起的输出误差。</p>
       <h3>关于调零</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 92 页</div>
-      <p>R2如何取值？</p>
+      <div class="section-num">第 92 页</div>
+      <p>R<sub>2</sub>如何取值？</p>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-      <p>如果IIB(R1//Rf)在输出误差中所占比例无足轻重，就无需添加R2，否则反而会引入更多的噪声。</p>
+      <p>如果I<sub>IB</sub>(R<sub>1</sub>//Rf)在输出误差中所占比例无足轻重，就无需添加R<sub>2</sub>，否则反而会引入更多的噪声。</p>
       <h3>关于输入端的平衡电阻</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 93 页</div>
-      <h3>VIO、IIO和IIB对积分电路的影响</h3>
+      <div class="section-num">第 93 页</div>
+      <h3>V<sub>I<sub>O</sub></sub>、I<sub>IO</sub>和I<sub>IB</sub>对积分电路的影响</h3>
       <h3>实际常用的积分电路</h3>
       <p>时间越长，误差越大，且易使输出进入饱和状态。</p>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 94 页</div>
+      <div class="section-num">第 94 页</div>
       <h3>有Rf 时</h3>
       <h3>无Rf 时</h3>
       <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-      <h3>VIO、IIO和IIB对积分电路的影响</h3>
+      <h3>V<sub>I<sub>O</sub></sub>、I<sub>IO</sub>和I<sub>IB</sub>对积分电路的影响</h3>
       <h3>当然，接入Rf会带来运算误差</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 95 页</div>
+      <div class="section-num">第 95 页</div>
       <p>7.5.1 输入直流误差特性（输入失调特性）
 7.5.2 差模特性
 7.5.3 共模特性
@@ -1001,38 +1041,38 @@ VIO——失调电压
     </div>
 
     <div class="section">
-      <div class="slide-num">第 96 页</div>
+      <div class="section-num">第 96 页</div>
       <h3>7.5.2  差模特性</h3>
-      <h3>1. 开环差模电压增益Avo和带宽BW</h3>
-      <h3>开环差模电压增益Avo</h3>
-      <h3>开环带宽BW (fH)</h3>
-      <h3>单位增益带宽 BWG (fT)</h3>
-      <p>目前高速运放要求fT &gt; 50MHz，如AD801的fT＝800 MHz。宽带运放如OPA657C（FET输入级）Avo·fH＝1600 MHz。</p>
-      <p>0dB以上斜线部分有增益带宽积为常数，即
-             APfP = fT</p>
+      <h3>1. 开环差模电压增益A<sub>vo</sub>和带宽BW</h3>
+      <h3>开环差模电压增益A<sub>vo</sub></h3>
+      <p>开环带宽BW (fH)</p>
+      <p>单位增益带宽 B<sub>WG</sub> (fT)</p>
+      <div class="formula">目前高速运放要求fT &gt; 50MHz，如AD801的fT＝800 MHz。宽带运放如OP<sub>A</sub>657C（FET输入级）A<sub>vo</sub>·fH＝1600 MHz。</div>
+      <h3>0dB以上斜线部分有增益带宽积为常数，即
+             AP✗fP = fT</h3>
       <h3>增益为AP</h3>
       <h3>频率为 fP</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 97 页</div>
+      <div class="section-num">第 97 页</div>
       <h3>7.5.2  差模特性</h3>
-      <h3>2. 差模输入电阻rid和输出电阻ro</h3>
-      <p>BJT输入级的运放rid一般在几百千欧到数兆欧
-MOSFET为输入级的运放rid＞1011Ω
-超高输入电阻运放rid＞1013Ω、IIB≤0.040pA
-一般运放的ro＜200Ω，而超高速AD9610的ro＝0.05Ω。</p>
+      <h3>2. 差模输入电阻r<sub>id</sub>和输出电阻r<sub>o</sub></h3>
+      <div class="formula">BJT输入级的运放r<sub>id</sub>一般在几百千欧到数兆欧
+MOSFET为输入级的运放r<sub>id</sub>＞1011Ω
+超高输入电阻运放r<sub>id</sub>＞1013Ω、I<sub>IB</sub>≤0.040pA
+一般运放的r<sub>o</sub>＜200Ω，而超高速AD9610的r<sub>o</sub>＝0.05Ω。</div>
       <h3>3. 最大差模输入电压Vidmax</h3>
       <p>指集成运放的反相和同相输入端之间所能承受的最大电压值。</p>
       <h3>最大差模输入电压超出电源电压零点几伏</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 98 页</div>
+      <div class="section-num">第 98 页</div>
       <h3>7.5.2  差模特性</h3>
       <h3>4. 最大输出电压Vomax（输出摆幅）</h3>
-      <p>目前很多运放的最大输出电压可接近电源电压，即RRO（Rail-to-Rail Output）输出特性，可大幅提高电源效率，有利于低压电源或电池供电的应用。
-   具有RRO特性的运放一般只适合于较大负载电阻的微功率电路。</p>
+      <p>目前很多运放的最大输出电压可接近电源电压，即R<sub>RO</sub>（Rail-to-Rail Output）输出特性，可大幅提高电源效率，有利于低压电源或电池供电的应用。
+   具有R<sub>RO</sub>特性的运放一般只适合于较大负载电阻的微功率电路。</p>
       <h3>5. 最大输出电流Iomax</h3>
       <p>指在保证一定输出电压下的输出端最大电流，包括拉电流和灌电流，常用正负号区别。
     因为Iomax与输出电压有关，所以很多数据手册中用输出短路电流Isc代替。
@@ -1040,7 +1080,7 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 99 页</div>
+      <div class="section-num">第 99 页</div>
       <p>7.5.1 输入直流误差特性（输入失调特性）
 7.5.2 差模特性
 7.5.3 共模特性
@@ -1051,26 +1091,26 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 100 页</div>
-      <h3>1. 共模抑制比KCMR和共模输入电阻ric</h3>
+      <div class="section-num">第 100 页</div>
+      <h3>1. 共模抑制比K<sub>CMR</sub>和共模输入电阻r<sub>ic</sub></h3>
       <h3>7.5.3  共模特性</h3>
-      <p>一般通用型运放KCMR为80～120 dB，高精度运放可达140dB，ric≥100MΩ。</p>
+      <div class="formula">一般通用型运放K<sub>CMR</sub>为80～120 dB，高精度运放可达140dB，r<sub>ic</sub>≥100MΩ。</div>
       <h3>2. 最大共模输入电压Vicmax</h3>
-      <p>运放作为电压跟随器时，使输出电压产生1%跟随误差的共模输入电压幅值。有些运放可达到正、负电源电压值，称为RRI（Rail -to-Rail Input）输入特性，即
-                 VicmaxV+，    -Vicmax  V－。</p>
+      <p>运放作为电压跟随器时，使输出电压产生1%跟随误差的共模输入电压幅值。有些运放可达到正、负电源电压值，称为R<sub>RI</sub>（Rail -to-Rail Input）输入特性，即
+                 Vicmax▲V+，    -Vicmax ▲ V－。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 101 页</div>
-      <h3>具有RRO和RRI特性运放的优势</h3>
+      <div class="section-num">第 101 页</div>
+      <h3>具有R<sub>RO</sub>和R<sub>RI</sub>特性运放的优势</h3>
       <h3>低电源电压下两种运放的电压摆幅</h3>
       <h3>7.5.3  共模特性</h3>
-      <h3>vO</h3>
-      <h3>vO</h3>
+      <h3>v<sub>O</sub></h3>
+      <h3>v<sub>O</sub></h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 102 页</div>
+      <div class="section-num">第 102 页</div>
       <p>7.5.1 输入直流误差特性（输入失调特性）
 7.5.2 差模特性
 7.5.3 共模特性
@@ -1081,29 +1121,29 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 103 页</div>
+      <div class="section-num">第 103 页</div>
       <h3>7.5.4  大信号动态特性</h3>
       <h3>1. 转换速率SR（Slew Rate）</h3>
       <h3>即</h3>
       <p>也称为“压摆率”，放大电路在闭环状态下，输入为大信号（例如阶跃信号）时，输出电压对时间的最大变化速率。</p>
-      <p>若信号为 vi＝Vimsin2ft 
-则运放的SR必须满足 SR ≥ 2πfmaxVom</p>
+      <div class="formula">若信号为 vi＝Vimsin2□ft 
+则运放的SR必须满足 SR ≥ 2πfmaxVom</div>
       <h3>SR通常取绝对值</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 104 页</div>
+      <div class="section-num">第 104 页</div>
       <h3>7.5.4  大信号动态特性</h3>
       <h3>2. 全功率带宽BWP</h3>
       <h3>运放输出最大峰值电压时允许的最高频率，即</h3>
       <p>SR和BWP是大信号和高频信号工作时的重要指标
-一般通用型运放SR在1V/s以下，741的SR= 0.5V/s
-高速运放要求SR&gt;30V/s以上。
-目前超高速的运放如AD9610的SR &gt; 3500V/s。</p>
+一般通用型运放SR在1V/★s以下，741的SR= 0.5V/★s
+高速运放要求SR&gt;30V/★s以上。
+目前超高速的运放如AD9610的SR &gt; 3500V/★s。</p>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 105 页</div>
+      <div class="section-num">第 105 页</div>
       <p>7.5.1 输入直流误差特性（输入失调特性）
 7.5.2 差模特性
 7.5.3 共模特性
@@ -1114,20 +1154,20 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 106 页</div>
+      <div class="section-num">第 106 页</div>
       <h3>7.5.5  电源特性</h3>
-      <h3>1. 电源电压抑制比KSVR</h3>
+      <h3>1. 电源电压抑制比KSV<sub>R</sub></h3>
       <h3>衡量电源电压波动对输出电压的影响</h3>
-      <h3>2. 静态功耗PV</h3>
+      <h3>2. 静态功耗P<sub>V</sub></h3>
       <h3>当输入信号为零时，运放消耗的总功率</h3>
-      <h3>PV＝VCCICO＋VEEIEO</h3>
-      <h3>电源电压范围、最大耗散功耗PCO等</h3>
+      <div class="formula">P<sub>V</sub>＝V<sub>CCI<sub>CO</sub></sub>＋V<sub>EEI<sub>EO</sub></sub></div>
+      <h3>电源电压范围、最大耗散功耗P<sub>CO</sub>等</h3>
       <h3>极限参数：</h3>
       <h3>另外还有噪声特性等</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 107 页</div>
+      <div class="section-num">第 107 页</div>
       <p>7.5.1 输入直流误差特性（输入失调特性）
 7.5.2 差模特性
 7.5.3 共模特性
@@ -1138,7 +1178,7 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 108 页</div>
+      <div class="section-num">第 108 页</div>
       <h3>关键是将输出端的静态电压设置为电源电压的一半</h3>
       <h3>对称的双电源工作</h3>
       <h3>单电源工作</h3>
@@ -1146,14 +1186,14 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 109 页</div>
-      <p>能否将输出端的静态电压设置在VCC/2处？</p>
+      <div class="section-num">第 109 页</div>
+      <p>能否将输出端的静态电压设置在V<sub>CC</sub>/2处？</p>
       <h3>741简化电路</h3>
       <h3>7.5.6  运放在单电源下工作</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 110 页</div>
+      <div class="section-num">第 110 页</div>
       <h3>接入C1和C2避免信号源和负载影响静态工作点</h3>
       <h3>设置输出静态电压</h3>
       <h3>阻容耦合反相放大电路</h3>
@@ -1162,16 +1202,16 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 111 页</div>
+      <div class="section-num">第 111 页</div>
       <h3>直流通路</h3>
       <h3>交流通路</h3>
-      <h3>对 vP是电压跟随</h3>
+      <h3>对 v<sub>P</sub>是电压跟随</h3>
       <h3>7.5.6  运放在单电源下工作</h3>
       <h3>阻容耦合反相放大电路</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 112 页</div>
+      <div class="section-num">第 112 页</div>
       <h3>交流同相放大电路</h3>
       <h3>直流通路</h3>
       <h3>交流通路</h3>
@@ -1182,22 +1222,22 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 113 页</div>
+      <div class="section-num">第 113 页</div>
       <h3>高输入阻抗交流同相放大电路</h3>
       <h3>直流通路</h3>
       <h3>交流通路</h3>
-      <h3>vn  vp，输入端电流极小</h3>
+      <h3>vn ▲ vp，输入端电流极小</h3>
       <h3>交流电压增益为</h3>
       <h3>7.5.6  运放在单电源下工作</h3>
       <h3>输入电阻大大提高</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 114 页</div>
+      <div class="section-num">第 114 页</div>
       <h3>直接耦合反相放大电路</h3>
       <h3>电阻应满足关系：</h3>
       <h3>此时输出电压</h3>
-      <h3>vO与vI的变化关系</h3>
+      <h3>v<sub>O</sub>与v<sub>I</sub>的变化关系</h3>
       <h3>直流偏移</h3>
       <h3>反相放大</h3>
       <h3>vi 是正负对称的信号</h3>
@@ -1205,31 +1245,29 @@ MOSFET为输入级的运放rid＞1011Ω
     </div>
 
     <div class="section">
-      <div class="slide-num">第 115 页</div>
-      <h3>须选用具有RRIO特性的运放</h3>
+      <div class="section-num">第 115 页</div>
+      <h3>须选用具有R<sub>RI</sub><sub>O</sub>特性的运放</h3>
       <h3>7.5.6  运放在单电源下工作</h3>
-      <h3>vI为单极性电压信号时</h3>
+      <h3>v<sub>I</sub>为单极性电压信号时</h3>
     </div>
 
     <div class="section">
-      <div class="slide-num">第 116 页</div>
+      <div class="section-num">第 116 页</div>
       <h3>7.5.6  运放在单电源下工作</h3>
       <h3>“浮地”工作方式</h3>
-      <h3>iZmin    iR+iL+iF   iZmax</h3>
+      <h3>i<sub>Z</sub>min  ◀  i<sub>R</sub>+i<sub>L</sub>+i<sub>F</sub>  ◀ i<sub>Z</sub>max</h3>
       <p>要求“浮地”与电源地之间对信号来说必须具有低阻特性，理想情况其阻抗为零。</p>
       <h3>交流通路</h3>
       <h3>end</h3>
     </div>
   <div class="nav-links">
-    <a href="index.html">← 返回首页</a>
-    <a href="ch05.html">← 第5章 双极结型三极管(BJT)及其放大电路</a>
-    <a href="ch08.html">第8章 反馈放大电路 →</a>
+    <a href="index.html">&larr; 返回首页</a>
+    <a href="ch05.html">&larr; 第5章 双极结型三极管(BJT)及其放大电路</a>
+    <a href="ch08.html">第8章 反馈放大电路 &rarr;</a>
   </div>
 </div>
-
 <div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT · 第7章 模拟集成电路</p>
+  <p>内容来源: 模拟电子技术课程PPT &middot; 第7章 模拟集成电路</p>
 </div>
-
 </body>
 </html>
