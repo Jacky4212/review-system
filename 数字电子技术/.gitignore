@@ -1,0 +1,12 @@
+# Large model files
+whisper-tiny-model/
+vosk-model-*.zip
+vosk-model-*/
+*.m4a
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Temp files
+搭建流程文档.docx
