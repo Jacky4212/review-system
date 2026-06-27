@@ -158,6 +158,58 @@ content_rules = [
 for r in content_rules:
     doc.add_paragraph(r, style='List Number')
 
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('HTML重建规范（关键）：').bold = True
+
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('1. 表格重建：').bold = True
+p.add_run('PPT提取出的表格通常是管道分隔的纯文本：')
+doc.add_paragraph('清零 | 预置 | 使能 | 时钟 | 输出', style='No Spacing')
+doc.add_paragraph('L   | ×   | ×   | ×   | L L L L', style='No Spacing')
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('处理方法：').bold = True
+doc.add_paragraph('识别表头行和数�的行，手动重建为 <table>')
+doc.add_paragraph('表头用 <th>，数据行用 <td>，对齐用 text-align: center')
+doc.add_paragraph('功能表逻辑：H=高电平 L=低电平 ×=任意 ↑=上升沿')
+doc.add_paragraph('')
+
+p = doc.add_paragraph()
+p.add_run('2. 上下标处理：').bold = True
+p.add_run('PPT文本中的VGS、2n等写法，需根据上下文还原为正确的上下标：')
+doc.add_paragraph('文本"VGS" → HTML: v<sub>GS</sub> （GS是下标）', style='List Bullet')
+doc.add_paragraph('文本"2n"  → HTML: 2<sup>n</sup> （n是上标）', style='List Bullet')
+doc.add_paragraph('文本"VREF" → HTML: V<sub>REF</sub> （REF是下标）', style='List Bullet')
+doc.add_paragraph('文本"VDD" → HTML: V<sub>DD</sub>', style='List Bullet')
+doc.add_paragraph('文本"Qn+1" → HTML: Q<sub>n+1</sub>', style='List Bullet')
+doc.add_paragraph('文本"VOH(min)" → HTML: V<sub>OH</sub>(min)', style='List Bullet')
+doc.add_paragraph('文本"VIL(max)" → HTML: V<sub>IL</sub>(max)', style='List Bullet')
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('判断依据：').bold = True
+p.add_run('大写字母组合跟在V/I/Q等后面 → 下标；数字/变量跟在幂次后面 → 上标；括号内容如(min)/(max) → 正常文本。')
+
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('3. 公式呈现：').bold = True
+p.add_run('提取文本中的公式如 tw=RC1n3≈1.1RC，手动格式化为：')
+doc.add_paragraph('使用 div.formula 居中展示', style='List Bullet')
+doc.add_paragraph('变量用 <i> 斜体或直接文本', style='List Bullet')
+doc.add_paragraph('约等号≈、乘号×、箭头→等保留原符号', style='List Bullet')
+doc.add_paragraph('关键公式用 .highlight 黄色高亮框突出', style='List Bullet')
+doc.add_paragraph('')
+
+p = doc.add_paragraph()
+p.add_run('4. CSS类名规范：').bold = True
+doc.add_paragraph('.def-box — 定义/概念高亮框（浅灰背景）', style='List Bullet')
+doc.add_paragraph('.highlight — 重要提示（黄色背景+左侧黄边）', style='List Bullet')
+doc.add_paragraph('.formula — 居中公式展示', style='List Bullet')
+doc.add_paragraph('.tag-xxx — 芯片/技术标签（如 .tag-rom .tag-adc）', style='List Bullet')
+doc.add_paragraph('.compare-grid + .compare-card — 对比卡片网格', style='List Bullet')
+doc.add_paragraph('table + th/td — 功能表/真值表', style='List Bullet')
+
 # ---------- Step 4 ----------
 doc.add_heading('Step 4 — 版本控制与推送到 GitHub', level=2)
 
