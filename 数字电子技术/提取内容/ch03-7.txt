@@ -54,16 +54,16 @@ VOL(max)≤VIL(max)
 3、5V CMOS门驱动3.3V CMOS门
 VOH（min)=4.4V      VOL(max) =0.5V
 3.3V CMOS门系列         VIH(min)   =  2V       VIL(max )=  0.8V
-IOH（max)= 20A
-IIH（max)=5A
+IOH（max)= −20μA
+IIH（max)=5μA
 VOH(min)    ≥   VIH(min)
 VOL(max)   ≤   VIL(max)
 带拉电流负载
 输出、输入电压
 带灌电流负载
 已知：5V CMOS门系列
-IOL（max)= 20A
-IIL（max)= 5 A，
+IOL（max)= 20μA
+IIL（max)= −5 μA，
 当负载门个数n小于≤4
 
 --- 第10页 ---
@@ -73,11 +73,11 @@ IIL（max)= 5 A，
 （ IO ：驱动门输出级截止管的漏电流）
 VOH（min)=2.4V      VOL(max) =0.4V
 5V CMOS门系列          VIH(min)=3.5V       VIL(max )=1.5V
-IOH（max)= 0.1mA
-IIH（max)=5A
+IOH（max)= −0.1mA
+IIH（max)=5μA
 已知：3.3V CMOS门系列
 IOL（max)= 0.1mA
-IIL（max)= 5 A，
+IIL（max)= −5 μA，
 
 --- 第11页 ---
 5、 低电压CMOS电路之间的接口
