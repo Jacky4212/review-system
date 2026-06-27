@@ -134,6 +134,23 @@ principles = [
 for p_text in principles:
     doc.add_paragraph(p_text, style='List Number')
 
+p = doc.add_paragraph()
+run = p.add_run('\n⚠️ 核心原则（重中之重）：')
+run.bold = True
+run.font.color.rgb = RGBColor(0xc0, 0x39, 0x2b)
+p2 = doc.add_paragraph()
+run2 = p2.add_run('每个章节的知识点都必须人工理解PPT原文后手动精写，绝不能用脚本批量生成。')
+run2.bold = True
+steps_warn = [
+    '通读该章所有PPT提取文本，理解知识结构和逻辑关系',
+    '筛选出核心概念、定义、公式、功能表，舍弃无关细节',
+    '用自己的语言组织，但关键术语和定义必须贴近PPT原话',
+    '判断哪些内容需要上下标、表格、高亮框等特殊格式',
+    '手动编写HTML，每个章节单独打磨',
+]
+for s in steps_warn:
+    doc.add_paragraph(s, style='List Number')
+
 doc.add_paragraph('推荐文件结构：', style='List Bullet')
 structure = """project-root/
   ├── index.html          ← 课程首页（导航卡片）
