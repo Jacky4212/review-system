@@ -3,47 +3,332 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ch01 · 模拟电子技术</title>
+<title>第1章 绪论 - 模拟电子技术</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --primary: #1a3a5c;
+    --accent: #2d7fc1;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e1e8ed;
+    --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
-    background: #f8f9fa; color: #1e293b; line-height: 1.8; padding: 1.5rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
   }
-  .container { max-width: 860px; margin: 0 auto; }
-  .back {
-    display: inline-flex; align-items: center; gap: 6px;
-    text-decoration: none; color: #2563eb; font-size: .95rem;
-    margin-bottom: 1.5rem;
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .back:hover { text-decoration: underline; }
-  h1 { font-size: 1.6rem; margin-bottom: 1.5rem; color: #1e293b; }
-  .slide {
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
-    padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .slide-num {
-    font-size: .8rem; color: #94a3b8; margin-bottom: .5rem;
-    font-weight: 600; letter-spacing: .5px;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
-  .slide p { margin-bottom: .4rem; font-size: .95rem; }
-  .slide p:last-child { margin-bottom: 0; }
-  @media (max-width:600px) {
-    h1 { font-size: 1.3rem; }
-    .slide { padding: 1rem 1.2rem; }
+  .section h3 {
+    font-size: 1.1em;
+    color: var(--accent);
+    margin: 18px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .section h3:first-of-type { margin-top: 0; }
+  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
+  .section ul { margin: 6px 0 10px 20px; }
+  .section li { margin-bottom: 4px; font-size: 0.95em; }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .nav-links span { flex: 1; }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) {
+    .section { padding: 16px; }
+    .topbar h2 { font-size: 1em; }
   }
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>第1章 绪论</h2>
+    <a href="ch02.html">第2章 运算放大器 →</a>
+  </div>
+</div>
+
 <div class="container">
-  <a class="back" href="index.html">← 返回目录</a>
-  <h1>📖 ch01</h1>
-  <div class="slide"><div class="slide-num">第 1 页</div><p>1.1 信号
+
+    <div class="section">
+      <div class="slide-num">第 1 页</div>
+      <p>1.1 信号
 1.2 信号的频谱
 1.3 模拟信号和数字信号
 1.4 放大电路模型 
-1.5 放大电路的主要性能指标</p><p>1  绪论</p></div><div class="slide"><div class="slide-num">第 2 页</div><p>1.1  信号</p><p>信号是信息的载体或表达形式</p><p>微音器输出的某一段信号的波形</p></div><div class="slide"><div class="slide-num">第 3 页</div><p>1.1  信号</p><p>电信号的电路表示</p></div><div class="slide"><div class="slide-num">第 4 页</div><p>1.2  信号的频谱</p><p>正弦信号</p></div><div class="slide"><div class="slide-num">第 5 页</div><p>方波信号</p><p>满足狄里赫利条件，展开成傅里叶级数</p><p>其中</p><p>方波的时域表示</p><p>1.2  信号的频谱</p></div><div class="slide"><div class="slide-num">第 6 页</div><p>方波的时域表示</p><p>方波信号</p><p>1.2  信号的频谱</p></div><div class="slide"><div class="slide-num">第 7 页</div><p>非周期信号</p><p>傅里叶变换：</p><p>实际电路的处理能力是有限的</p><p>1.2  信号的频谱</p></div><div class="slide"><div class="slide-num">第 8 页</div><p>1.3  模拟信号和数字信号</p><p>处理模拟信号的电子电路称为模拟电路。</p><p>模拟信号：在时间和幅值上都是连续的信号。</p><p>数字信号：在时间和幅值上都是离散的信号。</p></div><div class="slide"><div class="slide-num">第 9 页</div><p>简化形式</p><p>需要供电电源；是双口网络。</p><p>电路中的电位参考基准点，定义为零电位。</p><p>接地符号“”的含义</p><p>也是输入、输出和电源的“共同端”。</p><p>1.4  放大电路模型</p><p>1. 信号放大时电路的一般构成</p></div><div class="slide"><div class="slide-num">第 10 页</div><p>1.4  放大电路模型</p><p>2. 放大电路增益形式</p><p>电压增益（电压放大倍数）</p><p>电流增益</p><p>互阻增益</p><p>互导增益</p><p>功率增益</p><p>增益分贝数表示</p><p>电压增益= 20lg|Av| dB</p><p>电流增益= 20lg|Ai | dB</p><p>功率增益= 10lgAp dB</p></div><div class="slide"><div class="slide-num">第 11 页</div><p>1.4  放大电路模型</p><p>3. 放大电路模型</p><p>放大电路是一个双口网络。从端口特性来研究放大电路，可将其等效成具有某种端口特性的等效电路。（此处均忽略了电抗元件的影响。）</p><p>输入端口特性可以等效为一个输入电阻</p><p>输出端口可以根据不同情况等效成不同的电路形式</p></div><div class="slide"><div class="slide-num">第 12 页</div><p>电压放大模型</p><p>1.4  放大电路模型</p><p>3. 放大电路模型</p></div><div class="slide"><div class="slide-num">第 13 页</div><p>电压放大模型</p><p>由输出回路得</p><p>则电压增益为</p><p>由此可见</p><p>即负载的大小会影响增益的大小</p><p>要想减小负载的影响，则希望</p><p>理想情况</p><p>1.4  放大电路模型</p><p>3. 放大电路模型</p></div><div class="slide"><div class="slide-num">第 14 页</div><p>电压放大模型</p><p>在输入回路</p><p>1.4  放大电路模型</p><p>3. 放大电路模型</p><p>理想情况</p><p>要想减小衰减，则希望</p><p>即信号源内阻会导致输入信号衰减</p></div><div class="slide"><div class="slide-num">第 15 页</div><p>电流放大模型</p><p>1.4  放大电路模型</p><p>3. 放大电路模型</p><p>电流增益</p><p>互阻放大模型</p></div><div class="slide"><div class="slide-num">第 16 页</div><p>互导放大模型</p><p>1.4  放大电路模型</p><p>3. 放大电路模型</p><p>隔离放大模型</p></div><div class="slide"><div class="slide-num">第 17 页</div><p>1.5  放大电路的主要性能指标</p><p>1. 输入电阻</p><p>或</p></div><div class="slide"><div class="slide-num">第 18 页</div><p>1.5  放大电路的主要性能指标</p><p>2. 输出电阻</p><p>注意：输入、输出电阻为交流电阻</p></div><div class="slide"><div class="slide-num">第 19 页</div><p>1.5  放大电路的主要性能指标</p><p>3. 增益</p><p>反映放大电路在输入信号控制下，将供电电源能量转换为输出信号能量的能力。</p></div><div class="slide"><div class="slide-num">第 20 页</div><p>4. 频率响应</p><p>A.频率响应及带宽</p><p>电压增益可表示为</p><p>在输入正弦信号情况下，输出随输入信号频率连续变化的稳态响应，称为放大电路的频率响应。</p><p>其中</p><p>1.5  放大电路的主要性能指标</p></div><div class="slide"><div class="slide-num">第 21 页</div><p>其中</p><p>普通音响系统放大电路的幅频响应</p><p>直流放大电路的幅频响应</p><p>4. 频率响应</p><p>A.频率响应及带宽</p><p>1.5  放大电路的主要性能指标</p></div><div class="slide"><div class="slide-num">第 22 页</div><p>4. 频率响应</p><p>B.频率失真（线性失真）</p><p>1.5  放大电路的主要性能指标</p><p>当放大基波幅值的倍数大于放大二次谐波的倍数时，复合波形出现失真。</p><p>幅度失真：</p><p>放大电路对信号中不同频率分量的放大倍数不同而产生的失真。</p></div><div class="slide"><div class="slide-num">第 23 页</div><p>如果基波分量和二次谐波分量经放大电路产生不同的时延，则复合波形出现失真。</p><p>相位失真：</p><p>放大电路对信号中不同频率分量产生的时延不同而出现的失真。</p><p>幅度失真和相位失真通常都是同时发生的，它们统称为频率失真，也称为线性失真。</p><p>4. 频率响应</p><p>B.频率失真（线性失真）</p><p>1.5  放大电路的主要性能指标</p></div><div class="slide"><div class="slide-num">第 24 页</div><p>end</p><p>5. 非线性失真</p><p>1.5  放大电路的主要性能指标</p><p>由元器件非线性特性引起的失真。</p><p>非线性失真系数:</p><p>Vo1是输出电压信号基波分量的有效值，Vok是高次谐波分量的有效值，k为正整数。</p></div>
-  <a class="back" href="index.html" style="margin-top:1.5rem;display:inline-block;">← 返回目录</a>
+1.5 放大电路的主要性能指标</p>
+      <h3>1  绪论</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 2 页</div>
+      <h3>1.1  信号</h3>
+      <h3>信号是信息的载体或表达形式</h3>
+      <h3>微音器输出的某一段信号的波形</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 3 页</div>
+      <h3>1.1  信号</h3>
+      <h3>电信号的电路表示</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 4 页</div>
+      <h3>1.2  信号的频谱</h3>
+      <h3>正弦信号</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 5 页</div>
+      <h3>方波信号</h3>
+      <h3>满足狄里赫利条件，展开成傅里叶级数</h3>
+      <h3>其中</h3>
+      <h3>方波的时域表示</h3>
+      <h3>1.2  信号的频谱</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 6 页</div>
+      <h3>方波的时域表示</h3>
+      <h3>方波信号</h3>
+      <h3>1.2  信号的频谱</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 7 页</div>
+      <h3>非周期信号</h3>
+      <h3>傅里叶变换：</h3>
+      <h3>实际电路的处理能力是有限的</h3>
+      <h3>1.2  信号的频谱</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 8 页</div>
+      <h3>1.3  模拟信号和数字信号</h3>
+      <p>处理模拟信号的电子电路称为模拟电路。</p>
+      <p>模拟信号：在时间和幅值上都是连续的信号。</p>
+      <p>数字信号：在时间和幅值上都是离散的信号。</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 9 页</div>
+      <h3>简化形式</h3>
+      <p>需要供电电源；是双口网络。</p>
+      <p>电路中的电位参考基准点，定义为零电位。</p>
+      <h3>接地符号“”的含义</h3>
+      <p>也是输入、输出和电源的“共同端”。</p>
+      <h3>1.4  放大电路模型</h3>
+      <h3>1. 信号放大时电路的一般构成</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 10 页</div>
+      <h3>1.4  放大电路模型</h3>
+      <h3>2. 放大电路增益形式</h3>
+      <h3>电压增益（电压放大倍数）</h3>
+      <h3>电流增益</h3>
+      <h3>互阻增益</h3>
+      <h3>互导增益</h3>
+      <h3>功率增益</h3>
+      <h3>增益分贝数表示</h3>
+      <h3>电压增益= 20lg|Av| dB</h3>
+      <h3>电流增益= 20lg|Ai | dB</h3>
+      <h3>功率增益= 10lgAp dB</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 11 页</div>
+      <h3>1.4  放大电路模型</h3>
+      <h3>3. 放大电路模型</h3>
+      <p>放大电路是一个双口网络。从端口特性来研究放大电路，可将其等效成具有某种端口特性的等效电路。（此处均忽略了电抗元件的影响。）</p>
+      <h3>输入端口特性可以等效为一个输入电阻</h3>
+      <h3>输出端口可以根据不同情况等效成不同的电路形式</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 12 页</div>
+      <h3>电压放大模型</h3>
+      <h3>1.4  放大电路模型</h3>
+      <h3>3. 放大电路模型</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 13 页</div>
+      <h3>电压放大模型</h3>
+      <h3>由输出回路得</h3>
+      <h3>则电压增益为</h3>
+      <h3>由此可见</h3>
+      <h3>即负载的大小会影响增益的大小</h3>
+      <h3>要想减小负载的影响，则希望</h3>
+      <h3>理想情况</h3>
+      <h3>1.4  放大电路模型</h3>
+      <h3>3. 放大电路模型</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 14 页</div>
+      <h3>电压放大模型</h3>
+      <h3>在输入回路</h3>
+      <h3>1.4  放大电路模型</h3>
+      <h3>3. 放大电路模型</h3>
+      <h3>理想情况</h3>
+      <h3>要想减小衰减，则希望</h3>
+      <h3>即信号源内阻会导致输入信号衰减</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 15 页</div>
+      <h3>电流放大模型</h3>
+      <h3>1.4  放大电路模型</h3>
+      <h3>3. 放大电路模型</h3>
+      <h3>电流增益</h3>
+      <h3>互阻放大模型</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 16 页</div>
+      <h3>互导放大模型</h3>
+      <h3>1.4  放大电路模型</h3>
+      <h3>3. 放大电路模型</h3>
+      <h3>隔离放大模型</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 17 页</div>
+      <h3>1.5  放大电路的主要性能指标</h3>
+      <h3>1. 输入电阻</h3>
+      <h3>或</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 18 页</div>
+      <h3>1.5  放大电路的主要性能指标</h3>
+      <h3>2. 输出电阻</h3>
+      <h3>注意：输入、输出电阻为交流电阻</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 19 页</div>
+      <h3>1.5  放大电路的主要性能指标</h3>
+      <h3>3. 增益</h3>
+      <p>反映放大电路在输入信号控制下，将供电电源能量转换为输出信号能量的能力。</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 20 页</div>
+      <h3>4. 频率响应</h3>
+      <h3>A.频率响应及带宽</h3>
+      <h3>电压增益可表示为</h3>
+      <p>在输入正弦信号情况下，输出随输入信号频率连续变化的稳态响应，称为放大电路的频率响应。</p>
+      <h3>其中</h3>
+      <h3>1.5  放大电路的主要性能指标</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 21 页</div>
+      <h3>其中</h3>
+      <h3>普通音响系统放大电路的幅频响应</h3>
+      <h3>直流放大电路的幅频响应</h3>
+      <h3>4. 频率响应</h3>
+      <h3>A.频率响应及带宽</h3>
+      <h3>1.5  放大电路的主要性能指标</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 22 页</div>
+      <h3>4. 频率响应</h3>
+      <h3>B.频率失真（线性失真）</h3>
+      <h3>1.5  放大电路的主要性能指标</h3>
+      <p>当放大基波幅值的倍数大于放大二次谐波的倍数时，复合波形出现失真。</p>
+      <h3>幅度失真：</h3>
+      <p>放大电路对信号中不同频率分量的放大倍数不同而产生的失真。</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 23 页</div>
+      <p>如果基波分量和二次谐波分量经放大电路产生不同的时延，则复合波形出现失真。</p>
+      <h3>相位失真：</h3>
+      <p>放大电路对信号中不同频率分量产生的时延不同而出现的失真。</p>
+      <p>幅度失真和相位失真通常都是同时发生的，它们统称为频率失真，也称为线性失真。</p>
+      <h3>4. 频率响应</h3>
+      <h3>B.频率失真（线性失真）</h3>
+      <h3>1.5  放大电路的主要性能指标</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 24 页</div>
+      <h3>end</h3>
+      <h3>5. 非线性失真</h3>
+      <h3>1.5  放大电路的主要性能指标</h3>
+      <p>由元器件非线性特性引起的失真。</p>
+      <p>非线性失真系数:</p>
+      <p>Vo1是输出电压信号基波分量的有效值，Vok是高次谐波分量的有效值，k为正整数。</p>
+    </div>
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <span></span>
+    <a href="ch02.html">第2章 运算放大器 →</a>
+  </div>
 </div>
+
+<div class="footer">
+  <p>内容来源: 模拟电子技术课程PPT · 第1章 绪论</p>
+</div>
+
 </body>
 </html>

@@ -3,101 +3,651 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ch02 · 模拟电子技术</title>
+<title>第2章 运算放大器 - 模拟电子技术</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --primary: #1a3a5c;
+    --accent: #27ae60;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e1e8ed;
+    --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
-    background: #f8f9fa; color: #1e293b; line-height: 1.8; padding: 1.5rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
   }
-  .container { max-width: 860px; margin: 0 auto; }
-  .back {
-    display: inline-flex; align-items: center; gap: 6px;
-    text-decoration: none; color: #2563eb; font-size: .95rem;
-    margin-bottom: 1.5rem;
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .back:hover { text-decoration: underline; }
-  h1 { font-size: 1.6rem; margin-bottom: 1.5rem; color: #1e293b; }
-  .slide {
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
-    padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .slide-num {
-    font-size: .8rem; color: #94a3b8; margin-bottom: .5rem;
-    font-weight: 600; letter-spacing: .5px;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
-  .slide p { margin-bottom: .4rem; font-size: .95rem; }
-  .slide p:last-child { margin-bottom: 0; }
-  @media (max-width:600px) {
-    h1 { font-size: 1.3rem; }
-    .slide { padding: 1rem 1.2rem; }
+  .section h3 {
+    font-size: 1.1em;
+    color: var(--accent);
+    margin: 18px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .section h3:first-of-type { margin-top: 0; }
+  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
+  .section ul { margin: 6px 0 10px 20px; }
+  .section li { margin-bottom: 4px; font-size: 0.95em; }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .nav-links span { flex: 1; }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) {
+    .section { padding: 16px; }
+    .topbar h2 { font-size: 1em; }
   }
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>第2章 运算放大器</h2>
+    <a href="ch03.html">第3章 二极管及其基本电路 →</a>
+  </div>
+</div>
+
 <div class="container">
-  <a class="back" href="index.html">← 返回目录</a>
-  <h1>📖 ch02</h1>
-  <div class="slide"><div class="slide-num">第 1 页</div><p>2.1 集成电路运算放大器
+
+    <div class="section">
+      <div class="slide-num">第 1 页</div>
+      <p>2.1 集成电路运算放大器
 2.2 理想运算放大器
 2.3 基本线性运放电路
-2.4 同相输入和反相输入放大电路的其他应用</p><p>2  运算放大器</p></div><div class="slide"><div class="slide-num">第 2 页</div><p>1. 集成电路运算放大器简介</p><p>2.1  集成电路运算放大器</p><p>内部结构框图</p><p>一种双列直插封装外形</p></div><div class="slide"><div class="slide-num">第 3 页</div><p>国标符号</p><p>常用符号</p><p>电路符号</p><p>2.1  集成电路运算放大器</p><p>1. 集成电路运算放大器简介</p></div><div class="slide"><div class="slide-num">第 4 页</div><p>反相输入端</p><p>同相输入端</p><p>输出端</p><p>端口意义</p><p>无特定接地端！</p><p>2.1  集成电路运算放大器</p><p>1. 集成电路运算放大器简介</p></div><div class="slide"><div class="slide-num">第 5 页</div><p>外部电源连接</p><p>运算放大器正常工作时，必须提供工作电源，通常正负电源的连接方式为</p><p>运算放大器的电源连接</p><p>2.1  集成电路运算放大器</p><p>1. 集成电路运算放大器简介</p></div><div class="slide"><div class="slide-num">第 6 页</div><p>2. 运算放大器的电路模型</p><p>集成运算放大器的输入电阻</p><p>集成运算放大器的输出电阻</p><p>表示集成运算放大器的电压放大能力</p><p>2.1  集成电路运算放大器</p></div><div class="slide"><div class="slide-num">第 7 页</div><p>3.  运算放大器的传输特性</p><p>通常：
+2.4 同相输入和反相输入放大电路的其他应用</p>
+      <h3>2  运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 2 页</div>
+      <h3>1. 集成电路运算放大器简介</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+      <h3>内部结构框图</h3>
+      <h3>一种双列直插封装外形</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 3 页</div>
+      <h3>国标符号</h3>
+      <h3>常用符号</h3>
+      <h3>电路符号</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+      <h3>1. 集成电路运算放大器简介</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 4 页</div>
+      <h3>反相输入端</h3>
+      <h3>同相输入端</h3>
+      <h3>输出端</h3>
+      <h3>端口意义</h3>
+      <h3>无特定接地端！</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+      <h3>1. 集成电路运算放大器简介</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 5 页</div>
+      <h3>外部电源连接</h3>
+      <h3>运算放大器正常工作时，必须提供工作电源，通常正负电源的连接方式为</h3>
+      <h3>运算放大器的电源连接</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+      <h3>1. 集成电路运算放大器简介</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 6 页</div>
+      <h3>2. 运算放大器的电路模型</h3>
+      <h3>集成运算放大器的输入电阻</h3>
+      <h3>集成运算放大器的输出电阻</h3>
+      <h3>表示集成运算放大器的电压放大能力</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 7 页</div>
+      <h3>3.  运算放大器的传输特性</h3>
+      <h3>通常：
  开环电压增益
-     Avo的105 （很高）</p><p>输入电阻
-     ri  106Ω （很大）</p><p>输出电阻
-    ro  100Ω （很小）</p><p>vO＝Avo(vP－vN)           （  V－＜ vO ＜V＋ ）</p><p>注意输入输出的相位关系</p><p>2.1  集成电路运算放大器</p></div><div class="slide"><div class="slide-num">第 8 页</div><p>3.  运算放大器的传输特性</p><p>当(vP－vN) > 0，
+     Avo的105 （很高）</h3>
+      <h3>输入电阻
+     ri  106Ω （很大）</h3>
+      <h3>输出电阻
+    ro  100Ω （很小）</h3>
+      <p>vO＝Avo(vP－vN)           （  V－＜ vO ＜V＋ ）</p>
+      <h3>注意输入输出的相位关系</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 8 页</div>
+      <h3>3.  运算放大器的传输特性</h3>
+      <p>当(vP－vN) &gt; 0，
 且Avo(vP－vN) V＋ 时
-         vO ＝ + Vom≈  V＋</p><p>当(vP－vN) < 0，
+         vO ＝ + Vom≈  V＋</p>
+      <p>当(vP－vN) &lt; 0，
 且Avo(vP－vN)  V-时
-         vO＝ -Vom≈ V-</p><p>电压传输特性
-       vO＝ f (vP－vN)</p><p>2.1  集成电路运算放大器</p><p>线性范围内   vO＝Avo(vP－vN)</p></div><div class="slide"><div class="slide-num">第 9 页</div><p>4.  运算放大器的输出端电流</p><p>如果有</p><p>2.1  集成电路运算放大器</p></div><div class="slide"><div class="slide-num">第 10 页</div><p>5.  差模信号和共模信号</p><p>2.1  集成电路运算放大器</p></div><div class="slide"><div class="slide-num">第 11 页</div><p>5.  差模信号和共模信号</p><p>2.1  集成电路运算放大器</p></div><div class="slide"><div class="slide-num">第 12 页</div><p>5.  差模信号和共模信号</p><p>2.1  集成电路运算放大器</p></div><div class="slide"><div class="slide-num">第 13 页</div><p>5.  差模信号和共模信号</p><p>2.1  集成电路运算放大器</p><p>理想运放</p></div><div class="slide"><div class="slide-num">第 14 页</div><p>2.1 集成电路运算放大器
+         vO＝ -Vom≈ V-</p>
+      <h3>电压传输特性
+       vO＝ f (vP－vN)</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+      <h3>线性范围内   vO＝Avo(vP－vN)</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 9 页</div>
+      <h3>4.  运算放大器的输出端电流</h3>
+      <h3>如果有</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 10 页</div>
+      <h3>5.  差模信号和共模信号</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 11 页</div>
+      <h3>5.  差模信号和共模信号</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 12 页</div>
+      <h3>5.  差模信号和共模信号</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 13 页</div>
+      <h3>5.  差模信号和共模信号</h3>
+      <h3>2.1  集成电路运算放大器</h3>
+      <h3>理想运放</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 14 页</div>
+      <p>2.1 集成电路运算放大器
 2.2 理想运算放大器
 2.3 基本线性运放电路
-2.4 同相输入和反相输入放大电路的其他应用</p><p>2  运算放大器</p></div><div class="slide"><div class="slide-num">第 15 页</div><p>1. 理想运算放大器的参数</p><p>（1）开环电压增益Avo→∞；
+2.4 同相输入和反相输入放大电路的其他应用</p>
+      <h3>2  运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 15 页</div>
+      <h3>1. 理想运算放大器的参数</h3>
+      <p>（1）开环电压增益Avo→∞；
 （2）输入电阻ri＝∞；
 （3）输出电阻ro＝0；
 （4）开环带宽BW→∞；
-（5）当vP＝vN时，vＯ＝0。</p><p>若V－< vo <V＋       有  vo＝Avo(vP－vN)         则  （vP－vN）= vo /Avo 0      即    vP  vN   虚短</p><p>输入电阻ri的阻值很高， 使  iP = -iN = (vP - vN)/ri ≈ 0  虚断</p><p>2.2  理想运算放大器</p></div><div class="slide"><div class="slide-num">第 16 页</div><p>特别注意：
-    vP ≈ vN ，    iP≈ 0、iN≈ 0</p><p>2. 理想运算放大器的传输特性</p><p>“虚短”和“虚断”是用来分析各种运放线性应用电路的有力法则，必须熟练掌握。</p><p>2.2  理想运算放大器</p></div><div class="slide"><div class="slide-num">第 17 页</div><p>2.1 集成电路运算放大器
+（5）当vP＝vN时，vＯ＝0。</p>
+      <p>若V－&lt; vo &lt;V＋       有  vo＝Avo(vP－vN)         则  （vP－vN）= vo /Avo 0      即    vP  vN   虚短</p>
+      <p>输入电阻ri的阻值很高， 使  iP = -iN = (vP - vN)/ri ≈ 0  虚断</p>
+      <h3>2.2  理想运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 16 页</div>
+      <h3>特别注意：
+    vP ≈ vN ，    iP≈ 0、iN≈ 0</h3>
+      <h3>2. 理想运算放大器的传输特性</h3>
+      <p>“虚短”和“虚断”是用来分析各种运放线性应用电路的有力法则，必须熟练掌握。</p>
+      <h3>2.2  理想运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 17 页</div>
+      <p>2.1 集成电路运算放大器
 2.2 理想运算放大器
 2.3 基本线性运放电路
-2.4 同相输入和反相输入放大电路的其他应用</p><p>2  运算放大器</p></div><div class="slide"><div class="slide-num">第 18 页</div><p>2.3.1 同相放大电路	
-2.3.2 反相放大电路</p><p>2.3  基本线性运放电路</p></div><div class="slide"><div class="slide-num">第 19 页</div><p>能采用以下形式对信号进行线性放大吗？为什么？</p><p>线性区</p><p>理论上可以，实际上很难。
-要求输入信号非常小，且此时运放的带宽也很窄。</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 20 页</div><p>实际应用中，线性放大时都需要引入负反馈</p><p>使</p><p>反馈：将输出量（电压或电流）送回到输入的过程</p><p>反馈通路</p><p>负反馈：反馈到输入的信号将减小原来加到放大器输入端的信号</p><p>容易满足</p><p>运放工作在线性区</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 21 页</div><p>由于实际运放与理想运放特性很接近，所以在工程应用时，都将实际运放当作理想运放来简化分析和设计。
-        需要特别注意，它们最大的差别是，理想运放的频带宽度是无限的，而实际运放的带宽是有限的。</p><p>理想特性：
+2.4 同相输入和反相输入放大电路的其他应用</p>
+      <h3>2  运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 18 页</div>
+      <h3>2.3.1 同相放大电路	
+2.3.2 反相放大电路</h3>
+      <h3>2.3  基本线性运放电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 19 页</div>
+      <p>能采用以下形式对信号进行线性放大吗？为什么？</p>
+      <h3>线性区</h3>
+      <p>理论上可以，实际上很难。
+要求输入信号非常小，且此时运放的带宽也很窄。</p>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 20 页</div>
+      <h3>实际应用中，线性放大时都需要引入负反馈</h3>
+      <h3>使</h3>
+      <h3>反馈：将输出量（电压或电流）送回到输入的过程</h3>
+      <h3>反馈通路</h3>
+      <h3>负反馈：反馈到输入的信号将减小原来加到放大器输入端的信号</h3>
+      <h3>容易满足</h3>
+      <h3>运放工作在线性区</h3>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 21 页</div>
+      <p>由于实际运放与理想运放特性很接近，所以在工程应用时，都将实际运放当作理想运放来简化分析和设计。
+        需要特别注意，它们最大的差别是，理想运放的频带宽度是无限的，而实际运放的带宽是有限的。</p>
+      <p>理想特性：
     ri≈∞
     ro≈0
     Avo→∞
     vo＝Avo(vP－vN)
     vP≈ vN 
-     iP≈ 0、iN≈ 0</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 22 页</div><p>指标分析</p><p>（1）电压增益Av</p><p>根据理想运放特性
+     iP≈ 0、iN≈ 0</p>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 22 页</div>
+      <h3>指标分析</h3>
+      <h3>（1）电压增益Av</h3>
+      <p>根据理想运放特性
           vp≈vn  （虚短）
-          ip= -in=0  （虚断）</p><p>所以</p><p>（可作为公式直接使用）</p><p>为什么称为同相放大电路？</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 23 页</div><p>用理想运放模型带来的误差有多少？(设Avo=105,  ri =106Ω,    ro=100Ω, R1=1kΩ,   R2=49kΩ)</p><p>采用实际运放模型的电压增益Av</p><p>指标分析</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 24 页</div><p>指标分析</p><p>用理想运放模型带来的误差有多少？(设Avo=105,  ri =106Ω,    ro=100Ω, R1=1kΩ,   R2=49kΩ)</p><p>采用实际运放模型的电压增益Av  49.975</p><p>采用理想运放模型的电压增益</p><p>产生的相对误差约为 0.05%</p><p>实际上，电阻R1和R2如果用E48系列的阻值，则会有2%的误差，所以用理想运放代替实际运放进行电路分析和设计完全可行。</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 25 页</div><p>（2）输入电阻Ri</p><p>输入电阻定义</p><p>根据虚短和虚断有
-           vi＝vp，ii ＝ ip≈0</p><p>（3）输出电阻Ro</p><p>Ro→0</p><p>指标分析</p><p>输入电阻趋于无穷大；输出电阻趋于0，因此带负载能力强，所带负载电阻大小不影响其运算关系。</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 26 页</div><p>同相放大电路的一种特殊形式——电压跟随器</p><p>vo＝vn≈ vp＝ vi</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 27 页</div><p>无电压跟随器时
-        负载上得到的电压</p><p>有电压跟随器时</p><p>ip≈0，vp＝vs</p><p>根据虚短和虚断</p><p>vo＝vn≈ vp＝ vs</p><p>电压跟随器对电压增益有贡献吗？</p><p>隔离或缓冲</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 28 页</div><p>同相放大电路的另一种接法</p><p>?</p><p>2.3.1  同相放大电路</p></div><div class="slide"><div class="slide-num">第 29 页</div><p>2.3.1  同相放大电路</p><p>例：设对交流信号频率而言电容的阻抗很小，可视作短路。（1）求电路的交流电压增益；（2）若vi为直流电压，则电压增益又为多少？</p></div><div class="slide"><div class="slide-num">第 30 页</div><p>2.3.1 同相放大电路	
-2.3.2 反相放大电路</p><p>2.3  基本线性运放电路</p></div><div class="slide"><div class="slide-num">第 31 页</div><p>2.3.2  反相放大电路</p><p>1. 电路形式</p><p>输入信号</p><p>反相输入</p><p>输出端</p><p>反馈通路</p></div><div class="slide"><div class="slide-num">第 32 页</div><p>2. 指标分析</p><p>根据虚短和虚断有
-       vn≈ vp = 0 ，  in＝0</p><p>所以     i1＝i2</p><p>（可作为公式直接使用）</p><p>（1）电压增益Av</p><p>为什么称为反相放大电路？</p><p>若R1＝Rf 时，Av＝－1，习惯称为反相器。</p><p>2.3.2  反相放大电路</p></div><div class="slide"><div class="slide-num">第 33 页</div><p>（2）输入电阻Ri</p><p>（3）输出电阻Ro</p><p>Ro→0</p><p>若信号源是非理想的电压信号源，采用哪种放大电路更好？
-     同相放大电路    反相放大电路</p><p>2.3.2  反相放大电路</p><p>2. 指标分析</p></div><div class="slide"><div class="slide-num">第 34 页</div><p>解：</p><p>1）S闭合，电路同相输入端接地，构成反相比例电路，有：</p><p>例: 电路如图所示，求当开关闭合和断开时电路的增益  Av=vO/vI的值。</p><p>2）S断开，可以利用叠加原理求解</p><p>2.3.2  反相放大电路</p></div><div class="slide"><div class="slide-num">第 35 页</div><p>例: 负载电阻RL跨接在输出端与M点之间，没有接地（也称负载浮地）。 (1) 求电流增益表达式Ai=io/is；(2) 求电路的输入电阻。</p><p>解：利用运放的虚短虚断</p><p>2.3.2  反相放大电路</p><p>电流增益</p><p>输入电阻</p><p>与负载有关吗？</p><p>有什么好处？</p></div><div class="slide"><div class="slide-num">第 36 页</div><p>例: 负载电阻RL跨接在输出端与M点之间，没有接地（也称负载浮地）。 (1) 求电流增益表达式Ai=io/is；(2) 求电路的输入电阻。</p><p>解：利用运放的虚短虚断</p><p>2.3.2  反相放大电路</p><p>电流增益</p><p>输入电阻</p><p>有什么好处？</p><p>与负载有关吗？</p></div><div class="slide"><div class="slide-num">第 37 页</div><p>例: 设信号为零时电源引脚电流IQ=0.5mA（也称为静态电流）。电路输出驱动一个2kΩ的负载。(1) vi =0V时，求运放的输出电流、两电源引脚中的电流和运放的耗散功率；(2) vi =3V时，再求(1)中的问题。</p><p>解：</p><p>(1) vi =0V时，</p><p>2.3.2  反相放大电路</p><p>vo =0V</p></div><div class="slide"><div class="slide-num">第 38 页</div><p>解：</p><p>(1) vi =3V时，</p><p>2.3.2  反相放大电路</p><p>-9V</p><p>例: 设信号为零时电源引脚电流IQ=0.5mA（也称为静态电流）。电路输出驱动一个2kΩ的负载。(1) vi =0V时，求运放的输出电流、两电源引脚中的电流和运放的耗散功率；(2) vi =3V时，再求(1)中的问题。</p></div><div class="slide"><div class="slide-num">第 39 页</div><p>2.1 集成电路运算放大器
+          ip= -in=0  （虚断）</p>
+      <h3>所以</h3>
+      <h3>（可作为公式直接使用）</h3>
+      <p>为什么称为同相放大电路？</p>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 23 页</div>
+      <p>用理想运放模型带来的误差有多少？(设Avo=105,  ri =106Ω,    ro=100Ω, R1=1kΩ,   R2=49kΩ)</p>
+      <h3>采用实际运放模型的电压增益Av</h3>
+      <h3>指标分析</h3>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 24 页</div>
+      <h3>指标分析</h3>
+      <p>用理想运放模型带来的误差有多少？(设Avo=105,  ri =106Ω,    ro=100Ω, R1=1kΩ,   R2=49kΩ)</p>
+      <h3>采用实际运放模型的电压增益Av  49.975</h3>
+      <h3>采用理想运放模型的电压增益</h3>
+      <h3>产生的相对误差约为 0.05%</h3>
+      <p>实际上，电阻R1和R2如果用E48系列的阻值，则会有2%的误差，所以用理想运放代替实际运放进行电路分析和设计完全可行。</p>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 25 页</div>
+      <h3>（2）输入电阻Ri</h3>
+      <h3>输入电阻定义</h3>
+      <p>根据虚短和虚断有
+           vi＝vp，ii ＝ ip≈0</p>
+      <h3>（3）输出电阻Ro</h3>
+      <h3>Ro→0</h3>
+      <h3>指标分析</h3>
+      <p>输入电阻趋于无穷大；输出电阻趋于0，因此带负载能力强，所带负载电阻大小不影响其运算关系。</p>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 26 页</div>
+      <h3>同相放大电路的一种特殊形式——电压跟随器</h3>
+      <h3>vo＝vn≈ vp＝ vi</h3>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 27 页</div>
+      <h3>无电压跟随器时
+        负载上得到的电压</h3>
+      <h3>有电压跟随器时</h3>
+      <h3>ip≈0，vp＝vs</h3>
+      <h3>根据虚短和虚断</h3>
+      <h3>vo＝vn≈ vp＝ vs</h3>
+      <p>电压跟随器对电压增益有贡献吗？</p>
+      <h3>隔离或缓冲</h3>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 28 页</div>
+      <h3>同相放大电路的另一种接法</h3>
+      <h3>?</h3>
+      <h3>2.3.1  同相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 29 页</div>
+      <h3>2.3.1  同相放大电路</h3>
+      <p>例：设对交流信号频率而言电容的阻抗很小，可视作短路。（1）求电路的交流电压增益；（2）若vi为直流电压，则电压增益又为多少？</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 30 页</div>
+      <h3>2.3.1 同相放大电路	
+2.3.2 反相放大电路</h3>
+      <h3>2.3  基本线性运放电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 31 页</div>
+      <h3>2.3.2  反相放大电路</h3>
+      <h3>1. 电路形式</h3>
+      <h3>输入信号</h3>
+      <h3>反相输入</h3>
+      <h3>输出端</h3>
+      <h3>反馈通路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 32 页</div>
+      <h3>2. 指标分析</h3>
+      <h3>根据虚短和虚断有
+       vn≈ vp = 0 ，  in＝0</h3>
+      <h3>所以     i1＝i2</h3>
+      <h3>（可作为公式直接使用）</h3>
+      <h3>（1）电压增益Av</h3>
+      <p>为什么称为反相放大电路？</p>
+      <p>若R1＝Rf 时，Av＝－1，习惯称为反相器。</p>
+      <h3>2.3.2  反相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 33 页</div>
+      <h3>（2）输入电阻Ri</h3>
+      <h3>（3）输出电阻Ro</h3>
+      <h3>Ro→0</h3>
+      <p>若信号源是非理想的电压信号源，采用哪种放大电路更好？
+     同相放大电路    反相放大电路</p>
+      <h3>2.3.2  反相放大电路</h3>
+      <h3>2. 指标分析</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 34 页</div>
+      <h3>解：</h3>
+      <h3>1）S闭合，电路同相输入端接地，构成反相比例电路，有：</h3>
+      <p>例: 电路如图所示，求当开关闭合和断开时电路的增益  Av=vO/vI的值。</p>
+      <h3>2）S断开，可以利用叠加原理求解</h3>
+      <h3>2.3.2  反相放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 35 页</div>
+      <p>例: 负载电阻RL跨接在输出端与M点之间，没有接地（也称负载浮地）。 (1) 求电流增益表达式Ai=io/is；(2) 求电路的输入电阻。</p>
+      <h3>解：利用运放的虚短虚断</h3>
+      <h3>2.3.2  反相放大电路</h3>
+      <h3>电流增益</h3>
+      <h3>输入电阻</h3>
+      <p>与负载有关吗？</p>
+      <p>有什么好处？</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 36 页</div>
+      <p>例: 负载电阻RL跨接在输出端与M点之间，没有接地（也称负载浮地）。 (1) 求电流增益表达式Ai=io/is；(2) 求电路的输入电阻。</p>
+      <h3>解：利用运放的虚短虚断</h3>
+      <h3>2.3.2  反相放大电路</h3>
+      <h3>电流增益</h3>
+      <h3>输入电阻</h3>
+      <p>有什么好处？</p>
+      <p>与负载有关吗？</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 37 页</div>
+      <p>例: 设信号为零时电源引脚电流IQ=0.5mA（也称为静态电流）。电路输出驱动一个2kΩ的负载。(1) vi =0V时，求运放的输出电流、两电源引脚中的电流和运放的耗散功率；(2) vi =3V时，再求(1)中的问题。</p>
+      <h3>解：</h3>
+      <p>(1) vi =0V时，</p>
+      <h3>2.3.2  反相放大电路</h3>
+      <h3>vo =0V</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 38 页</div>
+      <h3>解：</h3>
+      <p>(1) vi =3V时，</p>
+      <h3>2.3.2  反相放大电路</h3>
+      <h3>-9V</h3>
+      <p>例: 设信号为零时电源引脚电流IQ=0.5mA（也称为静态电流）。电路输出驱动一个2kΩ的负载。(1) vi =0V时，求运放的输出电流、两电源引脚中的电流和运放的耗散功率；(2) vi =3V时，再求(1)中的问题。</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 39 页</div>
+      <p>2.1 集成电路运算放大器
 2.2 理想运算放大器
 2.3 基本线性运放电路
-2.4 同相输入和反相输入放大电路的其他应用</p><p>2  运算放大器</p></div><div class="slide"><div class="slide-num">第 40 页</div><p>2.4.1 求和电路	
+2.4 同相输入和反相输入放大电路的其他应用</p>
+      <h3>2  运算放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 40 页</div>
+      <p>2.4.1 求和电路	
 2.4.2 求差电路	
 2.4.3 仪用放大器	
-2.4.4 积分和微分电路</p><p>2.4  同相输入和反相输入放大电路
-的其他应用</p></div><div class="slide"><div class="slide-num">第 41 页</div><p>反相加法</p><p>2.4.1    求和电路</p><p>根据虚短、虚断和N点的KCL方程得：</p></div><div class="slide"><div class="slide-num">第 42 页</div><p>2.4.1 求和电路	
+2.4.4 积分和微分电路</p>
+      <h3>2.4  同相输入和反相输入放大电路
+的其他应用</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 41 页</div>
+      <h3>反相加法</h3>
+      <h3>2.4.1    求和电路</h3>
+      <h3>根据虚短、虚断和N点的KCL方程得：</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 42 页</div>
+      <p>2.4.1 求和电路	
 2.4.2 求差电路	
 2.4.3 仪用放大器	
-2.4.4 积分和微分电路</p><p>2.4  同相输入和反相输入放大电路
-的其他应用</p></div><div class="slide"><div class="slide-num">第 43 页</div><p>2.4.2    求差电路</p><p>1. 电路结构</p><p>vo= f (vi1，vi2) = ？</p></div><div class="slide"><div class="slide-num">第 44 页</div><p>2. 输入输出关系</p><p>当 R3 /R2 ＝R4 /R1 时，</p><p>2.4.2    求差电路</p></div><div class="slide"><div class="slide-num">第 45 页</div><p>3. 电压增益</p><p>2.4.2    求差电路</p><p>或</p></div><div class="slide"><div class="slide-num">第 46 页</div><p>4. 差模输入电阻</p><p>2.4.2    求差电路</p></div><div class="slide"><div class="slide-num">第 47 页</div><p>2.4.1 求和电路	
+2.4.4 积分和微分电路</p>
+      <h3>2.4  同相输入和反相输入放大电路
+的其他应用</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 43 页</div>
+      <h3>2.4.2    求差电路</h3>
+      <h3>1. 电路结构</h3>
+      <p>vo= f (vi1，vi2) = ？</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 44 页</div>
+      <h3>2. 输入输出关系</h3>
+      <p>当 R3 /R2 ＝R4 /R1 时，</p>
+      <h3>2.4.2    求差电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 45 页</div>
+      <h3>3. 电压增益</h3>
+      <h3>2.4.2    求差电路</h3>
+      <h3>或</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 46 页</div>
+      <h3>4. 差模输入电阻</h3>
+      <h3>2.4.2    求差电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 47 页</div>
+      <p>2.4.1 求和电路	
 2.4.2 求差电路	
 2.4.3 仪用放大器	
-2.4.4 积分和微分电路</p><p>2.4  同相输入和反相输入放大电路
-的其他应用</p></div><div class="slide"><div class="slide-num">第 48 页</div><p>热敏电阻</p><p>电桥测温电路</p><p>能实现吗？</p><p>改进电路</p><p>有更好的电路吗？</p><p>体现了输入电阻的重要性</p><p>2.4.3    仪用放大器</p></div><div class="slide"><div class="slide-num">第 49 页</div><p>1.  电路及增益</p><p>2.4.3    仪用放大器</p></div><div class="slide"><div class="slide-num">第 50 页</div><p>2. 集成仪用放大器</p><p>INA128</p><p>2.4.3    仪用放大器</p></div><div class="slide"><div class="slide-num">第 51 页</div><p>3. 应用实例——心电信号放大电路</p><p>2.4.3    仪用放大器</p><p>没有右腿驱动电路时，INA128输入端的共模电压：</p></div><div class="slide"><div class="slide-num">第 52 页</div><p>3. 应用实例——心电信号放大电路</p><p>2.4.3    仪用放大器</p><p>加入右腿驱动电路后，INA128输入端的共模电压：</p><p>其中 K = R6/R5</p><p>输入到INA128的共模电压大大减小！</p></div><div class="slide"><div class="slide-num">第 53 页</div><p>2.4.1 求和电路	
+2.4.4 积分和微分电路</p>
+      <h3>2.4  同相输入和反相输入放大电路
+的其他应用</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 48 页</div>
+      <h3>热敏电阻</h3>
+      <h3>电桥测温电路</h3>
+      <p>能实现吗？</p>
+      <h3>改进电路</h3>
+      <p>有更好的电路吗？</p>
+      <h3>体现了输入电阻的重要性</h3>
+      <h3>2.4.3    仪用放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 49 页</div>
+      <h3>1.  电路及增益</h3>
+      <h3>2.4.3    仪用放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 50 页</div>
+      <h3>2. 集成仪用放大器</h3>
+      <h3>INA128</h3>
+      <h3>2.4.3    仪用放大器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 51 页</div>
+      <h3>3. 应用实例——心电信号放大电路</h3>
+      <h3>2.4.3    仪用放大器</h3>
+      <h3>没有右腿驱动电路时，INA128输入端的共模电压：</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 52 页</div>
+      <h3>3. 应用实例——心电信号放大电路</h3>
+      <h3>2.4.3    仪用放大器</h3>
+      <h3>加入右腿驱动电路后，INA128输入端的共模电压：</h3>
+      <h3>其中 K = R6/R5</h3>
+      <h3>输入到INA128的共模电压大大减小！</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 53 页</div>
+      <p>2.4.1 求和电路	
 2.4.2 求差电路	
 2.4.3 仪用放大器	
-2.4.4 积分和微分电路</p><p>2.4  同相输入和反相输入放大电路
-的其他应用</p></div><div class="slide"><div class="slide-num">第 54 页</div><p>1.  积分电路</p><p>2.4.4    积分和微分电路</p><p>负号表示vO与vI在相位上是相反的</p><p>根据虚短，得</p><p>根据虚断，得</p><p>设电容器C的初始电压为零</p><p>（积分运算）</p><p>则</p></div><div class="slide"><div class="slide-num">第 55 页</div><p>2.  积分电路的应用</p><p>2.4.4    积分和微分电路</p><p>阶跃电压</p><p>与一般RC电路相比该积分电路有何特点？</p></div><div class="slide"><div class="slide-num">第 56 页</div><p>2.  积分电路的应用</p><p>2.4.4    积分和微分电路</p></div><div class="slide"><div class="slide-num">第 57 页</div><p>3. 微分电路</p><p>2.4.4    积分和微分电路</p><p>而</p><p>根据虚断得</p><p>根据虚短得</p><p>所以</p></div><div class="slide"><div class="slide-num">第 58 页</div><p>4.  微分电路的应用</p><p>方波输入信号</p><p>尖脉冲输出</p><p>2.4.4    积分和微分电路</p><p>end</p></div>
-  <a class="back" href="index.html" style="margin-top:1.5rem;display:inline-block;">← 返回目录</a>
+2.4.4 积分和微分电路</p>
+      <h3>2.4  同相输入和反相输入放大电路
+的其他应用</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 54 页</div>
+      <h3>1.  积分电路</h3>
+      <h3>2.4.4    积分和微分电路</h3>
+      <h3>负号表示vO与vI在相位上是相反的</h3>
+      <h3>根据虚短，得</h3>
+      <h3>根据虚断，得</h3>
+      <h3>设电容器C的初始电压为零</h3>
+      <h3>（积分运算）</h3>
+      <h3>则</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 55 页</div>
+      <h3>2.  积分电路的应用</h3>
+      <h3>2.4.4    积分和微分电路</h3>
+      <h3>阶跃电压</h3>
+      <p>与一般RC电路相比该积分电路有何特点？</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 56 页</div>
+      <h3>2.  积分电路的应用</h3>
+      <h3>2.4.4    积分和微分电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 57 页</div>
+      <h3>3. 微分电路</h3>
+      <h3>2.4.4    积分和微分电路</h3>
+      <h3>而</h3>
+      <h3>根据虚断得</h3>
+      <h3>根据虚短得</h3>
+      <h3>所以</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 58 页</div>
+      <h3>4.  微分电路的应用</h3>
+      <h3>方波输入信号</h3>
+      <h3>尖脉冲输出</h3>
+      <h3>2.4.4    积分和微分电路</h3>
+      <h3>end</h3>
+    </div>
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="ch01.html">← 第1章 绪论</a>
+    <a href="ch03.html">第3章 二极管及其基本电路 →</a>
+  </div>
 </div>
+
+<div class="footer">
+  <p>内容来源: 模拟电子技术课程PPT · 第2章 运算放大器</p>
+</div>
+
 </body>
 </html>

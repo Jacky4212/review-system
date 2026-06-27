@@ -3,96 +3,419 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ch09 · 模拟电子技术</title>
+<title>第9章 功率放大电路 - 模拟电子技术</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --primary: #1a3a5c;
+    --accent: #d35400;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e1e8ed;
+    --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
-    background: #f8f9fa; color: #1e293b; line-height: 1.8; padding: 1.5rem 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
   }
-  .container { max-width: 860px; margin: 0 auto; }
-  .back {
-    display: inline-flex; align-items: center; gap: 6px;
-    text-decoration: none; color: #2563eb; font-size: .95rem;
-    margin-bottom: 1.5rem;
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .back:hover { text-decoration: underline; }
-  h1 { font-size: 1.6rem; margin-bottom: 1.5rem; color: #1e293b; }
-  .slide {
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
-    padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .slide-num {
-    font-size: .8rem; color: #94a3b8; margin-bottom: .5rem;
-    font-weight: 600; letter-spacing: .5px;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
-  .slide p { margin-bottom: .4rem; font-size: .95rem; }
-  .slide p:last-child { margin-bottom: 0; }
-  @media (max-width:600px) {
-    h1 { font-size: 1.3rem; }
-    .slide { padding: 1rem 1.2rem; }
+  .section h3 {
+    font-size: 1.1em;
+    color: var(--accent);
+    margin: 18px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .section h3:first-of-type { margin-top: 0; }
+  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
+  .section ul { margin: 6px 0 10px 20px; }
+  .section li { margin-bottom: 4px; font-size: 0.95em; }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .nav-links span { flex: 1; }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) {
+    .section { padding: 16px; }
+    .topbar h2 { font-size: 1em; }
   }
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>第9章 功率放大电路</h2>
+    <a href="index.html">返回首页</a>
+  </div>
+</div>
+
 <div class="container">
-  <a class="back" href="index.html">← 返回目录</a>
-  <h1>📖 ch09</h1>
-  <div class="slide"><div class="slide-num">第 1 页</div><p>9.1 功率放大电路的一般问题
+
+    <div class="section">
+      <div class="slide-num">第 1 页</div>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p><p>9  功率放大电路</p></div><div class="slide"><div class="slide-num">第 2 页</div><p>9.1 功率放大电路的一般问题</p><p>1. 功率放大电路的特点及主要研究对象</p><p>放大电路实质上都是能量转换电路。
+9.7 集成功率放大器举例</p>
+      <h3>9  功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 2 页</div>
+      <h3>9.1 功率放大电路的一般问题</h3>
+      <h3>1. 功率放大电路的特点及主要研究对象</h3>
+      <p>放大电路实质上都是能量转换电路。
 从能量控制的观点来看，功率放大电路和电压放大电路没有本质的区别。
 功率放大电路和电压放大电路要完成的任务不同：
 电压放大电路：得到不失真的电压输出信号，关心电压增益。
-功率放大电路：获得一定的不失真（或失真较小）的输出功率，更关注效率而非功率增益。</p></div><div class="slide"><div class="slide-num">第 3 页</div><p>主要特点</p><p>功率放大电路是一种以输出较大功率为目的的放大电路。因此，要求同时输出较大的电压和电流。三极管工作在接近极限状态。</p><p>要解决的问题</p><p>提高效率</p><p>减小失真</p><p>三极管的保护</p><p>一般直接驱动负载，带载能力要强。</p><p>9.1 功率放大电路的一般问题</p><p>1. 功率放大电路的特点及主要研究对象</p></div><div class="slide"><div class="slide-num">第 4 页</div><p>2. 输出级工作状态分类及提高效率的主要途径</p><p>提高效率的主要途径：降低静态功耗，即减小静态电流。</p><p>四种工作状态：</p><p>根据正弦信号整个周期内三极管的导通情况划分</p><p>乙类：导通角等于180°</p><p>甲类：一个周期内均导通</p><p>甲乙类：导通角大于180°</p><p>丙类：导通角小于180°</p><p>9.1 功率放大电路的一般问题</p></div><div class="slide"><div class="slide-num">第 5 页</div><p>9  功率放大电路</p><p>9.1 功率放大电路的一般问题
+功率放大电路：获得一定的不失真（或失真较小）的输出功率，更关注效率而非功率增益。</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 3 页</div>
+      <h3>主要特点</h3>
+      <p>功率放大电路是一种以输出较大功率为目的的放大电路。因此，要求同时输出较大的电压和电流。三极管工作在接近极限状态。</p>
+      <h3>要解决的问题</h3>
+      <h3>提高效率</h3>
+      <h3>减小失真</h3>
+      <h3>三极管的保护</h3>
+      <p>一般直接驱动负载，带载能力要强。</p>
+      <h3>9.1 功率放大电路的一般问题</h3>
+      <h3>1. 功率放大电路的特点及主要研究对象</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 4 页</div>
+      <h3>2. 输出级工作状态分类及提高效率的主要途径</h3>
+      <p>提高效率的主要途径：降低静态功耗，即减小静态电流。</p>
+      <h3>四种工作状态：</h3>
+      <h3>根据正弦信号整个周期内三极管的导通情况划分</h3>
+      <h3>乙类：导通角等于180°</h3>
+      <h3>甲类：一个周期内均导通</h3>
+      <h3>甲乙类：导通角大于180°</h3>
+      <h3>丙类：导通角小于180°</h3>
+      <h3>9.1 功率放大电路的一般问题</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 5 页</div>
+      <h3>9  功率放大电路</h3>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 6 页</div><p>9.2 射极输出器——甲类放大的实例</p><p>略</p></div><div class="slide"><div class="slide-num">第 7 页</div><p>9  功率放大电路</p><p>9.1 功率放大电路的一般问题
+9.7 集成功率放大器举例</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 6 页</div>
+      <h3>9.2 射极输出器——甲类放大的实例</h3>
+      <h3>略</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 7 页</div>
+      <h3>9  功率放大电路</h3>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 8 页</div><p>1.  电路组成</p><p>基本互补对称电路实现了静态时两管不导电，而在有信号时，T1和T2轮流导电，组成推挽式电路。</p><p>9.3 乙类双电源互补对称功率放大电路</p><p>大信号</p></div><div class="slide"><div class="slide-num">第 9 页</div><p>2.  分析计算</p><p>三极管工作于大信号下，采用图解法分析。</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 10 页</div><p>1）输出功率</p><p>2.  分析计算</p><p>最大输出功率</p><p>忽略VCES时</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 11 页</div><p>单个管子在半个周期内的管耗</p><p>两管管耗</p><p>设输出电压为vo＝Vomsinωt</p><p>2.  分析计算</p><p>2）管耗PT</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 12 页</div><p>3）直流电源供给的功率PV</p><p>4）效率</p><p>2.  分析计算</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 13 页</div><p>3.  功率BJT的选择</p><p>1）最大管耗和最大输出功率的关系</p><p>选管依据之一</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 14 页</div><p>乙类互补对称电路Po、PV和PT1与Vom/VCC变化的关系曲线</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 15 页</div><p>2）功率BJT的选择</p><p>最大允许管耗PCM
+9.7 集成功率放大器举例</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 8 页</div>
+      <h3>1.  电路组成</h3>
+      <p>基本互补对称电路实现了静态时两管不导电，而在有信号时，T1和T2轮流导电，组成推挽式电路。</p>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+      <h3>大信号</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 9 页</div>
+      <h3>2.  分析计算</h3>
+      <p>三极管工作于大信号下，采用图解法分析。</p>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 10 页</div>
+      <h3>1）输出功率</h3>
+      <h3>2.  分析计算</h3>
+      <h3>最大输出功率</h3>
+      <h3>忽略VCES时</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 11 页</div>
+      <h3>单个管子在半个周期内的管耗</h3>
+      <h3>两管管耗</h3>
+      <h3>设输出电压为vo＝Vomsinωt</h3>
+      <h3>2.  分析计算</h3>
+      <h3>2）管耗PT</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 12 页</div>
+      <h3>3）直流电源供给的功率PV</h3>
+      <h3>4）效率</h3>
+      <h3>2.  分析计算</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 13 页</div>
+      <h3>3.  功率BJT的选择</h3>
+      <h3>1）最大管耗和最大输出功率的关系</h3>
+      <h3>选管依据之一</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 14 页</div>
+      <h3>乙类互补对称电路Po、PV和PT1与Vom/VCC变化的关系曲线</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 15 页</div>
+      <h3>2）功率BJT的选择</h3>
+      <p>最大允许管耗PCM
 最大集-射极电压|V(BR)CEO|
-最大集电极电流ICM</p><p>3.  功率BJT的选择</p><p>9.3 乙类双电源互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 16 页</div><p>4. MOS管乙类功放</p><p>9.3 乙类双电源互补对称功率放大电路</p><p>定量计算与BJT类似</p></div><div class="slide"><div class="slide-num">第 17 页</div><p>9  功率放大电路</p><p>9.1 功率放大电路的一般问题
+最大集电极电流ICM</p>
+      <h3>3.  功率BJT的选择</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 16 页</div>
+      <h3>4. MOS管乙类功放</h3>
+      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
+      <h3>定量计算与BJT类似</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 17 页</div>
+      <h3>9  功率放大电路</h3>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 18 页</div><p>9.4 甲乙类互补对称功率放大电路</p><p>乙类互补对称电路存在的问题</p></div><div class="slide"><div class="slide-num">第 19 页</div><p>1. 甲乙类双电源互补对称电路</p><p>T3正常工作，D1和D2一直导通，等效为恒压降模型，为T1、T2提供适当的静态偏置，使T1和T2处于微导通状态。</p><p>T1和T2两基极之间的静态压差不易调整</p><p>利用二极管进行偏置克服交越失真</p><p>9.4 甲乙类互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 20 页</div><p>利用VBE扩大电路进行偏置克服交越失真</p><p>VBE4可视为定值
-VCE4为T1和T2基极间的压差</p><p>1. 甲乙类双电源互补对称电路</p><p>当VCE4为定值时，可等效为恒压源。</p><p>Po、PT、PV和PTm仍然按照乙类功放计算公式进行估算。</p><p>9.4 甲乙类互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 21 页</div><p>2.  甲乙类单电源互补对称电路（OTL电路）</p><p>1）基本电路</p><p>直流时
-VK＝VC ≈ VCC /2</p><p>9.4 甲乙类互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 22 页</div><p>2）工作原理</p><p>条件：
- =RLC远大于信号最长的第周期</p><p>应用 OCL 电路有关公式时，要用 VCC / 2 取代 VCC</p><p>2.  甲乙类单电源互补对称电路（OTL电路）</p><p>9.4 甲乙类互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 23 页</div><p>3.  MOS管甲乙类双电源互补对称电路</p><p>9.4 甲乙类互补对称功率放大电路</p></div><div class="slide"><div class="slide-num">第 24 页</div><p>9  功率放大电路</p><p>9.1 功率放大电路的一般问题
+9.7 集成功率放大器举例</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 18 页</div>
+      <h3>9.4 甲乙类互补对称功率放大电路</h3>
+      <h3>乙类互补对称电路存在的问题</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 19 页</div>
+      <h3>1. 甲乙类双电源互补对称电路</h3>
+      <p>T3正常工作，D1和D2一直导通，等效为恒压降模型，为T1、T2提供适当的静态偏置，使T1和T2处于微导通状态。</p>
+      <h3>T1和T2两基极之间的静态压差不易调整</h3>
+      <h3>利用二极管进行偏置克服交越失真</h3>
+      <h3>9.4 甲乙类互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 20 页</div>
+      <h3>利用VBE扩大电路进行偏置克服交越失真</h3>
+      <h3>VBE4可视为定值
+VCE4为T1和T2基极间的压差</h3>
+      <h3>1. 甲乙类双电源互补对称电路</h3>
+      <p>当VCE4为定值时，可等效为恒压源。</p>
+      <p>Po、PT、PV和PTm仍然按照乙类功放计算公式进行估算。</p>
+      <h3>9.4 甲乙类互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 21 页</div>
+      <h3>2.  甲乙类单电源互补对称电路（OTL电路）</h3>
+      <h3>1）基本电路</h3>
+      <h3>直流时
+VK＝VC ≈ VCC /2</h3>
+      <h3>9.4 甲乙类互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 22 页</div>
+      <h3>2）工作原理</h3>
+      <h3>条件：
+ =RLC远大于信号最长的第周期</h3>
+      <h3>应用 OCL 电路有关公式时，要用 VCC / 2 取代 VCC</h3>
+      <h3>2.  甲乙类单电源互补对称电路（OTL电路）</h3>
+      <h3>9.4 甲乙类互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 23 页</div>
+      <h3>3.  MOS管甲乙类双电源互补对称电路</h3>
+      <h3>9.4 甲乙类互补对称功率放大电路</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 24 页</div>
+      <h3>9  功率放大电路</h3>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 25 页</div><p>9.5 丁类（D类）功率放大电路原理简介</p><p>脉宽与vI幅值成正比</p><p>MOS管工作于开关状态
-功耗几乎零</p><p>滤除高频调制信号
-输出频率较低的音频信号</p></div><div class="slide"><div class="slide-num">第 26 页</div><p>9  功率放大电路</p><p>9.1 功率放大电路的一般问题
+9.7 集成功率放大器举例</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 25 页</div>
+      <h3>9.5 丁类（D类）功率放大电路原理简介</h3>
+      <h3>脉宽与vI幅值成正比</h3>
+      <h3>MOS管工作于开关状态
+功耗几乎零</h3>
+      <h3>滤除高频调制信号
+输出频率较低的音频信号</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 26 页</div>
+      <h3>9  功率放大电路</h3>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 27 页</div><p>9.6 功率管</p><p>略</p></div><div class="slide"><div class="slide-num">第 28 页</div><p>9  功率放大电路</p><p>9.1 功率放大电路的一般问题
+9.7 集成功率放大器举例</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 27 页</div>
+      <h3>9.6 功率管</h3>
+      <h3>略</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 28 页</div>
+      <h3>9  功率放大电路</h3>
+      <p>9.1 功率放大电路的一般问题
 9.2 射极输出器——甲类放大的实例
 9.3 乙类双电源互补对称功率放大电路
 9.4 甲乙类互补对称功率放大电路
 9.5 丁类（D类）功率放大电路原理简介
 9.6 功率管
-9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 29 页</div><p>集成功率放大器TDA7294</p><p>9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 30 页</div><p>集成功率放大器TDA7294</p><p>9.7 集成功率放大器举例</p><p>等效P沟道源极输出的电压跟随器</p></div><div class="slide"><div class="slide-num">第 31 页</div><p>典型应用电路</p><p>9.7 集成功率放大器举例</p><p>集成功率放大器TDA7294</p><p>最大输出功率： 100W</p></div><div class="slide"><div class="slide-num">第 32 页</div><p>BJT集成音频功率放大器LM386</p><p>9.7 集成功率放大器举例</p></div><div class="slide"><div class="slide-num">第 33 页</div><p>典型应用电路</p><p>BJT集成音频功率放大器LM386</p><p>9.7 集成功率放大器举例</p><p>1和8脚之间接10μF电容交流短路时，增益为200倍</p><p>输出功率：0.325W</p><p>end</p></div>
-  <a class="back" href="index.html" style="margin-top:1.5rem;display:inline-block;">← 返回目录</a>
+9.7 集成功率放大器举例</p>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 29 页</div>
+      <h3>集成功率放大器TDA7294</h3>
+      <h3>9.7 集成功率放大器举例</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 30 页</div>
+      <h3>集成功率放大器TDA7294</h3>
+      <h3>9.7 集成功率放大器举例</h3>
+      <h3>等效P沟道源极输出的电压跟随器</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 31 页</div>
+      <h3>典型应用电路</h3>
+      <h3>9.7 集成功率放大器举例</h3>
+      <h3>集成功率放大器TDA7294</h3>
+      <h3>最大输出功率： 100W</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 32 页</div>
+      <h3>BJT集成音频功率放大器LM386</h3>
+      <h3>9.7 集成功率放大器举例</h3>
+    </div>
+
+    <div class="section">
+      <div class="slide-num">第 33 页</div>
+      <h3>典型应用电路</h3>
+      <h3>BJT集成音频功率放大器LM386</h3>
+      <h3>9.7 集成功率放大器举例</h3>
+      <h3>1和8脚之间接10μF电容交流短路时，增益为200倍</h3>
+      <h3>输出功率：0.325W</h3>
+      <h3>end</h3>
+    </div>
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="ch08.html">← 第8章 反馈放大电路</a>
+  </div>
 </div>
+
+<div class="footer">
+  <p>内容来源: 模拟电子技术课程PPT · 第9章 功率放大电路</p>
+</div>
+
 </body>
 </html>
