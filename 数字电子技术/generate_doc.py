@@ -46,7 +46,7 @@ doc.add_paragraph('')
 doc.add_heading('通用工作流', level=1)
 
 # ---------- Step 1 ----------
-doc.add_heading('Step 1 — 提取 PPT 文字内容', level=2)
+doc.add_heading('Step 1 — 提取PPT文字', level=2)
 
 p = doc.add_paragraph()
 p.add_run('目标：').bold = True
@@ -62,6 +62,38 @@ core1 = [
 ]
 for c in core1:
     doc.add_paragraph(c, style='List Number')
+
+p = doc.add_paragraph()
+p.add_run('\n⚠️ 乱码修复（重要）：').bold = True
+p2 = doc.add_paragraph()
+run2 = p2.add_run('PPT提取的文本中常有PUA私有用字区域乱码。常见乱码及对应正确符号如下：')
+doc.add_paragraph('')
+garbled_table = [
+    ('乱码', '正确', '含义'),
+    ('U+F0B4', '×', '乘号'),
+    ('U+F02D', '−', '减号/负号'),
+    ('U+F0AE', '→', '箭头'),
+    ('U+F075', 'v', '电压变量'),
+    ('U+F0A3', '≤', '小于等于'),
+    ('U+F0BB', '≠', '不等于'),
+    ('U+F0C5', '⊕', '异或'),
+    ('U+F0D7', '·', '点乘'),
+    ('U+F06D', 'μ', '微'),
+    ('U+F074', 'τ', '时间常数'),
+    ('U+F057', 'Ω', '欧姆'),
+    ('U+F0A5', '∞', '无穷'),
+]
+table = doc.add_table(rows=len(garbled_table), cols=3)
+table.style = 'Light Grid Accent 1'
+for i, (a, b, c) in enumerate(garbled_table):
+    table.rows[i].cells[0].text = a
+    table.rows[i].cells[1].text = b
+    table.rows[i].cells[2].text = c
+
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('修复方法：').bold = True
+p.add_run('编写脚本按 Unicode 码点扫描替换，不能靠直接复制文本。')
 
 p = doc.add_paragraph()
 p.add_run('关键库：').bold = True
@@ -216,6 +248,23 @@ doc.add_paragraph('使用 div.formula 居中展示', style='List Bullet')
 doc.add_paragraph('变量用 <i> 斜体或直接文本', style='List Bullet')
 doc.add_paragraph('约等号≈、乘号×、箭头→等保留原符号', style='List Bullet')
 doc.add_paragraph('关键公式用 .highlight 黄色高亮框突出', style='List Bullet')
+doc.add_paragraph('')
+
+p = doc.add_paragraph()
+p.add_run('5. 导航一致性规范：').bold = True
+doc.add_paragraph('导航链必须完整闭环：首页 → ch01 → ch02 → ... → chN → 芯片专题 → 首页', style='List Bullet')
+doc.add_paragraph('每页必须有两个导航区：顶部粘性栏（topbar）和底部导航区（nav-links）', style='List Bullet')
+doc.add_paragraph('顶部导航：简洁格式 "← 第N章" / "第M章 →"', style='List Bullet')
+doc.add_paragraph('底部导航：完整格式 "← 第N章 完整章节名" / "第M章 完整章节名 →"', style='List Bullet')
+doc.add_paragraph('方向符号统一：← 表示上一页/返回，→ 表示下一页', style='List Bullet')
+doc.add_paragraph('每页右下角加悬浮返回顶部按钮 ↑ (class: back2top)', style='List Bullet')
+doc.add_paragraph('')
+
+p = doc.add_paragraph()
+p.add_run('6. 章节生成策略：').bold = True
+doc.add_paragraph('禁止用脚本自动批量生成章节内容', style='List Bullet')
+doc.add_paragraph('每个章节必须人工通读PPT原文 → 理解知识结构 → 筛选核心概念 → 手动编写HTML', style='List Bullet')
+doc.add_paragraph('脚本仅辅助生成页面框架（导航/样式），内容仍需手动填入', style='List Bullet')
 doc.add_paragraph('')
 
 p = doc.add_paragraph()
