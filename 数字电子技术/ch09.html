@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第9章 脉冲波形的变换与产生 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c; --accent: #2d7fc1; --bg: #f5f7fa; --card-bg: #ffffff;
+    --text: #2c3e50; --text-light: #7f8c8d; --border: #e1e8ed; --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 20px;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em; color: var(--primary); border-left: 4px solid var(--accent);
+    padding-left: 14px; margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em; color: var(--accent); margin: 20px 0 10px;
+    padding-bottom: 6px; border-bottom: 1px dashed var(--border);
+  }
+  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 10px; }
+  .section ul { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight {
+    background: #fffbe6; border-left: 3px solid #f0c040;
+    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+  .def-box {
+    background: var(--code-bg); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px;
+    text-decoration: none; color: var(--accent); border: 1px solid var(--border);
+    transition: all 0.2s; font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .back2top {
+    position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); color: #fff; border: none; font-size: 1.4em; cursor: pointer;
+    opacity: 0.7; transition: opacity 0.2s; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .back2top:hover { opacity: 1; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
+  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) { .section { padding: 20px 16px; } .topbar h2 { font-size: 1em; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="ch08.html">ch08.html_LABEL</a>
+    <h2>第9章 脉冲波形的变换与产生</h2>
+    <a href="ch10.html">ch10.html_LABEL</a>
+  </div>
+</div>
+<div class="container">
+
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>正确理解单稳态电路、施密特触发电路、多谐振荡电路的组成及工作原理</li>
+      <li>掌握单稳、施密特触发电路、多谐振荡电路的逻辑功能及主要指标计算</li>
+      <li>了解555定时器的工作原理</li>
+      <li>了解555定时器组成的多谐、单稳、施密特触发电路及外接参数计算</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9.1 单稳态电路</h2>
+    <div class="def-box">
+      <strong>工作特点：</strong><br>
+      ① 没有触发信号时处于一种稳定状态。<br>
+      ② 在外来触发信号作用下，由稳态翻转到暂稳态。<br>
+      ③ 暂稳态的持续时间仅取决于RC参数值，经过一段时间后电路会自动返回到稳态。
+    </div>
+    <p>输出脉冲宽度：<strong>t<sub>w</sub> ≈ 0.7RC</strong>（由RC充放电时间常数决定）</p>
+    <p>集成单稳态触发器74121：输出脉冲宽度 t<sub>w</sub> ≈ 0.7·R<sub>ext</sub>·C<sub>ext</sub></p>
+  </div>
+
+  <div class="section">
+    <h2>9.2 施密特触发电路</h2>
+    <p><strong>特点：</strong></p>
+    <ul>
+      <li>属于电平触发器件，当输入信号达到某一定电压值时，输出电压会发生突变</li>
+      <li>电路有两个阈值电压——<strong>正向阈值电压V<sub>T+</sub></strong>和<strong>负阈值电压V<sub>T-</sub></strong></li>
+    </ul>
+    <p>应用：波形变换、波形的整形与抗干扰、幅度鉴别。</p>
+  </div>
+
+  <div class="section">
+    <h2>9.3 多谐振荡电路</h2>
+    <p>多谐振荡器不需要外加触发信号就能自动产生矩形脉冲波。</p>
+    <p>基本组成：开关器件（产生高、低电平）+ 反馈延迟环节（RC电路的充放电特性实现延时）。</p>
+    <p>由门电路组成的多谐振荡电路周期：<strong>T ≈ 2.2RC</strong>。频率稳定性较差。</p>
+    <h3>石英晶体多谐振荡电路</h3>
+    <p>当f等于串联谐振频率f<sub>s</sub>时，石英晶体呈纯电阻特性，正反馈最强。频率稳定性极高。</p>
+  </div>
+
+  <div class="section">
+    <h2>9.4 555定时器</h2>
+    <p>555定时器是一种应用方便的中规模集成电路，广泛用于信号的产生、变换、控制与检测。详见<a href="chips.html">芯片专题</a>。</p>
+    <h3>三种典型应用</h3>
+    <ul>
+      <li><strong>施密特触发电路</strong>：V<sub>T+</sub> = 2/3V<sub>CC</sub>，V<sub>T-</sub> = 1/3V<sub>CC</sub></li>
+      <li><strong>单稳态电路</strong>：t<sub>w</sub> ≈ 1.1RC</li>
+      <li><strong>多谐振荡电路</strong>：T ≈ 0.7(R<sub>1</sub> + 2R<sub>2</sub>)C</li>
+    </ul>
+  </div>
+
+  <div class="nav-links">
+    <a href="ch08.html">← 第8章</a>
+    <a href="ch10.html">第10章 →</a>
+  </div>
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第9章 脉冲波形的变换与产生</p>
+</div>
+</body>
+</html>

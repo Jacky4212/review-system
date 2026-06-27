@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5章 锁存器和触发器 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c; --accent: #2d7fc1; --bg: #f5f7fa; --card-bg: #ffffff;
+    --text: #2c3e50; --text-light: #7f8c8d; --border: #e1e8ed; --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 20px;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em; color: var(--primary); border-left: 4px solid var(--accent);
+    padding-left: 14px; margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em; color: var(--accent); margin: 20px 0 10px;
+    padding-bottom: 6px; border-bottom: 1px dashed var(--border);
+  }
+  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 10px; }
+  .section ul { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight {
+    background: #fffbe6; border-left: 3px solid #f0c040;
+    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+  .def-box {
+    background: var(--code-bg); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px;
+    text-decoration: none; color: var(--accent); border: 1px solid var(--border);
+    transition: all 0.2s; font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .back2top {
+    position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); color: #fff; border: none; font-size: 1.4em; cursor: pointer;
+    opacity: 0.7; transition: opacity 0.2s; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .back2top:hover { opacity: 1; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
+  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) { .section { padding: 20px 16px; } .topbar h2 { font-size: 1em; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="ch04.html">ch04.html_LABEL</a>
+    <h2>第5章 锁存器和触发器</h2>
+    <a href="ch06.html">ch06.html_LABEL</a>
+  </div>
+</div>
+<div class="container">
+
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>掌握锁存器、触发器的电路结构和工作原理</li>
+      <li>熟练掌握SR触发器、JK触发器、D触发器及T触发器的逻辑功能</li>
+      <li>正确理解锁存器、触发器的动态特性</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>概述</h2>
+    <p>锁存器和触发器是构成时序逻辑电路的基本逻辑单元。</p>
+    <div class="def-box">
+      <strong>共同点：</strong>具有0和1两个稳定状态，一旦状态被确定，就能自行保持。一个锁存器或触发器能存储一位二进制码。<br>
+      <strong>不同点：</strong><br>
+      • <strong>锁存器</strong>——对脉冲电平敏感的存储电路，在特定输入脉冲电平作用下改变状态。<br>
+      • <strong>触发器</strong>——对脉冲边沿敏感的存储电路，在时钟脉冲的上升沿或下降沿的变化瞬间改变状态。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>5.1 基本双稳态电路</h2>
+    <p>两个反相器交叉耦合构成最基本的双稳态电路。电路具有记忆1位二进制数据的功能。Q端的状态定义为电路输出状态。</p>
+  </div>
+
+  <div class="section">
+    <h2>5.2 SR锁存器</h2>
+    <p>SR锁存器（Set-Reset Latch）由两个或非门（或与非门）交叉耦合构成。</p>
+    <table>
+      <tr><th>R</th><th>S</th><th>Q<sup>n+1</sup></th><th>功能</th></tr>
+      <tr><td>0</td><td>0</td><td>Q<sup>n</sup></td><td>保持</td></tr>
+      <tr><td>0</td><td>1</td><td>1</td><td>置1</td></tr>
+      <tr><td>1</td><td>0</td><td>0</td><td>置0</td></tr>
+      <tr><td>1</td><td>1</td><td>不确定</td><td>禁止</td></tr>
+    </table>
+    <p>约束条件：<strong>SR = 0</strong>（S和R不能同时为1）</p>
+  </div>
+
+  <div class="section">
+    <h2>5.3 D锁存器</h2>
+    <p>D锁存器在E=1时Q=D（跟随），E=0时Q不变（保持）。</p>
+    <p>由传输门构成的D锁存器：E=1时TG1导通TG2断开，Q=D；E=0时TG1断开TG2导通，Q不变。</p>
+  </div>
+
+  <div class="section">
+    <h2>5.4 D触发器（边沿触发）</h2>
+    <p>主从D触发器由主锁存器和从锁存器构成，在CP的上升沿将D端信号传送到输出端。</p>
+    <p>触发器的状态仅仅取决于CP信号上升沿到达前瞬间的D信号。</p>
+  </div>
+
+  <div class="section">
+    <h2>5.5 触发器的逻辑功能</h2>
+    <h3>D触发器</h3>
+    <p>特性方程：<strong>Q<sup>n+1</sup> = D</strong></p>
+    <h3>JK触发器</h3>
+    <p>特性方程：<strong>Q<sup>n+1</sup> = J·¬Q<sup>n</sup> + ¬K·Q<sup>n</sup></strong></p>
+    <h3>T触发器</h3>
+    <p>特性方程：<strong>Q<sup>n+1</sup> = T ⊕ Q<sup>n</sup></strong></p>
+    <p>当T=1时，称为T′触发器，时钟脉冲每作用一次，触发器翻转一次（二分频）。</p>
+    <h3>SR触发器</h3>
+    <p>特性方程：<strong>Q<sup>n+1</sup> = S + ¬R·Q<sup>n</sup></strong>（约束条件SR=0）</p>
+    <div class="highlight">
+      <strong>💡 触发器的电路结构与逻辑功能没有必然联系。</strong>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a href="ch04.html">← 第4章</a>
+    <a href="ch06.html">第6章 →</a>
+  </div>
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第5章 锁存器和触发器</p>
+</div>
+</body>
+</html>

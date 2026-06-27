@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2章 逻辑代数与HDL基础 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c; --accent: #2d7fc1; --bg: #f5f7fa; --card-bg: #ffffff;
+    --text: #2c3e50; --text-light: #7f8c8d; --border: #e1e8ed; --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 20px;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em; color: var(--primary); border-left: 4px solid var(--accent);
+    padding-left: 14px; margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em; color: var(--accent); margin: 20px 0 10px;
+    padding-bottom: 6px; border-bottom: 1px dashed var(--border);
+  }
+  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 10px; }
+  .section ul { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight {
+    background: #fffbe6; border-left: 3px solid #f0c040;
+    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+  .def-box {
+    background: var(--code-bg); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px;
+    text-decoration: none; color: var(--accent); border: 1px solid var(--border);
+    transition: all 0.2s; font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .back2top {
+    position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); color: #fff; border: none; font-size: 1.4em; cursor: pointer;
+    opacity: 0.7; transition: opacity 0.2s; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .back2top:hover { opacity: 1; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
+  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) { .section { padding: 20px 16px; } .topbar h2 { font-size: 1em; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="ch01.html">ch01.html_LABEL</a>
+    <h2>第2章 逻辑代数与HDL基础</h2>
+    <a href="ch03.html">ch03.html_LABEL</a>
+  </div>
+</div>
+<div class="container">
+
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>熟悉逻辑代数常用基本定律、恒等式和规则</li>
+      <li>掌握逻辑代数的表示方法</li>
+      <li>掌握逻辑代数的变换和卡诺图化简法</li>
+      <li>熟悉硬件描述语言Verilog HDL</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>2.1 逻辑代数的基本定律和规则</h2>
+    <p>逻辑代数又称<strong>布尔代数</strong>，是分析和设计现代数字逻辑电路不可缺少的数学工具。</p>
+    <h3>基本公式</h3>
+    <ul>
+      <li>0-1律：A·0=0，A+1=1</li>
+      <li>自等律：A·1=A，A+0=A</li>
+      <li>互补律：A·¬A=0，A+¬A=1</li>
+      <li>重叠律：A·A=A，A+A=A</li>
+      <li>交换律：A·B=B·A，A+B=B+A</li>
+      <li>结合律：A·(B·C)=(A·B)·C，A+(B+C)=(A+B)+C</li>
+      <li>分配律：A·(B+C)=AB+AC，A+BC=(A+B)(A+C)</li>
+      <li>吸收律：A+AB=A，A·(A+B)=A</li>
+      <li>摩根定律：¬(A·B)=¬A+¬B，¬(A+B)=¬A·¬B</li>
+    </ul>
+    <h3>基本规则</h3>
+    <ul>
+      <li><strong>代入规则</strong>：在包含变量A逻辑等式中，如果用另一个函数式代入式中所有A的位置，则等式仍然成立。</li>
+      <li><strong>反演规则</strong>：将逻辑表达式L中所有·换成+，+换成·；原变量换反变量，反变量换原变量；1换0，0换1；得到的结果就是原函数的反函数。</li>
+      <li><strong>对偶规则</strong>：若某个逻辑恒等式成立，则该恒等式两侧的对偶式也相等。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>2.2 逻辑函数表达式的形式</h2>
+    <h3>最小项</h3>
+    <p>n个变量的最小项是n个因子的乘积，每个变量都以它的原变量或非变量的形式在乘积项中出现，且仅出现一次。n个变量的最小项应有2<sup>n</sup>个。</p>
+    <p>最小项的性质：</p>
+    <ul>
+      <li>对于任意一个最小项，只有一组变量取值使得它的值为1</li>
+      <li>任意两个最小项的乘积为0</li>
+      <li>全体最小项之和为1</li>
+    </ul>
+    <h3>最大项</h3>
+    <p>n个变量的最大项是n个因子或相，每个变量都以它的原变量或非变量的形式在或项中出现，且仅出现一次。</p>
+  </div>
+
+  <div class="section">
+    <h2>2.3 逻辑函数的代数化简法</h2>
+    <p>化简的目的：降低电路实现的成本，以较少的门实现电路。</p>
+    <p><strong>最简与-或表达式</strong>：包含的与项数最少，且每个与项中变量数最少。</p>
+    <p>化简方法：</p>
+    <ul>
+      <li><strong>并项法</strong>：利用A+¬A=1合并两项</li>
+      <li><strong>吸收法</strong>：利用A+AB=A吸收多余项</li>
+      <li><strong>消去法</strong>：利用A+¬AB=A+B消去多余因子</li>
+      <li><strong>配项法</strong>：通过配项简化表达式</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>2.4 卡诺图化简法</h2>
+    <p><strong>卡诺图</strong>：将n变量的全部最小项都用小方块表示，并使具有<strong>逻辑相邻</strong>的最小项在几何位置上也相邻地排列起来。</p>
+    <p>逻辑相邻的最小项：如果两个最小项只有一个变量互为反变量，就称这两个最小项在逻辑上相邻。</p>
+    <p>化简步骤：</p>
+    <ul>
+      <li>将逻辑函数写成最小项表达式</li>
+      <li>按最小项表达式填卡诺图，含最小项的方格填1，其余填0</li>
+      <li>合并相邻的1方格圈成一组（包围圈），每组含2<sup>n</sup>个方格</li>
+      <li>将所有包围圈对应的乘积项相加</li>
+    </ul>
+    <div class="highlight">
+      <strong>💡 无关项：</strong>在真值表内对应于变量的某些取值下，函数的值可以是任意的，或者这些变量的取值根本不会出现。化简中它的值可以取0或1，根据使函数尽量简化而定。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>2.5 Verilog HDL基础</h2>
+    <p><strong>硬件描述语言HDL</strong>：以文本形式来描述数字系统硬件的结构和行为的语言。</p>
+    <p>模块是Verilog描述电路的基本单元。每个模块以<strong>module</strong>开始，以<strong>endmodule</strong>结束。</p>
+    <p>逻辑功能的描述方式有三种：</p>
+    <ul>
+      <li><strong>结构描述方式</strong>（门级描述）</li>
+      <li><strong>数据流描述方式</strong>（assign语句）</li>
+      <li><strong>行为描述方式</strong>（always语句）</li>
+    </ul>
+    <p>Verilog有4种基本逻辑值：0（逻辑0/假）、1（逻辑1/真）、x（不确定）、z（高阻态）。</p>
+    <p>数据类型：<strong>线网类型（wire）</strong>输出始终根据输入的变化而更新；<strong>变量类型（reg）</strong>对应具有状态保持作用的电路元件。</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="ch01.html">← 第1章</a>
+    <a href="ch03.html">第3章 →</a>
+  </div>
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第2章 逻辑代数与HDL基础</p>
+</div>
+</body>
+</html>

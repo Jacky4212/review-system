@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1章 数字逻辑概论 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c; --accent: #2d7fc1; --bg: #f5f7fa; --card-bg: #ffffff;
+    --text: #2c3e50; --text-light: #7f8c8d; --border: #e1e8ed; --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 20px;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section {
+    background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em; color: var(--primary); border-left: 4px solid var(--accent);
+    padding-left: 14px; margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em; color: var(--accent); margin: 20px 0 10px;
+    padding-bottom: 6px; border-bottom: 1px dashed var(--border);
+  }
+  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 10px; }
+  .section ul { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight {
+    background: #fffbe6; border-left: 3px solid #f0c040;
+    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+  .def-box {
+    background: var(--code-bg); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px;
+    text-decoration: none; color: var(--accent); border: 1px solid var(--border);
+    transition: all 0.2s; font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .back2top {
+    position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); color: #fff; border: none; font-size: 1.4em; cursor: pointer;
+    opacity: 0.7; transition: opacity 0.2s; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .back2top:hover { opacity: 1; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
+  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) { .section { padding: 20px 16px; } .topbar h2 { font-size: 1em; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">index.html_LABEL</a>
+    <h2>第1章 数字逻辑概论</h2>
+    <a href="ch02.html">ch02.html_LABEL</a>
+  </div>
+</div>
+<div class="container">
+
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>了解数字信号与数字电路的基本概念</li>
+      <li>了解数字信号的特点及表示方法</li>
+      <li>掌握常用二～十、二～十六进制数的转换</li>
+      <li>熟悉常用二进制码：8421 BCD码、格雷码</li>
+      <li>掌握基本逻辑运算及逻辑函数的表示方法</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>1.1 数字信号与数字电路</h2>
+    <p><strong>模拟信号</strong>：时间和数值均连续变化的电信号，如正弦波、三角波等。</p>
+    <p><strong>数字信号</strong>：在时间上和数值上均是离散的信号。</p>
+    <p>数字电路可分为<strong>组合逻辑电路</strong>和<strong>时序逻辑电路</strong>。</p>
+    <p>数字电路从集成度不同可分为：小规模(SSI)、中规模(MSI)、大规模(LSI)、超大规模(VLSI)和甚大规模(ULSI)五类。</p>
+    <p>数字集成电路的特点：稳定性高抗干扰能力强、易于设计、体积小通用性好、具可编程性及保密性、高速度低功耗、可扩展性。</p>
+  </div>
+
+  <div class="section">
+    <h2>1.2 数制</h2>
+    <p><strong>数制</strong>：多位数码中的每一位数的构成及低位向高位进位的规则。</p>
+    <h3>十进制</h3>
+    <p>采用0~9十个数码，进位规则是"逢十进一"。</p>
+    <h3>二进制</h3>
+    <p>只有0、1两个数码，进位规律是："逢二进一"。各位的权都是2的幂。</p>
+    <p>二进制的优点：(1)易于电路表达 (2)所用元件少，电路简单可靠 (3)基本运算规则简单。</p>
+    <h3>二-十进制转换</h3>
+    <p><strong>整数转换（辗转相除法）</strong>：将十进制数连续不断地除以2，直至商为零，所得余数由低位到高位排列。</p>
+    <p><strong>小数转换（基数乘法）</strong>：将十进制小数每次除去上次所得积中的整数再乘以2，直到满足误差要求。</p>
+    <h3>十六进制</h3>
+    <p>有0~9、A~F十六个数码，进位规律是"逢十六进一"。各位的权均为16的幂。</p>
+    <p>十六进制的优点：(1)与二进制之间的转换容易 (2)计数容量较其它进制都大 (3)书写简洁。</p>
+  </div>
+
+  <div class="section">
+    <h2>1.3 二进制数的算术运算</h2>
+    <p>加法规则：0+0=0，0+1=1，1+1=10</p>
+    <p>减法规则：0-0=0，1-1=0，1-0=1，0-1=11（借位）</p>
+    <p>有符号二进制数用最高位表示符号位，0表示正数，1表示负数。</p>
+    <div class="def-box">
+      <strong>补码表示：</strong>正数的补码与原码相同。负数的补码：将原码的数值位逐位求反，然后在最低位加1。<br>
+      减法运算原理：A − B = A + (−B)，对(−B)求补码，然后进行加法运算。
+    </div>
+    <p><strong>溢出判别</strong>：如果两个加数的符号相同，而和的符号与它们不同，则运算结果是错误的，产生溢出。</p>
+  </div>
+
+  <div class="section">
+    <h2>1.4 二进制代码</h2>
+    <p><strong>码制</strong>：编制代码所要遵循的规则。</p>
+    <p>二进制代码的位数n与需要编码的事件个数N之间应满足：2<sup>n-1</sup> ≤ N ≤ 2<sup>n</sup></p>
+    <h3>常用BCD码</h3>
+    <table>
+      <tr><th>十进制</th><th>8421码</th><th>2421码</th><th>5421码</th><th>余3码</th><th>余3循环码</th></tr>
+      <tr><td>0</td><td>0000</td><td>0000</td><td>0000</td><td>0011</td><td>0010</td></tr>
+      <tr><td>1</td><td>0001</td><td>0001</td><td>0001</td><td>0100</td><td>0110</td></tr>
+      <tr><td>2</td><td>0010</td><td>0010</td><td>0010</td><td>0101</td><td>0111</td></tr>
+      <tr><td>3</td><td>0011</td><td>0011</td><td>0011</td><td>0110</td><td>0101</td></tr>
+      <tr><td>4</td><td>0100</td><td>0100</td><td>0100</td><td>0111</td><td>0100</td></tr>
+      <tr><td>5</td><td>0101</td><td>1011</td><td>1000</td><td>1000</td><td>1100</td></tr>
+      <tr><td>6</td><td>0110</td><td>1100</td><td>1001</td><td>1001</td><td>1101</td></tr>
+      <tr><td>7</td><td>0111</td><td>1101</td><td>1010</td><td>1010</td><td>1111</td></tr>
+      <tr><td>8</td><td>1000</td><td>1110</td><td>1011</td><td>1011</td><td>1110</td></tr>
+      <tr><td>9</td><td>1001</td><td>1111</td><td>1100</td><td>1100</td><td>1010</td></tr>
+    </table>
+    <h3>格雷码</h3>
+    <p>特点是：任何两个相邻代码之间<strong>仅有一位取值不同</strong>。格雷码是一种常见的无权码，又称为<strong>循环码</strong>。</p>
+    <p>格雷码是错误最小化的编码。当模拟量发生微小变化，格雷码仅仅改变一位，更加可靠且容易检错。</p>
+  </div>
+
+  <div class="section">
+    <h2>1.5 二值逻辑变量与基本逻辑运算</h2>
+    <p><strong>逻辑运算</strong>：当0和1表示逻辑状态时，两个二进制数码按照某种特定的因果关系进行的运算。</p>
+    <p>逻辑运算使用的数学工具是<strong>逻辑代数</strong>。有与、或、非三种基本逻辑运算。</p>
+    <ul>
+      <li><strong>与运算</strong>（L = A · B）：只有当决定某一事件的条件全部具备时，这一事件才会发生。</li>
+      <li><strong>或运算</strong>（L = A + B）：只要有一个或几个条件具备时，事件就会发生。</li>
+      <li><strong>非运算</strong>（L = ¬A）：条件具备时事件不发生，条件不具备时事件发生。</li>
+      <li><strong>与非</strong>：先与后非；<strong>或非</strong>：先或后非</li>
+      <li><strong>异或</strong>：两个输入变量的值相异，输出为1，否则为0。</li>
+      <li><strong>同或</strong>：两个输入变量的值相同，输出为1，否则为0。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>1.6 逻辑函数及其表示方法</h2>
+    <p>逻辑函数有五种表示方法：</p>
+    <ul>
+      <li><strong>真值表</strong>：列出所有输入组合对应的输出值</li>
+      <li><strong>逻辑表达式</strong>：用与、或、非等运算组合表示</li>
+      <li><strong>逻辑图</strong>：用逻辑符号表示逻辑关系</li>
+      <li><strong>波形图</strong>：用输入输出信号的波形表示</li>
+      <li><strong>卡诺图</strong>：用方格图表示（见第2章）</li>
+    </ul>
+    <p>这些表示方法之间可以相互转换。</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="ch02.html">第2章 →</a>
+  </div>
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第1章 数字逻辑概论</p>
+</div>
+</body>
+</html>
