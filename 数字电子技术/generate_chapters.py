@@ -86,6 +86,7 @@ PAGE = '''<!DOCTYPE html>
 <div class="container">
 CONTENT
   <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
     <a href="NAV_PREV">NAV_PREV_LABEL</a>
     <a href="NAV_NEXT">NAV_NEXT_LABEL</a>
   </div>
@@ -100,7 +101,7 @@ CONTENT
 CHAPTERS = [
     {
         'num': '1', 'file': 'ch01', 'title': '数字逻辑概论',
-        'prev': 'index.html', 'prev_label': '← 返回首页',
+        'prev': 'index.html', 'prev_label': '课程首页',
         'next': 'ch02.html', 'next_label': '第2章 逻辑代数与HDL基础 →',
         'tprev': 'index.html', 'tprev_label': '← 返回首页',
         'tnext': 'ch02.html', 'tnext_label': '第2章 →',
