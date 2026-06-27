@@ -1,0 +1,92 @@
+来源: ch06-7(1).pptx
+总页数: 7
+
+--- 第1页 ---
+6.7.1  移位寄存器的Verilog建模
+6.7.2  计数器的Verilog建模
+6.7.3    状态转换图的Verilog建模
+6.7.4    数字钟的Verilog建模
+6.7 用Verilog HDL描述时序逻辑电路
+
+--- 第2页 ---
+用行为级描述always描述一个４位双向移位寄存器，有异步清零、同步置数、左移、右移和保持。功能同74xx194。
+6.7.1 移位寄存器的Verilog建模
+module shift74x194 (S1, S0, D, Dsl, Dsr, Q, CP, CR);
+input S1, S0;                   		//控制输入
+input Dsl, Dsr;                 	//串行输入
+input CP, CR;                  	//时钟及清零
+input [3:0] D;                	　　　//并行输入
+output [3:0] Q;                	//寄存器输出
+reg [3:0] Q;
+
+--- 第3页 ---
+6.7.1 移位寄存器的Verilog建模
+always @ (posedge CP or negedge CR)
+if (~CR) Q <= 4'b0000;
+else
+case ({S1,S0})
+2‘b00: Q <= Q;              	//保持
+2‘b01: Q <= {Q[2:0],Dsr}; 	//右移
+2‘b10: Q <= {Dsl,Q[3:1]}; 	//左移
+2‘b11: Q <= D;             　	//并行输入
+endcase
+endmodule
+
+--- 第4页 ---
+6.7.2  计数器的Verilog建模
+module updowncount_beh #(parameter n=4)
+(
+input Load,Up_down,En,CP, //输入端口声明
+input[n-1:0]D,	      //并行数据输入
+output reg[n-1:0]Q    //数据输出端口及变量数据类型声明
+);
+integer direction;   //中间变量声明
+用Verilog描述带使能端和同步置数端的可逆4位二进制计数器
+
+--- 第5页 ---
+always @(posedge CP)
+begin
+if(Up_down)
+direction <= 1;
+else
+direction <= -1;
+if(Load)
+Q <= D;	         //Load=1,同步置数
+else if(En)
+Q <= Q+direction;  //加1或减1
+else
+Q <= Q;	         //输出保持不变
+end
+endmodule
+
+--- 第6页 ---
+6.7.3  状态转换图的Verilog建模
+module  Mealy_sequence_detector (A, CP, CR, Y);
+input A, CP, CR;
+output Y;
+reg Y;
+reg [1:0] current_state, next_state;
+parameter  S0=2’b00, S1=2’b01, S2=2’b11;
+always @( negedge CP or negedge CR)
+begin
+if (~CR)  current_state <=S0; 　//在CR下降沿设s0为初态
+else          current_state <= next_state;
+end
+用Verilog描述状态转换图非常方便，常用always或case语句。
+下面程序，第一个always语句描述状态转移
+
+--- 第7页 ---
+6.7.3  状态转换图的Verilog建模
+always @(current_state,A)　//组合电路
+begin
+case(current_state)  //准备下一状态, 电路输出
+Y=0;
+S0:begin next_state=(A= =1)?S1:S0;end
+S1:begin next_state=(A= =1)?S2:S0;end
+S2:if(A==1)    begin next_state = S2;end
+else     begin Y=1;next_state = S0;end
+default    begin next_state = S0; end
+endcase
+end
+endmodule
+第二个always是将current_state和输入A作为敏感变量，判断状态转移条件。

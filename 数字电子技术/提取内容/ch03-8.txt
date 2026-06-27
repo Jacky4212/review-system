@@ -1,0 +1,52 @@
+来源: ch03-8.pptx
+总页数: 4
+
+--- 第1页 ---
+3.8 用VerilogHDL描述CMOS门电路
+用VerilogHDL对MOS管构成的电路建模，称为开关级建模，是最底层的描述。
+用关键词nmos、pmos定义NMOS、PMOS管模型。rnmos、rpmos定义输入与输出端存在电阻的NMOS、PMOS管模型。
+关键词supply1、supply0分别定义了电源线和地线。
+3.8.1 CMOS门电路的Verilog建模
+
+--- 第2页 ---
+设计举例
+module NAND2 (L,A,B);  //IEEE 1364—1995 Syntax
+input A,B;      //输入端口声明
+output L;       //输出端口声明
+supply1  Vdd;
+supply0  GND;
+wire W1;     //将两个NMOS管之间的连接点定义为W1
+pmos (L,Vdd,A);   //PMOS管的源极与Vdd相连
+pmos (L,Vdd,B);     //两个PMOS管并行连接
+nmos (L,W1, A);     //两NMOS管串行连接
+nmos (W1,GND, B);   //NMOS管的源极与地相连
+endmodule
+试用Verilog语言的开关级
+建模描述CMOS与非门。
+
+--- 第3页 ---
+用关键词cmos定义传输门模型。
+cmos C1(输出信号, 输入信号, TN管控制信号, TP管控制信号);
+3.8.2 CMOS传输门电路的Verilog建模
+module mymux2to1 (A, B, L);  //IEEE 1364—1995 Syntax
+input A, B;  //输入端口声明
+output L;   //输出端口声明
+wire Anot, Bnot;     //声明模块内部的连接线
+inverter V1(Anot, A);  //调用底层模块inverter，见下一页
+inverter V2(Bnot, B);
+cmos (L, Anot, B, Bnot); //调用内部开关元件
+cmos (L, A, Bnot, B);  //(output,input,ncontrol,pcontrol)
+endmodule
+例：用Verilog语言的开关级
+建模描述下列异或门。
+
+--- 第4页 ---
+//CMOS反相器
+module inverter (Vo,Vi);  //IEEE 1364—1995 Syntax
+input Vi;   //输入端口声明
+output Vo;  //输出端口声明
+supply1  Vdd;
+supply0  GND;
+pmos (Vo,Vdd,Vi);   //实例化，调用内部开关元件
+nmos (Vo,GND,Vi);  //(漏极,源极,控制栅极)
+endmodule
