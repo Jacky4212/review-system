@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a detailed step-by-step Word document of the entire process."""
+"""Generate a generalized reusable workflow document."""
 from docx import Document
 from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -8,7 +8,7 @@ import os
 
 doc = Document()
 
-# --- Styles ---
+# --- Style ---
 style = doc.styles['Normal']
 font = style.font
 font.name = '微软雅黑'
@@ -17,175 +17,249 @@ style.element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
 
 # ===== Title =====
 title = doc.add_heading('', level=0)
-run = title.add_run('数字电子技术复习系统 — 完整搭建流程')
+run = title.add_run('PPT课程复习网站搭建 — 通用工作流')
 run.font.size = Pt(20)
 run.font.color.rgb = RGBColor(0x1a, 0x3a, 0x5c)
 title.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-doc.add_paragraph('')  # spacing
+desc = doc.add_paragraph()
+desc.alignment = WD_ALIGN_PARAGRAPH.CENTER
+run = desc.add_run('适用场景：从课程PPT中提取内容 → 搭建静态复习网站 → 部署到GitHub Pages')
+run.font.color.rgb = RGBColor(0x7f, 0x8c, 0x8d)
 
-# ===== Overview =====
-h = doc.add_heading('一、任务概述', level=1)
+doc.add_paragraph('')
+
+# ===== 前置条件 =====
+h = doc.add_heading('前置条件', level=1)
+items = [
+    'Python 3.8+ 环境（需安装 python-pptx 库）',
+    'Git 已安装并配置好 GitHub 远程仓库',
+    'GitHub CLI（gh）已安装并登录（可选，用于自动配置Pages）',
+    'PPTX 格式的课件文件（.ppt 旧格式需先转换为 .pptx）',
+]
+for item in items:
+    doc.add_paragraph(item, style='List Bullet')
+
+doc.add_paragraph('')
+
+# ===== 工作流 =====
+doc.add_heading('通用工作流', level=1)
+
+# ---------- Step 1 ----------
+doc.add_heading('Step 1 — 提取 PPT 文字内容', level=2)
+
 p = doc.add_paragraph()
 p.add_run('目标：').bold = True
-p.add_run('基于课程PPT文件，搭建一个可直接访问的静态复习网站，包含重点章节的知识梳理和常用芯片专题。')
-doc.add_paragraph('')
+p.add_run('从所有 PPTX 文件中批量提取文字，保存为结构化文本文件。')
 
-# ===== Step 1 =====
-doc.add_heading('二、详细流程', level=1)
-
-doc.add_heading('Step 1 — PPT文字内容提取', level=2)
-p = doc.add_paragraph()
-p.add_run('工具：').bold = True
-p.add_run('python-pptx 库')
-doc.add_paragraph('操作步骤：', style='List Bullet')
-steps = [
-    '编写 extract_pptx.py 脚本，遍历当前目录下所有 .pptx 文件',
-    '对每个文件，逐页读取所有文本框（shape.has_text_frame）和表格（shape.has_table）中的文字',
-    '将每页文字合并，写入 提取内容/ 目录下对应的 .txt 文件',
-    '跳过文件名含 (2) 的重复文件，保留原文件',
+doc.add_paragraph('核心逻辑：', style='List Bullet')
+core1 = [
+    '遍历目标目录下所有 .pptx 文件',
+    '对每个文件，逐页遍历所有形状（shapes）',
+    '对每个形状：若有文本框（has_text_frame），提取段落文本；若有表格（has_table），逐行逐格提取',
+    '按"来源文件 + 页码 + 文字"的格式写入 .txt 文件',
+    '可设置过滤规则：如跳过重复文件、(2)副本等',
 ]
-for s in steps:
-    doc.add_paragraph(s, style='List Number')
-p = doc.add_paragraph()
-p.add_run('关键代码片段：').bold = True
-doc.add_paragraph('for shape in slide.shapes:\n    if shape.has_text_frame:\n        for para in shape.text_frame.paragraphs:\n            if para.text.strip(): slide_text.append(para.text)', style='No Spacing')
+for c in core1:
+    doc.add_paragraph(c, style='List Number')
 
-doc.add_heading('Step 2 — 录音转写', level=2)
 p = doc.add_paragraph()
-p.add_run('工具：').bold = True
-p.add_run('faster-whisper（本地离线语音识别）')
-doc.add_paragraph('操作步骤：', style='List Bullet')
-steps2 = [
-    '安装 faster-whisper：pip install faster-whisper',
-    '由于网络SSL证书问题，使用 curl -k 直接从 HuggingFace 下载模型文件到本地 whisper-tiny-model/ 目录',
-    '模型文件包括：config.json, model.bin(~75MB), tokenizer.json, vocabulary.txt',
-    '编写 transcribe.py，用本地模型对 .m4a 录音文件进行语音转写',
-    '设置 language="zh"，得到中文转写结果，保存为 .txt 文件',
-]
-for s in steps2:
-    doc.add_paragraph(s, style='List Number')
-p = doc.add_paragraph()
-p.add_run('注：').bold = True
-p.add_run('如果网络环境不允许从 HuggingFace 下载，可用 curl -k 绕过SSL验证。')
+p.add_run('关键库：').bold = True
+p.add_run('python-pptx (from pptx import Presentation)')
 
-doc.add_heading('Step 3 — 静态网站搭建', level=2)
 p = doc.add_paragraph()
-p.add_run('工具：').bold = True
-p.add_run('纯 HTML + CSS，无任何外部依赖')
-doc.add_paragraph('网站结构：', style='List Bullet')
-doc.add_paragraph('数字电子技术/', style='List Number')
-doc.add_paragraph('  ├── index.html      ← 课程首页（章节导航卡片）', style='List Number')
-doc.add_paragraph('  ├── ch03.html       ← 第3章 逻辑门电路', style='List Number')
-doc.add_paragraph('  ├── ch07.html       ← 第7章 半导体存储器', style='List Number')
-doc.add_paragraph('  ├── ch10.html       ← 第10章 模数与数模转换器', style='List Number')
-doc.add_paragraph('  └── chips.html      ← 常用芯片专题(555/161/138)', style='List Number')
+p.add_run('伪代码：').bold = True
+code = """for each .pptx file:
+    prs = Presentation(file)
+    for each slide in prs.slides:
+        for each shape in slide.shapes:
+            if shape.has_text_frame:
+                extract paragraphs
+            if shape.has_table:
+                extract cells row by row
+        save to {file_name}.txt"""
+doc.add_paragraph(code, style='No Spacing')
 
 doc.add_paragraph('')
 p = doc.add_paragraph()
-p.add_run('设计要点：').bold = True
-doc.add_paragraph('内容全部基于 PPT 原话整理，标记来源页码', style='List Bullet')
-doc.add_paragraph('每个芯片（555/161/138）都配有功能表（真值表）和典型应用公式', style='List Bullet')
-doc.add_paragraph('响应式设计，兼容手机端', style='List Bullet')
-doc.add_paragraph('章节间有上下页导航，方便浏览', style='List Bullet')
+p.add_run('输出结果：').bold = True
+p.add_run('每个 PPTX 对应一个 .txt 文件，保存到指定输出目录。')
 
-doc.add_heading('Step 4 — Git 提交与推送', level=2)
-doc.add_paragraph('操作步骤：', style='List Bullet')
+# ---------- Step 2 ----------
+doc.add_heading('Step 2 — 录音转写（可选）', level=2)
+
+p = doc.add_paragraph()
+p.add_run('目标：').bold = True
+p.add_run('将课程录音（.m4a/.mp3/.wav）转写为文字，作为复习补充材料。')
+
+doc.add_paragraph('方案一（推荐）：', style='List Bullet')
+steps2a = [
+    '安装 openai-whisper 或 faster-whisper：pip install faster-whisper',
+    '若网络受限，单独下载模型文件：用 curl -k 从 HuggingFace Hub 手动下载模型到本地路径',
+    '模型文件包括：config.json, model.bin, tokenizer.json, vocabulary.txt',
+    '加载本地模型：WhisperModel(model_path, device="cpu", compute_type="int8", local_files_only=True)',
+    '调用 model.transcribe(audio_file, language="zh") 进行中文转写',
+    '遍历 segments，拼接全文，保存为 .txt 文件',
+]
+for s in steps2a:
+    doc.add_paragraph(s, style='List Number')
+
+doc.add_paragraph('方案二（轻量离线）：', style='List Bullet')
+steps2b = [
+    '安装 vosk：pip install vosk',
+    '从 alphacephei.com 下载中文模型（vosk-model-small-cn-0.22，约42MB）',
+    '加载模型，对音频文件进行流式或一次性识别',
+]
+for s in steps2b:
+    doc.add_paragraph(s, style='List Number')
+
+p = doc.add_paragraph()
+p.add_run('注意：').bold = True
+p.add_run('中文转写建议指定 language="zh" 以提高准确率。首次运行需下载模型文件（~75MB）。')
+
+# ---------- Step 3 ----------
+doc.add_heading('Step 3 — 构建静态复习网站', level=2)
+
+p = doc.add_paragraph()
+p.add_run('目标：').bold = True
+p.add_run('基于提取的文字内容，构建可直接在浏览器中打开的知识梳理网站。')
+
+doc.add_paragraph('设计原则：', style='List Bullet')
+principles = [
+    '纯静态 HTML + CSS，零外部依赖，无需服务器',
+    '内容忠实于 PPT 原话，标注来源',
+    '响应式设计，兼容桌面和移动端',
+    '按章节组织，导航清晰，可扩展',
+]
+for p_text in principles:
+    doc.add_paragraph(p_text, style='List Number')
+
+doc.add_paragraph('推荐文件结构：', style='List Bullet')
+structure = """project-root/
+  ├── index.html          ← 课程首页（导航卡片）
+  ├── ch03.html           ← 各章节页面（按需创建）
+  ├── ch07.html
+  ├── ch10.html
+  └── chips.html          ← 专题页面（如常用芯片/公式速查）"""
+doc.add_paragraph(structure, style='No Spacing')
+
+doc.add_paragraph('')
+doc.add_paragraph('页面内容组织规范：', style='List Bullet')
+content_rules = [
+    '每页顶部：教学基本要求（直接从PPT摘录）',
+    '正文：按 PPT 小节划分，使用 h2/h3 层级标题',
+    '关键概念用 def-box 高亮框展示定义',
+    '功能表/真值表用 HTML table 呈现',
+    '公式用居中 formula 块展示',
+    '多芯片或方法对比用卡片网格（compare-grid）布局',
+    '页脚注明内容来源章节',
+    '章节间提供上下页导航链接',
+]
+for r in content_rules:
+    doc.add_paragraph(r, style='List Number')
+
+# ---------- Step 4 ----------
+doc.add_heading('Step 4 — 版本控制与推送到 GitHub', level=2)
+
+p = doc.add_paragraph()
+p.add_run('目标：').bold = True
+p.add_run('将网站文件纳入 Git 管理并推送到远程仓库。')
+
 steps4 = [
-    'cd 到上级目录（D:\\code\\cherry studio\\复习\\），这是 git 仓库根目录',
-    'git add "数字电子技术/*.html" 添加新文件',
-    'git commit -m "feat: 数字电子技术静态复习网站"',
-    'git push origin master 推送到 GitHub',
+    'cd 到仓库根目录',
+    'git add <网站文件> 添加新文件',
+    'git commit -m "feat: 课程复习网站" 提交',
+    'git push origin <branch> 推送到 GitHub',
+    '若仓库根目录已有 index.html，建议改为导航页，链接到各课程站点',
 ]
 for s in steps4:
     doc.add_paragraph(s, style='List Number')
 
-doc.add_heading('Step 5 — 上级首页更新', level=2)
-doc.add_paragraph('将根目录 index.html 从外部跳转页改为课程导航页，包含指向 数字电子技术 的卡片入口。')
+p = doc.add_paragraph()
+p.add_run('建议：').bold = True
+p.add_run('仓库根目录下的 index.html 可作为多课程统一入口（导航页），每个课程一个子目录。')
 
-doc.add_heading('Step 6 — 启用 GitHub Pages', level=2)
-doc.add_paragraph('操作步骤：', style='List Bullet')
+# ---------- Step 5 ----------
+doc.add_heading('Step 5 — 启用 GitHub Pages', level=2)
+
+p = doc.add_paragraph()
+p.add_run('目标：').bold = True
+p.add_run('开启 GitHub Pages，使网站可通过公网域名直接访问。')
+
+steps5 = [
+    '方式一（gh CLI）：gh api repos/{owner}/{repo}/pages --method POST --field source=\'{"branch":"master","path":"/"}\'',
+    '方式二（网页端）：进入仓库 Settings → Pages → 选择分支和目录 → Save',
+    '等待构建完成（状态变为 "built"），通常需 1~5 分钟',
+    '访问 https://{owner}.github.io/{repo}/ 即可看到站点',
+]
+for s in steps5:
+    doc.add_paragraph(s, style='List Number')
+
+p = doc.add_paragraph()
+p.add_run('注意：').bold = True
+p.add_run('GitHub Pages 默认使用 Jekyll，但纯静态 HTML 网站可直接工作。如果路径中带下划线，需在根目录添加 .nojekyll 文件。')
+
+# ---------- Step 6 ----------
+doc.add_heading('Step 6 — 维护与扩展', level=2)
+
+p = doc.add_paragraph()
+p.add_run('目标：').bold = True
+p.add_run('持续更新网站内容，适配更多课程。')
+
 steps6 = [
-    '使用 gh CLI：gh api repos/Jacky4212/review-system/pages --method POST --field source=\'{"branch":"master","path":"/"}\'',
-    '等待 GitHub Pages 构建完成（状态变为 built）',
-    '访问 https://jacky4212.github.io/review-system/ 即可看到上级首页',
-    '点击 "数字电子技术基础" 卡片进入复习网站',
+    '增加新章节：参照现有 HTML 模板创建新文件，在 index.html 导航栏添加卡片',
+    '增加新专题：创建独立的专题页面（如 chips.html），引用各章节相关内容',
+    '更新内容：重新运行提取脚本获得最新PPT内容，更新对应章节页面',
+    'git commit & push 后，GitHub Pages 自动重新部署',
 ]
 for s in steps6:
     doc.add_paragraph(s, style='List Number')
 
-# ===== File Tree =====
-doc.add_heading('三、最终文件结构', level=1)
-doc.add_paragraph('D:\\code\\cherry studio\\复习\\（Git仓库根目录）')
-tree = [
-    '├── index.html              ← 上级首页（课程导航）',
-    '├── 数字电子技术/',
-    '│   ├── index.html          ← 课程首页（章节导航）',
-    '│   ├── ch03.html           ← 第3章 逻辑门电路',
-    '│   ├── ch07.html           ← 第7章 半导体存储器',
-    '│   ├── ch10.html           ← 第10章 ADC/DAC',
-    '│   ├── chips.html          ← 芯片专题(555/161/138)',
-    '│   ├── 提取内容/           ← PPT文字提取结果',
-    '│   └── 185 ... .txt        ← 录音转写结果',
-    '├── 放射化学/',
-    '├── 加速器/',
-    '└── ...其他文件',
-]
-for t in tree:
-    p = doc.add_paragraph(t)
-    p.style.font.size = Pt(9)
+# ===== 关键技巧 =====
+doc.add_heading('常见问题与技巧', level=1)
 
-# ===== Key formulas =====
-doc.add_heading('四、关键公式速查', level=1)
-
-doc.add_heading('555定时器', level=2)
-formulas = [
-    ('单稳态脉宽', 'tw ≈ 1.1 RC'),
-    ('多谐振荡高电平时间', 'tpH ≈ 0.7 (R1 + R2) C'),
-    ('多谐振荡低电平时间', 'tpL ≈ 0.7 R2 C'),
-    ('多谐振荡周期', 'T ≈ 0.7 (R1 + 2R2) C'),
-    ('施密特正向阈值', 'VT+ = 2/3 VCC'),
-    ('施密特负向阈值', 'VT- = 1/3 VCC'),
+tips = [
+    ('SSL证书问题', '在受限网络环境中，Python 的 httpx/requests 可能因 SSL 验证失败无法连接 HuggingFace。解决方案：使用 curl -k 手动下载模型文件，或设置环境变量 CURL_CA_BUNDLE="" 后重试。'),
+    ('中文乱码', 'Windows 终端输出中文可能乱码。解决方案：将输出写入 UTF-8 编码的文件，用 Read 工具或直接打开文件查看。'),
+    ('GitHub Pages 不更新', '推送后等待 1~5 分钟。若长时间未更新，可尝试在 Pages 设置页面触发重新部署。'),
+    ('大文件推送', '模型文件（whisper-tiny-model ~75MB, vosk ~42MB）不推荐推送到 Git 仓库。建议在 .gitignore 中排除，或使用 Git LFS。'),
+    ('PPT表格提取不完整', '部分复杂表格（合并单元格、嵌套表格）可能导致提取结果不完整。建议手动复核关键功能表。'),
 ]
-for name, formula in formulas:
+for title_text, detail in tips:
     p = doc.add_paragraph()
-    p.add_run(f'{name}：').bold = True
-    p.add_run(formula)
+    p.add_run(f'【{title_text}】').bold = True
+    p.add_run(f' {detail}')
 
-doc.add_heading('74LVC161计数器', level=2)
-p = doc.add_paragraph()
-p.add_run('并行进位输出：').bold = True
-p.add_run('TC = CET · Q3Q2Q1Q0')
+# ===== 工具清单 =====
+doc.add_heading('工具与依赖清单', level=1)
 
-doc.add_heading('D/A转换器（倒T形电阻网络）', level=2)
-p = doc.add_paragraph()
-p.add_run('输出模拟电压：').bold = True
-p.add_run('vO = – K · NB  (与输入二进制数成正比)')
-
-doc.add_heading('A/D转换器', level=2)
-p = doc.add_paragraph()
-p.add_run('采样定理：').bold = True
-p.add_run('fs ≥ 2fimax')
-
-# ===== Reference =====
-doc.add_heading('五、参考资料', level=1)
-refs = [
-    '华中科技大学《数字电子技术基础》课程PPT（全部10章）',
-    'GitHub仓库: https://github.com/Jacky4212/review-system',
-    '在线访问: https://jacky4212.github.io/review-system/',
-    'faster-whisper: https://github.com/SYSTRAN/faster-whisper',
-    'Vosk: https://alphacephei.com/vosk/',
+doc.add_paragraph('Python 库：', style='List Bullet')
+libs = [
+    'python-pptx — PPTX 文件文字提取',
+    'faster-whisper — 语音转写（GPU/CPU），依赖 ctranslate2, huggingface-hub',
+    'vosk — 轻量离线语音识别',
+    'python-docx — Word 文档生成',
 ]
-for r in refs:
-    doc.add_paragraph(r, style='List Bullet')
+for lib in libs:
+    doc.add_paragraph(lib, style='List Number')
+
+doc.add_paragraph('命令行工具：', style='List Bullet')
+cmds = [
+    'curl — 手动下载模型文件',
+    'gh — GitHub CLI，用于操作仓库和 Pages',
+    'git — 版本控制',
+]
+for cmd in cmds:
+    doc.add_paragraph(cmd, style='List Number')
 
 # ===== Footer =====
 doc.add_paragraph('')
 p = doc.add_paragraph()
 p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-p.add_run('— 文档自动生成于 2026年6月 —').font.color.rgb = RGBColor(0x95, 0xa5, 0xa6)
+run = p.add_run('— 本文档描述通用流程，具体路径和参数请根据实际环境调整 —')
+run.font.color.rgb = RGBColor(0x95, 0xa5, 0xa6)
 
 # ===== Save =====
-out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '搭建流程文档.docx')
+out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'PPT课程复习网站搭建-通用工作流.docx')
 doc.save(out_path)
 print("文档已生成: " + out_path)
