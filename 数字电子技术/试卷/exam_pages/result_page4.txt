@@ -1,0 +1,39 @@
+### 解答如下：
+---
+#### 1) 触发器类型和数量
+电路共使用$\boldsymbol{2个下降沿触发的JK触发器}$。
+---
+#### 2) 各级触发器的激励方程
+两个触发器为同步时钟，均由CP下降沿触发：
+- 对$\text{FF}_0$：$\boldsymbol{J_0=\overline{Q_1^n}，K_0=1}$
+- 对$\text{FF}_1$：$\boldsymbol{J_1=Q_0^n，K_1=1}$
+---
+#### 3) 状态转换方程
+JK触发器特性方程为$Q^{n+1}=J\overline{Q^n}+\overline{K}Q^n$，代入激励方程得：
+- $\text{FF}_0$：$Q_0^{n+1}=J_0\overline{Q_0^n}+\overline{K_0}Q_0^n=\overline{Q_1^n}\cdot\overline{Q_0^n}+0=\boldsymbol{\overline{Q_1^n}\cdot\overline{Q_0^n}}$（CP下降沿有效）
+- $\text{FF}_1$：$Q_1^{n+1}=J_1\overline{Q_1^n}+\overline{K_1}Q_1^n=Q_0^n\cdot\overline{Q_1^n}+0=\boldsymbol{Q_0^n\cdot\overline{Q_1^n}}$（CP下降沿有效）
+---
+#### 4) 状态转换真值表
+| 现态$Q_1^nQ_0^n$ | 次态$Q_1^{n+1}Q_0^{n+1}$ |
+|------------------|--------------------------|
+| 00               | 01                       |
+| 01               | 10                       |
+| 10               | 00                       |
+| 11               | 00                       |
+---
+#### 5) 状态转换图
+```mermaid
+stateDiagram-v2
+    s0: 00
+    s1: 01
+    s2: 10
+    s3: 11
+    s0 --> s1: CP↓
+    s1 --> s2: CP↓
+    s2 --> s0: CP↓
+    s3 --> s0: CP↓
+```
+有效状态形成循环：$\boldsymbol{00\rightarrow01\rightarrow10\rightarrow00}$，无效状态11经过1个CP脉冲后自动回到有效循环。
+---
+#### 6) 电路功能
+该电路是**可自启动的同步三进制加法计数器**，CP下降沿触发，计数模值为3，无效状态11可自动回归有效循环，无死锁问题。
