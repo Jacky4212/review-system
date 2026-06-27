@@ -183,7 +183,7 @@ CHAPTERS = [
     <ul>
       <li><strong>与运算</strong>（L = A · B）：只有当决定某一事件的条件全部具备时，这一事件才会发生。</li>
       <li><strong>或运算</strong>（L = A + B）：只要有一个或几个条件具备时，事件就会发生。</li>
-      <li><strong>非运算</strong>（L = ¬A）：条件具备时事件不发生，条件不具备时事件发生。</li>
+      <li><strong>非运算</strong>（L = ~A）：条件具备时事件不发生，条件不具备时事件发生。</li>
       <li><strong>与非</strong>：先与后非；<strong>或非</strong>：先或后非</li>
       <li><strong>异或</strong>：两个输入变量的值相异，输出为1，否则为0。</li>
       <li><strong>同或</strong>：两个输入变量的值相同，输出为1，否则为0。</li>
@@ -228,13 +228,13 @@ CHAPTERS = [
     <ul>
       <li>0-1律：A·0=0，A+1=1</li>
       <li>自等律：A·1=A，A+0=A</li>
-      <li>互补律：A·¬A=0，A+¬A=1</li>
+      <li>互补律：A·~A=0，A+~A=1</li>
       <li>重叠律：A·A=A，A+A=A</li>
       <li>交换律：A·B=B·A，A+B=B+A</li>
       <li>结合律：A·(B·C)=(A·B)·C，A+(B+C)=(A+B)+C</li>
       <li>分配律：A·(B+C)=AB+AC，A+BC=(A+B)(A+C)</li>
       <li>吸收律：A+AB=A，A·(A+B)=A</li>
-      <li>摩根定律：¬(A·B)=¬A+¬B，¬(A+B)=¬A·¬B</li>
+      <li>摩根定律：~(A·B)=~A+~B，~(A+B)=~A·~B</li>
     </ul>
     <h3>基本规则</h3>
     <ul>
@@ -264,9 +264,9 @@ CHAPTERS = [
     <p><strong>最简与-或表达式</strong>：包含的与项数最少，且每个与项中变量数最少。</p>
     <p>化简方法：</p>
     <ul>
-      <li><strong>并项法</strong>：利用A+¬A=1合并两项</li>
+      <li><strong>并项法</strong>：利用A+~A=1合并两项</li>
       <li><strong>吸收法</strong>：利用A+AB=A吸收多余项</li>
-      <li><strong>消去法</strong>：利用A+¬AB=A+B消去多余因子</li>
+      <li><strong>消去法</strong>：利用A+~AB=A+B消去多余因子</li>
       <li><strong>配项法</strong>：通过配项简化表达式</li>
     </ul>
   </div>
@@ -444,12 +444,12 @@ CHAPTERS = [
     <h3>D触发器</h3>
     <p>特性方程：<strong>Q<sup>n+1</sup> = D</strong></p>
     <h3>JK触发器</h3>
-    <p>特性方程：<strong>Q<sup>n+1</sup> = J·¬Q<sup>n</sup> + ¬K·Q<sup>n</sup></strong></p>
+    <p>特性方程：<strong>Q<sup>n+1</sup> = J·~Q<sup>n</sup> + ~K·Q<sup>n</sup></strong></p>
     <h3>T触发器</h3>
     <p>特性方程：<strong>Q<sup>n+1</sup> = T ⊕ Q<sup>n</sup></strong></p>
     <p>当T=1时，称为T′触发器，时钟脉冲每作用一次，触发器翻转一次（二分频）。</p>
     <h3>SR触发器</h3>
-    <p>特性方程：<strong>Q<sup>n+1</sup> = S + ¬R·Q<sup>n</sup></strong>（约束条件SR=0）</p>
+    <p>特性方程：<strong>Q<sup>n+1</sup> = S + ~R·Q<sup>n</sup></strong>（约束条件SR=0）</p>
     <div class="highlight">
       <strong>💡 触发器的电路结构与逻辑功能没有必然联系。</strong>
     </div>
