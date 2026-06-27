@@ -182,12 +182,13 @@ CHAPTERS = [
     <p><strong>逻辑运算</strong>：当0和1表示逻辑状态时，两个二进制数码按照某种特定的因果关系进行的运算。</p>
     <p>逻辑运算使用的数学工具是<strong>逻辑代数</strong>。有与、或、非三种基本逻辑运算。</p>
     <ul>
-      <li><strong>与运算</strong>（L = A · B）：只有当决定某一事件的条件全部具备时，这一事件才会发生。</li>
+      <li><strong>与运算</strong>（L = A · B = AB）：只有当决定某一事件的条件全部具备时，这一事件才会发生。</li>
       <li><strong>或运算</strong>（L = A + B）：只要有一个或几个条件具备时，事件就会发生。</li>
       <li><strong>非运算</strong>（L = <span style="text-decoration:overline">A</span>）：条件具备时事件不发生，条件不具备时事件发生。</li>
-      <li><strong>与非</strong>：先与后非；<strong>或非</strong>：先或后非</li>
-      <li><strong>异或</strong>：两个输入变量的值相异，输出为1，否则为0。</li>
-      <li><strong>同或</strong>：两个输入变量的值相同，输出为1，否则为0。</li>
+      <li><strong>与非运算</strong>（L = <span style="text-decoration:overline">A·B</span>）：先与后非，输入全1时输出0。</li>
+      <li><strong>或非运算</strong>（L = <span style="text-decoration:overline">A+B</span>）：先或后非，输入全0时输出1。</li>
+      <li><strong>异或运算</strong>（L = A ⊕ B）：两个输入变量的值相异，输出为1，否则为0。</li>
+      <li><strong>同或运算</strong>（L = A ⊙ B = <span style="text-decoration:overline">A⊕B</span>）：两个输入变量的值相同，输出为1，否则为0。</li>
     </ul>
   </div>
 
