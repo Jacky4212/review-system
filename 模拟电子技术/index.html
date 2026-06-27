@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模拟电子技术 · 复习笔记</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #1e40af, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p {
+      color: var(--text-secondary);
+      margin-top: .5rem;
+      font-size: 1.05rem;
+    }
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 1rem;
+      padding: .55rem 1.4rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: .95rem;
+      font-weight: 500;
+      transition: all .2s;
+      box-shadow: var(--shadow);
+    }
+    .github-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 4px 12px rgba(37,99,235,.15);
+      transform: translateY(-1px);
+    }
+    .github-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* Stats bar */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 2rem;
+      font-size: .9rem;
+      color: var(--text-secondary);
+    }
+    .stats span { display: flex; align-items: center; gap: 4px; }
+
+    /* Chapters */
+    .chapter-list { display: flex; flex-direction: column; gap: 1rem; }
+    .chapter-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all .2s;
+    }
+    .chapter-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(37,99,235,.12);
+    }
+    .chapter-card h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: .5rem;
+    }
+    .chapter-card h2 .num {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 0 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+    .chapter-card ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem .8rem;
+    }
+    .chapter-card ul li {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      position: relative;
+      padding-left: 12px;
+    }
+    .chapter-card ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: .4;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem 0;
+      color: var(--text-secondary);
+      font-size: .85rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6rem; }
+      .chapter-card { padding: 1rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <h1>📘 模拟电子技术</h1>
+    <p>Analog Electronics · 复习笔记</p>
+
+    <!-- GitHub repo link 名为"模拟电子技术" -->
+    <a class="github-link" href="https://github.com/Jacky4212/review-system" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      模拟电子技术
+    </a>
+
+    <div class="stats">
+      <span>📄 9 章</span>
+      <span>🏷️ 含 MOS 管 &amp; BJT</span>
+      <span>📅 2026 复习</span>
+    </div>
+  </header>
+
+  <!-- Chapter list -->
+  <div class="chapter-list">
+
+    <div class="chapter-card">
+      <h2><span class="num">01</span>绪论</h2>
+      <ul>
+        <li>信号与频谱</li>
+        <li>模拟信号与数字信号</li>
+        <li>放大电路模型</li>
+        <li>增益分贝表示</li>
+        <li>输入/输出电阻</li>
+        <li>频率响应与失真</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">02</span>运算放大器</h2>
+      <ul>
+        <li>理想运放与虚短虚断</li>
+        <li>同相放大电路</li>
+        <li>反相放大电路</li>
+        <li>电压跟随器</li>
+        <li>求和与求差电路</li>
+        <li>仪用放大器</li>
+        <li>积分与微分电路</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">03</span>二极管及其基本电路</h2>
+      <ul>
+        <li>本征半导体与杂质半导体</li>
+        <li>PN 结的形成与单向导电性</li>
+        <li>二极管 I-V 特性与模型</li>
+        <li>整流电路</li>
+        <li>限幅与钳位电路</li>
+        <li>齐纳二极管与稳压</li>
+        <li>光电 / 发光二极管</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">04</span>MOS 场效应管及其放大电路</h2>
+      <ul>
+        <li>增强型与耗尽型 MOSFET</li>
+        <li>N 沟道与 P 沟道</li>
+        <li>截止区 / 可变电阻区 / 恒流区</li>
+        <li>共源、共漏、共栅放大电路</li>
+        <li>小信号模型 (gm, rds)</li>
+        <li>沟道长度调制效应</li>
+        <li>Cascode 与 CMOS</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">05</span>双极结型三极管 (BJT) 及其放大电路</h2>
+      <ul>
+        <li>NPN 与 PNP 结构</li>
+        <li>放大条件：发射结正偏、集电结反偏</li>
+        <li>电流关系：IC = βIB</li>
+        <li>共射 / 共集 / 共基三种组态</li>
+        <li>H 参数小信号模型 (rbe, β)</li>
+        <li>静态工作点与图解分析</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">07</span>模拟集成电路</h2>
+      <ul>
+        <li>镜像电流源 / 微电流源</li>
+        <li>MOSFET 与 BJT 差分式放大电路</li>
+        <li>差模与共模信号</li>
+        <li>共模抑制比 KCMR</li>
+        <li>有源负载差分放大</li>
+        <li>CMOS 两级运放</li>
+        <li>运放参数：失调 / 带宽 / 压摆率</li>
+        <li>单电源工作</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">08</span>反馈放大电路</h2>
+      <ul>
+        <li>正反馈与负反馈</li>
+        <li>串联 / 并联反馈</li>
+        <li>电压 / 电流反馈</li>
+        <li>四种组态</li>
+        <li>深度负反馈与虚短虚断</li>
+        <li>对输入/输出电阻的影响</li>
+        <li>扩展带宽与增益-带宽积</li>
+        <li>自激振荡与频率补偿</li>
+      </ul>
+    </div>
+
+    <div class="chapter-card">
+      <h2><span class="num">09</span>功率放大电路</h2>
+      <ul>
+        <li>甲类 / 乙类 / 甲乙类 / 丁类</li>
+        <li>OCL 乙类双电源互补对称</li>
+        <li>交越失真与甲乙类偏置</li>
+        <li>OTL 单电源互补对称</li>
+        <li>D 类功放（开关状态）</li>
+        <li>集成功率放大器 TDA7294 / LM386</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      基于 <a href="https://github.com/Jacky4212/review-system" target="_blank" rel="noopener">review-system</a> 仓库 ·
+      模拟电子技术复习笔记
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
