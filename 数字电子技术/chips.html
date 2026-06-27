@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>常用芯片专题 - 555 · 161 · 138 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #2d7fc1;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e1e8ed;
+    --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 20px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+  .chip-header {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .chip-header h2 { font-size: 1.8em; color: var(--primary); margin-bottom: 8px; }
+  .chip-header p { color: var(--text-light); }
+
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em; color: var(--primary);
+    border-left: 4px solid var(--accent); padding-left: 14px; margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em; color: var(--accent);
+    margin: 20px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 10px; }
+  .section ul { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+
+  .highlight {
+    background: #fffbe6; border-left: 3px solid #f0c040;
+    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+
+  .def-box {
+    background: var(--code-bg); border-radius: 8px;
+    padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
+  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
+
+  .chip-tag { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 0.78em; margin-right: 4px; }
+  .chip-tag.tag555 { background: #fdf2e9; color: #e67e22; }
+  .chip-tag.tag161 { background: #e8f4fd; color: var(--accent); }
+  .chip-tag.tag138 { background: #f0f8f0; color: #27ae60; }
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px; margin: 14px 0;
+  }
+  .app-card {
+    background: var(--code-bg); border-radius: 10px; padding: 16px;
+    border-top: 3px solid var(--accent);
+  }
+  .app-card h4 { margin-top: 0; color: var(--accent); }
+  .formula {
+    text-align: center; font-size: 1.1em; padding: 10px;
+    background: var(--code-bg); border-radius: 8px; margin: 10px 0;
+    font-family: "Times New Roman", serif;
+  }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block; padding: 10px 24px;
+    background: var(--card-bg); border-radius: 8px;
+    text-decoration: none; color: var(--accent);
+    border: 1px solid var(--border); transition: all 0.2s; font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  @media (max-width: 640px) {
+    .section { padding: 20px 16px; }
+    .topbar h2 { font-size: 1em; }
+    table { font-size: 0.82em; }
+    th, td { padding: 4px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>常用芯片专题</h2>
+    <span></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="chip-header">
+    <h2>🔧 常用中规模集成电路模块</h2>
+    <p>555定时器 · 74LVC161计数器 · 74HC138译码器</p>
+  </div>
+
+  <!-- ==================== 555 ==================== -->
+  <div class="section">
+    <h2> <span class="chip-tag tag555">555</span> 9.4 555定时器</h2>
+
+    <h3>概述</h3>
+    <p>555定时器是一种应用方便的<strong>中规模集成电路</strong>，广泛用于信号的产生、变换、控制与检测。有<strong>双极性</strong>和<strong>CMOS</strong>之分。</p>
+
+    <h3>电路结构</h3>
+    <p>555定时器内部由以下五部分组成：</p>
+    <ol>
+      <li><strong>电阻分压器</strong>——三个等值电阻串联，提供参考电压（2/3 V<sub>CC</sub> 和 1/3 V<sub>CC</sub>）</li>
+      <li><strong>电压比较器</strong>——两个比较器C1和C2</li>
+      <li><strong>基本SR锁存器</strong></li>
+      <li><strong>输出缓冲反相器</strong></li>
+      <li><strong>集电极开路输出三极管</strong></li>
+    </ol>
+
+    <h3>555定时器功能表</h3>
+    <table>
+      <tr><th>阈值输入 (TH)</th><th>触发输入 (TR)</th><th>复位 (R)</th><th>输出 (OUT)</th><th>放电管 (DIS)</th></tr>
+      <tr><td>×</td><td>×</td><td>L</td><td>L</td><td>导通</td></tr>
+      <tr><td>> 2/3 V<sub>CC</sub></td><td>> 1/3 V<sub>CC</sub></td><td>H</td><td>L</td><td>导通</td></tr>
+      <tr><td>< 2/3 V<sub>CC</sub></td><td>> 1/3 V<sub>CC</sub></td><td>H</td><td>不变</td><td>不变</td></tr>
+      <tr><td>< 2/3 V<sub>CC</sub></td><td>< 1/3 V<sub>CC</sub></td><td>H</td><td>H</td><td>截止</td></tr>
+    </table>
+
+    <h3>三种典型应用</h3>
+
+    <h4>1. 用555组成施密特触发电路</h4>
+    <p>将阈值输入端（TH）和触发输入端（TR）连在一起作为信号输入端。</p>
+    <ul>
+      <li><strong>正向阈值电压 V<sub>T+</sub></strong> = 2/3 V<sub>CC</sub></li>
+      <li><strong>负向阈值电压 V<sub>T-</sub></strong> = 1/3 V<sub>CC</sub></li>
+      <li><strong>回差电压 ΔV<sub>T</sub></strong> = V<sub>T+</sub> − V<sub>T-</sub> = 1/3 V<sub>CC</sub></li>
+    </ul>
+    <p>应用：波形变换、波形整形与抗干扰、幅度鉴别。</p>
+
+    <h4>2. 用555组成单稳态电路</h4>
+    <ul>
+      <li><strong>稳态</strong>：输出为0。</li>
+      <li><strong>触发</strong>：外加触发信号（TR < 1/3 V<sub>CC</sub>），电路翻转到暂稳态，输出为1。</li>
+      <li><strong>暂稳态持续时间</strong>（由RC决定）：</li>
+    </ul>
+    <div class="formula">
+      t<sub>w</sub> = RC · ln3 ≈ <strong>1.1 RC</strong>
+    </div>
+
+    <h4>3. 用555组成多谐振荡电路</h4>
+    <p>无需外加触发信号，电路自动产生矩形脉冲波。</p>
+    <div class="app-grid">
+      <div class="app-card">
+        <h4>充电时间（高电平）</h4>
+        <div class="formula">t<sub>pH</sub> ≈ <strong>0.7 (R<sub>1</sub> + R<sub>2</sub>) C</strong></div>
+      </div>
+      <div class="app-card" style="border-top-color:#e67e22;">
+        <h4>放电时间（低电平）</h4>
+        <div class="formula">t<sub>pL</sub> ≈ <strong>0.7 R<sub>2</sub> C</strong></div>
+      </div>
+      <div class="app-card" style="border-top-color:#27ae60;">
+        <h4>振荡周期</h4>
+        <div class="formula">T = t<sub>pH</sub> + t<sub>pL</sub> ≈ <strong>0.7 (R<sub>1</sub> + 2R<sub>2</sub>) C</strong></div>
+      </div>
+    </div>
+    <p>通过改变R<sub>A</sub>和R<sub>B</sub>的比值，可以调节占空比。</p>
+  </div>
+
+  <!-- ==================== 161 ==================== -->
+  <div class="section">
+    <h2> <span class="chip-tag tag161">161</span> 6.5 74LVC161 计数器</h2>
+
+    <h3>概述</h3>
+    <p>74LVC161是<strong>4位二进制同步加计数器</strong>，具有<strong>异步清零</strong>和<strong>同步并行置数</strong>功能。</p>
+    <p>同时具有计数使能控制（CET、CEP）和并行进位输出（TC）。</p>
+
+    <h3>芯片特点</h3>
+    <ul>
+      <li><strong>异步清零</strong>：清零端（CLR）为低电平时，无论其他输入如何，立即清零。</li>
+      <li><strong>同步并行置数</strong>：预置端（LOAD）为低电平时，在时钟CP上升沿将D<sub>3</sub>~D<sub>0</sub>数据装入。</li>
+      <li><strong>计数使能</strong>：CET和CEP同时为高电平时，在时钟CP上升沿进行加1计数。</li>
+      <li><strong>并行进位输出</strong>：TC = CET · Q<sub>3</sub>Q<sub>2</sub>Q<sub>1</sub>Q<sub>0</sub></li>
+    </ul>
+
+    <h3>74LVC161逻辑功能表</h3>
+    <table>
+      <tr>
+        <th>清零</th><th>预置</th><th>CEP</th><th>CET</th><th>时钟CP</th>
+        <th>D<sub>3</sub>D<sub>2</sub>D<sub>1</sub>D<sub>0</sub></th>
+        <th>Q<sub>3</sub>Q<sub>2</sub>Q<sub>1</sub>Q<sub>0</sub></th><th>TC</th>
+      </tr>
+      <tr><td>L</td><td>×</td><td>×</td><td>×</td><td>×</td><td>×</td><td><strong>L L L L</strong></td><td>L</td></tr>
+      <tr><td>H</td><td>L</td><td>×</td><td>×</td><td>↑</td><td>D<sub>3</sub>~D<sub>0</sub></td><td><strong>D<sub>3</sub>D<sub>2</sub>D<sub>1</sub>D<sub>0</sub></strong></td><td>*</td></tr>
+      <tr><td>H</td><td>H</td><td>L</td><td>×</td><td>×</td><td>×</td><td><strong>保持</strong></td><td>*</td></tr>
+      <tr><td>H</td><td>H</td><td>×</td><td>L</td><td>×</td><td>×</td><td><strong>保持</strong></td><td>*</td></tr>
+      <tr><td>H</td><td>H</td><td>H</td><td>H</td><td>↑</td><td>×</td><td><strong>计数（加1）</strong></td><td>*</td></tr>
+    </table>
+
+    <h3>用161构成任意进制计数器</h3>
+    <p><strong>（1）反馈清零法</strong>：利用异步清零输入端，在M进制计数器的计数过程中，跳过M‒N个状态，得到N进制计数器。</p>
+    <p><strong>（2）反馈置数法</strong>：利用同步置数端，在M进制计数器的计数过程中，跳过M‒N个状态，得到N进制计数器。</p>
+
+    <h3>多片级联扩展</h3>
+    <p>当需要N > M（M=16）时，需用多片161级联。通常有两种方式：</p>
+    <ul>
+      <li><strong>并行进位</strong>：低位片的进位信号作为高位片的<strong>使能信号</strong>（同步方式）。</li>
+      <li><strong>串行进位</strong>：低位片的进位信号作为高位片的<strong>时钟脉冲</strong>（异步方式）。</li>
+    </ul>
+  </div>
+
+  <!-- ==================== 138 ==================== -->
+  <div class="section">
+    <h2> <span class="chip-tag tag138">138</span> 4.4 74HC138 译码器</h2>
+
+    <h3>概述</h3>
+    <p>74HC138是<strong>3线-8线二进制译码器</strong>。</p>
+    <p><strong>译码</strong>是编码的逆过程，它能将二进制码翻译成代表某一特定含义的信号（即电路的某种状态）。</p>
+    <p><strong>译码器</strong>：具有译码功能的逻辑电路称为译码器。</p>
+
+    <h3>74HC138的特点</h3>
+    <ul>
+      <li>3个输入端 A<sub>2</sub>A<sub>1</sub>A<sub>0</sub>（高电平有效）</li>
+      <li>8个输出端 Y<sub>0</sub>~Y<sub>7</sub>（低电平有效）</li>
+      <li>3个使能端：E<sub>1</sub>、E<sub>2</sub>、E<sub>3</sub>（其中E<sub>1</sub>、E<sub>2</sub>低有效，E<sub>3</sub>高有效）</li>
+    </ul>
+    <div class="def-box">
+      <strong>逻辑符号说明：</strong>符号框外部的符号表示外部输入或输出信号名称，字母上面的"—"号说明该输入或输出是<strong>低电平有效</strong>。符号框内部的输入、输出变量表示其内部的逻辑关系。
+    </div>
+
+    <h3>74HC138 功能表</h3>
+    <table>
+      <tr><th>使能输入</th><th colspan="3">选择输入</th><th colspan="8">输出</th></tr>
+      <tr><th>E<sub>3</sub></th><th>E<sub>2</sub></th><th>A<sub>2</sub></th><th>A<sub>1</sub></th><th>A<sub>0</sub></th>
+          <th>Y<sub>0</sub></th><th>Y<sub>1</sub></th><th>Y<sub>2</sub></th><th>Y<sub>3</sub></th><th>Y<sub>4</sub></th><th>Y<sub>5</sub></th><th>Y<sub>6</sub></th><th>Y<sub>7</sub></th></tr>
+      <tr><td>×</td><td>H</td><td>×</td><td>×</td><td>×</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>L</td><td>×</td><td>×</td><td>×</td><td>×</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>L</td><td>L</td><td>L</td><td><strong>L</strong></td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>L</td><td>L</td><td>H</td><td>H</td><td><strong>L</strong></td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>L</td><td>H</td><td>L</td><td>H</td><td>H</td><td><strong>L</strong></td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>L</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td><strong>L</strong></td><td>H</td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>H</td><td>L</td><td>L</td><td>H</td><td>H</td><td>H</td><td>H</td><td><strong>L</strong></td><td>H</td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>H</td><td>L</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td><strong>L</strong></td><td>H</td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>H</td><td>H</td><td>L</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td><strong>L</strong></td><td>H</td></tr>
+      <tr><td>H</td><td>L</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td>H</td><td><strong>L</strong></td></tr>
+    </table>
+    <p style="font-size:0.85em;color:var(--text-light);">注：E<sub>1</sub>和E<sub>2</sub>合并为E<sub>2</sub>列表示（两者均为低有效，逻辑与关系）。H=高电平，L=低电平，×=任意。</p>
+
+    <h3>译码器的扩展</h3>
+    <ul>
+      <li>用2片74X138可以构成<strong>4线-16线译码器</strong>。</li>
+      <li>用74X139和74X138可以构成<strong>5线-32线译码器</strong>。</li>
+    </ul>
+
+    <h3>译码器的应用</h3>
+    <p><strong>（1）地址译码</strong>：译码器常用于识别不同设备。当系统地址总线的高位地址连到译码器输入端，每个输出对应一个设备的片选信号。</p>
+    <p><strong>（2）数据分配器</strong>：用译码器可以实现数据分配功能，将公共数据线上的数据按需要送到不同的通道上去。</p>
+  </div>
+
+  <!-- 快速对比 -->
+  <div class="section">
+    <h2>📊 三芯片快速对比</h2>
+    <table>
+      <tr><th>芯片</th><th>功能</th><th>输入</th><th>输出</th><th>关键特点</th></tr>
+      <tr>
+        <td><strong>555</strong></td>
+        <td>定时器/多谐振荡</td>
+        <td>TH, TR, R, CV</td>
+        <td>OUT, DIS</td>
+        <td>三种工作模式（施密特/单稳/多谐）</td>
+      </tr>
+      <tr>
+        <td><strong>74LVC161</strong></td>
+        <td>4位二进制计数器</td>
+        <td>CP, CLR, LOAD, CET, CEP, D<sub>3</sub>~D<sub>0</sub></td>
+        <td>Q<sub>3</sub>~Q<sub>0</sub>, TC</td>
+        <td>异步清零+同步置数+级联扩展</td>
+      </tr>
+      <tr>
+        <td><strong>74HC138</strong></td>
+        <td>3线-8线译码器</td>
+        <td>A<sub>2</sub>A<sub>1</sub>A<sub>0</sub>, E<sub>1</sub>E<sub>2</sub>E<sub>3</sub></td>
+        <td>Y<sub>0</sub>~Y<sub>7</sub></td>
+        <td>低有效输出+多使能+级联扩展</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="index.html">课程主页</a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第4/6/9章</p>
+</div>
+
+</body>
+</html>

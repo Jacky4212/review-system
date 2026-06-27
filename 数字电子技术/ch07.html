@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7章 半导体存储器 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #2d7fc1;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e1e8ed;
+    --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topbar a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.2s;
+  }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em;
+    color: var(--primary);
+    border-left: 4px solid var(--accent);
+    padding-left: 14px;
+    margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em;
+    color: var(--accent);
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .section h4 {
+    font-size: 1em;
+    color: var(--text);
+    margin: 14px 0 6px;
+    font-weight: 600;
+  }
+  .section p { margin-bottom: 10px; color: var(--text); }
+  .section ul, .section ol { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight {
+    background: #fffbe6;
+    border-left: 3px solid #f0c040;
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+  .tag-rom { display: inline-block; background: #e8f4fd; color: var(--accent); font-size: 0.78em; padding: 1px 10px; border-radius: 10px; margin-right: 4px; }
+  .tag-ram { display: inline-block; background: #f0f8f0; color: #27ae60; font-size: 0.78em; padding: 1px 10px; border-radius: 10px; margin-right: 4px; }
+  .tag-flash { display: inline-block; background: #fdf2e9; color: #e67e22; font-size: 0.78em; padding: 1px 10px; border-radius: 10px; margin-right: 4px; }
+  .def-box {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-light);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+  }
+  @media (max-width: 640px) {
+    .section { padding: 20px 16px; }
+    .topbar h2 { font-size: 1em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>第7章 半导体存储器</h2>
+    <a href="ch10.html">下一章 →</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 教学要求 -->
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>掌握半导体存储器字、位、存储容量、地址等基本概念。</li>
+      <li>掌握RAM、ROM的工作原理及典型应用。</li>
+      <li>了解只读存储器基本结构、工作原理和分类。</li>
+      <li>了解随机存取存储器SRAM、DRAM基本结构、工作原理和分类。</li>
+    </ul>
+  </div>
+
+  <!-- 概述 -->
+  <div class="section">
+    <h2>📖 概述</h2>
+    <p><strong>半导体存储器</strong>是能存放大量二值信息的半导体器件。</p>
+    <p>存储器的主要性能指标：</p>
+    <ul>
+      <li><strong>存取速度</strong>——存储时间短</li>
+      <li><strong>存储数据量</strong>——存储容量大</li>
+    </ul>
+
+    <h3>几个基本概念</h3>
+    <div class="def-box">
+      <p><strong>存储容量(M)</strong>：存储单元的数目。</p>
+      <p><strong>存储容量(M)＝字数 × 位数</strong></p>
+      <p><strong>字</strong>：计算机中作为一个整体被存取传送处理的一组数据。</p>
+      <p><strong>地址</strong>：每个字的编号。</p>
+      <p><strong>字数 = 2<sup>n</sup></strong>（n为地址线的总数）</p>
+      <p><strong>字长</strong>：一个字所含的位数称为字长。例如：4位。</p>
+    </div>
+  </div>
+
+  <!-- RAM vs ROM -->
+  <div class="section">
+    <h2>📊 存储器的分类</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;">
+      <div style="background:#e8f4fd;border-radius:10px;padding:18px;">
+        <h3 style="margin-top:0;border:none;color:var(--accent);">🟦 RAM（随机存取存储器）</h3>
+        <p>在运行状态可以随时进行读或写操作。存储的数据必须有电源供应才能保存，<strong>一旦掉电，数据全部丢失</strong>。</p>
+      </div>
+      <div style="background:#fdf2e9;border-radius:10px;padding:18px;">
+        <h3 style="margin-top:0;border:none;color:#e67e22;">🟧 ROM（只读存储器）</h3>
+        <p>在正常工作状态只能读出信息。<strong>断电后信息不会丢失</strong>，常用于存放固定信息（如程序、常数等）。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.1 ROM -->
+  <div class="section">
+    <h2>7.1 只读存储器（ROM）</h2>
+
+    <h3>ROM的基本结构</h3>
+    <p>ROM主要由<strong>地址译码器</strong>、<strong>存储矩阵</strong>和<strong>输出控制电路</strong>三部分组成。</p>
+    <p>ROM是一种永久性数据存储器，其中的数据一般由专用的装置写入，数据一旦写入，不能随意改写，在切断电源之后，数据也不会消失。</p>
+
+    <h3>ROM的分类</h3>
+    <p>按写入情况划分：</p>
+    <ul>
+      <li><span class="tag-rom">固定ROM</span> <strong>掩模ROM</strong>：可用二极管、MOS管或BJT管，出厂时数据已经"固化"了，不能更改。</li>
+      <li><span class="tag-rom">PROM</span> <strong>一次可编程</strong>：由带熔丝或反熔丝的器件构成，只能烧写一次。</li>
+      <li><span class="tag-rom">EPROM</span> <strong>光可擦除</strong>：用SIMOS管，有石英盖板，用紫外灯或X射线照15~20分钟擦除。</li>
+      <li><span class="tag-rom">E²PROM</span> <strong>电可擦除</strong>：用Flotox MOS管，在线电擦除，但集成度低。</li>
+      <li><span class="tag-flash">Flash</span> <strong>闪存</strong>：由Flash MOS管构成，有NOR和NAND型两类。</li>
+    </ul>
+
+    <h3>NOR Flash 与 NAND Flash</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:#f0f4f8;border-radius:8px;padding:14px;">
+        <h4 style="margin-top:0;">NOR型</h4>
+        <p>列线上的浮栅MOS漏极并联，源极接地的或非结构。按块擦除、按字写入，采用并行接口，在计算机系统中常用于<strong>存放运行程序</strong>。</p>
+      </div>
+      <div style="background:#f0f4f8;border-radius:8px;padding:14px;">
+        <h4 style="margin-top:0;">NAND型</h4>
+        <p>列线上的浮栅MOS串联，最后一个MOS管接地，因而节省空间，<strong>集成度比NOR高</strong>。以块存取，采用串行接口，多用于数据文件存储，如固态硬盘、存储卡和U盘等。</p>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>💡 几种ROM性能比较：</strong><br>
+      Flash、ROM、EPROM、E²PROM都具有<strong>非易失性</strong>。<br>
+      Flash和ROM高密度，单管存储单元。<br>
+      只有在系统可写方面，Flash和E²PROM支持，ROM和EPROM不支持。
+    </div>
+  </div>
+
+  <!-- 7.2 RAM -->
+  <div class="section">
+    <h2>7.2 随机存取存储器（RAM）</h2>
+
+    <h3>7.2.1 静态随机存取存储器（SRAM）</h3>
+    <p><strong>SRAM（Static RAM）</strong> 的存储单元是<strong>双稳态存储单元电路</strong>，由触发器构成。只要电源供电，数据就能保持。</p>
+    <p>SRAM的基本结构包括：行地址译码器、列地址译码器、存储矩阵、输入输出控制电路。</p>
+
+    <div class="highlight">
+      <strong>🔹 SRAM的工作模式：</strong> 输出高阻、输入、输出、高阻等模式，由控制信号决定。
+    </div>
+
+    <h3>7.2.2 同步静态随机存取存储器（SSRAM）</h3>
+    <p>SSRAM是一种<strong>高速RAM</strong>。与SRAM不同，SSRAM的读写操作是在<strong>时钟脉冲节拍控制</strong>下完成的。</p>
+    <p>在由SSRAM构成的计算机系统中，由于在时钟有效沿到来时，地址、数据、控制等信号被锁存到SSRAM内部的寄存器中，因此读写过程的延时等待均在时钟作用下，由SSRAM内部控制完成。此时，系统中的微处理器在读写SSRAM的同时，可以处理其他任务，从而提高了整个系统的工作速度。</p>
+    <p>SSRAM有两种读写模式：</p>
+    <ul>
+      <li><strong>普通模式读写（ADV=0）</strong>：地址直接送到地址译码器，按外部给定地址进行读/写操作。</li>
+      <li><strong>丛发模式读写（ADV=1）</strong>：地址寄存器不接受外部新地址，在原有地址上由丛发计数器加1产生新地址。</li>
+    </ul>
+
+    <h3>7.2.3 动态随机存取存储器（DRAM）</h3>
+    <p>DRAM的存储单元由一个<strong>MOS管T和一个电容器C</strong>组成。</p>
+    <ul>
+      <li><strong>写入</strong>：T导通，输入缓冲器被选通，数据DI经缓冲器和位线写入存储单元。如果DI为1，则向电容器充电，C存1；反之电容器放电，C存0。</li>
+      <li><strong>读出</strong>：T导通，输出缓冲器/灵敏放大器被选通，C中存储的数据通过位线和缓冲器输出。</li>
+      <li><strong>刷新</strong>：每次读出后，必须及时对读出单元刷新，因为电容器上的电荷会泄漏。</li>
+    </ul>
+
+    <h3>其他存取方式的存储器</h3>
+    <p><strong>（1）FIFO（First-in First-out，先进先出）</strong></p>
+    <p>指先存入的数据也先被读出，不能随机存取。数据写入端口和读出端口是分开的。用于需要长时间、不间断、高速数据采集的缓冲器。</p>
+    <p><strong>（2）双口SRAM</strong></p>
+    <p>有两套完全独立完整的地址、数据和控制端口，共用同一个存储阵列。两个端口都能进行读写操作，而且能根据各自端口的地址随机存取。内部仲裁电路决定先完成哪个端口的访问。</p>
+  </div>
+
+  <!-- 存储器扩展 -->
+  <div class="section">
+    <h2>📐 存储器容量的扩展</h2>
+
+    <h3>1. 字长（位数）的扩展</h3>
+    <p>可以利用芯片的<strong>并联</strong>方式实现。例如用4K×4位的芯片组成4K×16位的存储系统。</p>
+
+    <h3>2. 字数的扩展</h3>
+    <p>字数的扩展可以利用<strong>外加译码器控制存储器芯片的片选输入端</strong>来实现。</p>
+
+    <h3>3. 同时实现字数、位数的扩展</h3>
+    <p>先进行位扩展（组成所需字长），再进行字扩展（增加字数）。</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="ch10.html">第10章 模数与数模转换器 →</a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第7章 半导体存储器</p>
+</div>
+
+</body>
+</html>

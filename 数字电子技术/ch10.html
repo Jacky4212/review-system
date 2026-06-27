@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第10章 模数与数模转换器 - 数字电子技术</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --accent: #2d7fc1;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e1e8ed;
+    --code-bg: #f0f4f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .topbar {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topbar a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.2s;
+  }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+  .section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .section h2 {
+    font-size: 1.4em;
+    color: var(--primary);
+    border-left: 4px solid var(--accent);
+    padding-left: 14px;
+    margin-bottom: 20px;
+  }
+  .section h3 {
+    font-size: 1.15em;
+    color: var(--accent);
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .section h4 {
+    font-size: 1em;
+    color: var(--text);
+    margin: 14px 0 6px;
+    font-weight: 600;
+  }
+  .section p { margin-bottom: 10px; color: var(--text); }
+  .section ul, .section ol { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight {
+    background: #fffbe6;
+    border-left: 3px solid #f0c040;
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  .highlight strong { color: #c0392b; }
+  .tag-dac { display: inline-block; background: #e8f4fd; color: var(--accent); font-size: 0.78em; padding: 1px 10px; border-radius: 10px; margin-right: 4px; }
+  .tag-adc { display: inline-block; background: #fdf2e9; color: #e67e22; font-size: 0.78em; padding: 1px 10px; border-radius: 10px; margin-right: 4px; }
+  .tag-param { display: inline-block; background: #f0f8f0; color: #27ae60; font-size: 0.78em; padding: 1px 10px; border-radius: 10px; margin-right: 4px; }
+  .def-box {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 0.95em;
+  }
+  .def-box strong { color: var(--accent); }
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 14px 0;
+  }
+  .compare-card {
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 16px;
+    border-top: 3px solid var(--accent);
+  }
+  .compare-card h4 { margin-top: 0; color: var(--accent); }
+  .compare-card.adc-card { border-top-color: #e67e22; }
+  .compare-card.adc-card h4 { color: #e67e22; }
+  .formula {
+    text-align: center;
+    font-size: 1.1em;
+    padding: 12px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    margin: 10px 0;
+    font-family: "Times New Roman", serif;
+  }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    font-size: 0.95em;
+  }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-light);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+  }
+  @media (max-width: 640px) {
+    .section { padding: 20px 16px; }
+    .topbar h2 { font-size: 1em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>第10章 模数与数模转换器</h2>
+    <a href="ch07.html">上一章 →</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 教学要求 -->
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>掌握倒T形电阻网络D/A转换器（DAC）、集成D/A转换器的工作原理及相关计算。</li>
+      <li>掌握并行比较、逐次比较、双积分A/D转换器（ADC）的工作原理及其特点。</li>
+      <li>正确理解D/A、A/D转换器的主要参数。</li>
+    </ul>
+  </div>
+
+  <!-- 概述 -->
+  <div class="section">
+    <h2>📖 概述</h2>
+    <p>ADC和DAC已成为计算机系统中不可缺少的接口电路。</p>
+    <p>将温度、压力、流量、应力等物理量转换为模拟电量，经A/D转换送入计算机进行数字处理（如计算、滤波）、保存等，再由D/A转换将数字量转换为模拟量作为控制信号。</p>
+    <p><strong>模数混合电路</strong>——处理模拟信号的模拟电路与数字电路的接口，由模数（数模）转换电路构成。</p>
+  </div>
+
+  <!-- 10.1 DAC -->
+  <div class="section">
+    <h2>10.1 D/A转换器</h2>
+
+    <h3>10.1.1 D/A转换的基本思想</h3>
+    <p>二进制每位代码都有一定的<strong>权值</strong>，按其权的大小转换成模拟量，然后将这些模拟量相加，即可得到与数字量成正比的模拟量，从而实现数字量到模拟量的转换。</p>
+    <div class="formula">
+      N<sub>B</sub> = D<sub>n</sub>×2<sup>n</sup> + D<sub>n-1</sub>×2<sup>n-1</sup> + … + D<sub>1</sub>×2<sup>1</sup> + D<sub>0</sub>×2<sup>0</sup>
+    </div>
+
+    <h3>D/A转换器的分类</h3>
+    <p>按解码网络结构分类：</p>
+    <ul>
+      <li><span class="tag-dac">权电阻网络DAC</span></li>
+      <li><span class="tag-dac">倒T形电阻网络DAC</span> ← 重点</li>
+      <li><span class="tag-dac">权电流型DAC</span></li>
+      <li><span class="tag-dac">电阻串联分压式DAC</span></li>
+    </ul>
+
+    <h3>10.1.2 倒T形电阻网络D/A转换器</h3>
+    <p><strong>核心原理</strong>：根据运放线性运用时虚地的概念可知，无论模拟开关Si处于何种位置，与Si相连的2R电阻将接"地"或虚地。</p>
+    <ul>
+      <li>D<sub>i</sub> = 0时，S<sub>i</sub>将电阻2R接地</li>
+      <li>D<sub>i</sub> = 1时，S<sub>i</sub>接运算放大器反相端，电流I<sub>i</sub>流入求和电路</li>
+    </ul>
+    <p>流入每个2R电阻的电流从高位到低位按<strong>2的整数倍递减</strong>：</p>
+    <div class="formula">
+      I<sub>3</sub> = V<sub>REF</sub>/2R &nbsp;&nbsp; I<sub>2</sub> = V<sub>REF</sub>/4R &nbsp;&nbsp; I<sub>1</sub> = V<sub>REF</sub>/8R &nbsp;&nbsp; I<sub>0</sub> = V<sub>REF</sub>/16R
+    </div>
+    <p>输出模拟电压：</p>
+    <div class="formula">
+      v<sub>O</sub> = – K · N<sub>B</sub>
+    </div>
+    <p>即电路的输出电压与输入的二进制数<strong>成正比</strong>，实现了数字量到模拟量的转换。</p>
+
+    <h3>10.1.3 权电流型D/A转换器</h3>
+    <p>在恒流源电路中，各支路权电流的大小均<strong>不受开关导通电阻和压降的影响</strong>，降低了对开关电路的要求，提高了转换精度。</p>
+
+    <h3>10.1.5 D/A转换器的双极性输出</h3>
+    <p>计算机中用<strong>偏移码</strong>表示有符号的数，0表示负数，1表示正数。偏移码将补码最高位取反得到。</p>
+    <p>如果将偏移码作为无符号二进制数，转换成十进制后，减去8（对于4位），就是其对应的十进制结果。</p>
+
+    <h3>10.1.6 D/A转换器的主要技术指标</h3>
+    <ul>
+      <li><span class="tag-param">分辨率</span>：用位数表示。n位DAC最多有2<sup>n</sup>个模拟输出电压。位数越多，分辨率越高。</li>
+      <li><span class="tag-param">转换精度</span>：也称转换误差，指D/A转换器实际转换特性与理想转换特性之间的最大偏差。有静态误差与动态误差之分。包括：<strong>失调误差</strong>（零点偏移）、<strong>增益误差</strong>（比例系数误差）、<strong>级差非线性误差</strong>、<strong>整体非线性误差</strong>。</li>
+      <li><span class="tag-param">转换速度</span>：用稳定时间和转换速率描述。</li>
+    </ul>
+  </div>
+
+  <!-- 10.2 ADC -->
+  <div class="section">
+    <h2>10.2 A/D转换器</h2>
+
+    <h3>A/D转换器的功能</h3>
+    <p>能将模拟电压<strong>成正比地</strong>转换成对应的数字量。</p>
+
+    <h3>A/D转换器的分类</h3>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>⚡ 并联比较型</h4>
+        <p><strong>特点：</strong>转换速度最快，转换时间10ns~1μs，但电路复杂。</p>
+      </div>
+      <div class="compare-card adc-card">
+        <h4>🎯 逐次逼近型</h4>
+        <p><strong>特点：</strong>转换速度适中，转换时间为几μs~100μs，转换精度高，在速度和复杂度之间达到很好的平衡。</p>
+      </div>
+      <div class="compare-card" style="border-top-color:#27ae60;">
+        <h4>🛡️ 双积分型</h4>
+        <p><strong>特点：</strong>转换速度慢，转换时间几百μs~几ms，但抗干扰能力最强。</p>
+      </div>
+    </div>
+
+    <h3>10.2.1 A/D转换的一般工作过程</h3>
+    <p>A/D转换器一般要包括<strong>取样、保持、量化及编码</strong>4个过程。</p>
+
+    <h4>1. 取样与保持</h4>
+    <p>采样是将随时间连续变化的模拟量转换为在时间离散的模拟量。</p>
+    <div class="highlight">
+      <strong>📐 采样定理：</strong>设采样信号S(t)的频率为f<sub>s</sub>，输入模拟信号v<sub>I</sub>(t)的最高频率分量的频率为f<sub>imax</sub>，则 <strong>f<sub>s</sub> ≥ 2f<sub>imax</sub></strong>
+    </div>
+    <p>采样信号S(t)的频率愈高，所采得信号经低通滤波器后愈能真实地复现输入信号。</p>
+    <p>为了给后续的量化编码过程提供一个稳定的值，在取样电路后要求将所采样的模拟信号<strong>保持</strong>一段时间。</p>
+
+    <h4>2. 量化与编码</h4>
+    <p>数字信号在数值上是离散的。采样–保持电路的输出电压还需按某种近似方式归化到与之相应的离散电平上，任何数字量只能是某个最小数量单位的整数倍。</p>
+    <p>量化后的数值最后还需通过编码过程用一个代码表示出来。经编码后得到的代码就是A/D转换器输出的数字量。</p>
+
+    <h4>3. 量化误差</h4>
+    <p>在量化过程中由于采样电压不一定能被Δ整除，所以量化前后一定存在误差，此误差称之为<strong>量化误差</strong>，用ε表示。</p>
+    <div class="highlight">
+      <strong>⚠️ 量化误差属原理误差，它是无法消除的。</strong><br>
+      A/D转换器的位数越多，各离散电平之间的差值越小，量化误差越小。
+    </div>
+
+    <h4>4. 量化方式</h4>
+    <ul>
+      <li><strong>只舍不入量化方式</strong>：把不足一个量化单位的部分舍弃；对于等于或大于一个量化单位部分按一个量化单位处理。最大量化误差为Δ。</li>
+      <li><strong>四舍五入量化方式</strong>：将不足半个量化单位部分舍弃，对于等于或大于半个量化单位部分按一个量化单位处理。最大量化误差为Δ/2。</li>
+    </ul>
+
+    <h3>10.2.2 并行比较型A/D转换器</h3>
+    <p>输入电压v<sub>I</sub>同时加到所有比较器的输入端。如不考虑各器件的延迟，可认为数字量是与v<sub>I</sub>输入时刻同时获得的。所以它的<strong>转换时间最短</strong>。</p>
+    <p>缺点是电路复杂，如三位ADC需7个比较器、7个触发器、8个电阻。位数越多，电路越复杂。</p>
+    <p>为了解决提高分辨率和增加元件数的矛盾，可以采取分级并行转换的方法，即<strong>半闪速型</strong>或<strong>流水线型</strong>A/D转换器。</p>
+
+    <h3>10.2.3 逐次比较型A/D转换器</h3>
+    <p>逐次逼近转换过程与<strong>用天平称物重</strong>非常相似。</p>
+    <p>电路组成：比较器、逐次逼近寄存器和控制逻辑、D/A转换器、时钟源等。</p>
+    <ul>
+      <li>逐次比较型A/D转换器输出数字量的位数越多，转换精度越高。</li>
+      <li>完成一次转换所需时间与其位数n和时钟脉冲频率有关，位数愈少，时钟频率越高，转换所需时间越短。</li>
+    </ul>
+
+    <h3>10.2.4 双积分型A/D转换器</h3>
+    <p>双积分式A/D转换器对输入模拟电压和参考电压分别进行两次积分，将输入电压平均值变换成与之成正比的时间间隔，然后利用时钟脉冲和计数器测出此时间间隔，进而得到相应的数字量输出。也称为<strong>电压－时间－数字式积分器</strong>。</p>
+    <p><strong>优点：</strong></p>
+    <ul>
+      <li>转换结果与时间常数RC无关，消除了积分非线性带来的误差。</li>
+      <li>在T<sub>1</sub>时间内采的是输入电压的平均值，因此<strong>具有很强的抗工频干扰的能力</strong>。</li>
+      <li>只要求时钟源在一个转换周期时间内保持稳定即可。</li>
+    </ul>
+
+    <h3>10.2.5 A/D转换器的主要技术指标</h3>
+    <ul>
+      <li><span class="tag-param">分辨率</span>：以输出二进制数的位数表示。n位ADC能区分输入电压的最小值为满量程输入的1/2<sup>n</sup>。</li>
+      <li><span class="tag-param">转换精度</span>：常用最低有效位(LSB)或满刻度的百分比(%FSR)表示。例如转换误差≤±1/2LSB。</li>
+      <li><span class="tag-param">转换速度</span>：用转换时间或转换速率描述。转换时间是指ADC完成一次完整的转换所需要的时间。</li>
+    </ul>
+
+    <div class="highlight">
+      <strong>⏱️ 转换速度对比：</strong><br>
+      并行比较ADC > 逐次比较型ADC > 间接A/D转换器（如双积分ADC）
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a href="ch07.html">← 第7章 半导体存储器</a>
+    <a href="index.html">返回首页</a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第10章 模数与数模转换器</p>
+</div>
+
+</body>
+</html>
