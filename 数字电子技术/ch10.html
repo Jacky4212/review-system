@@ -11,7 +11,15 @@
     --accent: #1abc9c; --accent-hover: #1d4ed8;
     --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
     --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
-    --code-bg: #eee8d8; --code-text: #8a4b1e;
+    --code-bg: #eee8d8;
+    --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e;
+    --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af;
+    --tag-must-bg: #fee2e2; --tag-must-color: #991b1b;
+    --tag-key-bg: #fef3c7; --tag-freq-bg: #dbeafe; --tag-info-bg: #f0fdf4; --tag-info-color: #166534;
+    --chip-tag-orange-bg: #fdf2e9; --chip-tag-orange-color: #e67e22;
+    --chip-tag-blue-bg: #e8f4fd; --chip-tag-green-bg: #f0f8f0; --chip-tag-green-color: #27ae60;
+    --heading-color: #1a3a5c;
+    --ram-bg: #e8f4fd; --rom-bg: #fdf2e9; --rom-color: #e67e22; --card-bg2: #f0f4f8; --code-text: #8a4b1e;
     --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
   }
   .dark-mode {
@@ -20,7 +28,15 @@
     --accent: #6a82f0; --accent-hover: #5a72e0;
     --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
     --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
-    --code-bg: #2a2a3e; --code-text: #c0a060;
+    --code-bg: #2a2a3e;
+    --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830;
+    --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0;
+    --tag-must-bg: #3d1a1a; --tag-must-color: #e88080;
+    --tag-key-bg: #3d3a1a; --tag-freq-bg: #1a2a3d; --tag-info-bg: #1a3d2a; --tag-info-color: #80c090;
+    --chip-tag-orange-bg: #3d2a1a; --chip-tag-orange-color: #f0a060;
+    --chip-tag-blue-bg: #1a2a3d; --chip-tag-green-bg: #1a3d1a; --chip-tag-green-color: #60d080;
+    --heading-color: var(--ink);
+    --ram-bg: #1a2a3d; --rom-bg: #3d2a1a; --rom-color: #f0a060; --card-bg2: var(--code-bg); --code-text: #c0a060;
     background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -48,7 +64,7 @@
   .topbar h2 {font-size:1.2em}
   .container {max-width:1100px;margin:0 auto;padding:30px 20px;flex:1}
   .section {background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-  .section h2 {font-size:1.3em;color:#1a3a5c;border-bottom:2px solid var(--divider);padding-bottom:8px;margin-bottom:16px}
+  .section h2 {font-size:1.3em;color: var(--heading-color);border-bottom:2px solid var(--divider);padding-bottom:8px;margin-bottom:16px}
   .section h3 {font-size:1.08em;color:var(--accent);margin:18px 0 8px;padding-bottom:4px;border-bottom:1px dashed var(--divider)}
   .section h3:first-of-type {margin-top:0}
   .section h4 {font-size:1em;color:var(--ink);margin:14px 0 6px;font-weight:600}
@@ -57,21 +73,21 @@
   .section li {margin-bottom:6px}
   .section-num {font-size:.8rem;color:var(--ink-light);font-weight:600;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--divider)}
   .chip-header {background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.04);text-align:center}
-  .chip-header h2 {font-size:1.8em;color:#1a3a5c;margin-bottom:8px}
+  .chip-header h2 {font-size:1.8em;color: var(--heading-color);margin-bottom:8px}
   .chip-header p {color:var(--ink-light)}
-  .highlight {background:#fefce8;border-left:3px solid #eab308;padding:12px 16px;margin:14px 0;border-radius:4px;font-size:.95em}
+  .highlight { background: var(--highlight-bg); border-left: 3px solid var(--highlight-border);padding:12px 16px;margin:14px 0;border-radius:4px;font-size:.95em}
   .highlight strong {color:#92400e}
   .def-box {background:var(--code-bg);border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.95em;border:1px solid var(--card-border)}
   .def-box strong {color:var(--accent)}
   .formula {text-align:center;font-size:1.05em;padding:12px 16px;background:var(--code-bg);border-radius:6px;margin:10px 0;font-weight:500;letter-spacing:.5px;border:1px solid var(--card-border);font-family:"Times New Roman","Cascadia Code",monospace}
-  .checkpoint {background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:12px 16px;margin:18px 0;font-size:.93em}
+  .checkpoint { background: var(--checkpoint-bg); border: 1px solid var(--checkpoint-border);border-radius:var(--radius);padding:12px 16px;margin:18px 0;font-size:.93em}
   .checkpoint::before {content:'🧠 自查：';font-weight:700;color:#1e40af}
   .dark-mode .checkpoint {background:#1e2a3a;border-color:#2d4a5a}
   .dark-mode .checkpoint::before {color:#6a82f0}
-  .tag-must{background:#fee2e2;color:#991b1b;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
-  .tag-key{background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
-  .tag-freq{background:#dbeafe;color:#1e40af;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
-  .tag-info{background:#f0fdf4;color:#166534;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-must { background: var(--tag-must-bg); color: var(--tag-must-color);padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-key { background: var(--tag-key-bg); color: #92400e;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-freq { background: var(--tag-freq-bg); color: #1e40af;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-info { background: var(--tag-info-bg); color: var(--tag-info-color);padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
   .kp{font-weight:700;color:var(--ink)}
   .exp{font-weight:400;color:var(--ink-light)}
   .chip-tag{display:inline-block;padding:2px 12px;border-radius:12px;font-size:.78em;margin-right:4px}
@@ -237,7 +253,7 @@ function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var b
         <h4>🎯 逐次逼近型</h4>
         <p><strong>特点：</strong>转换速度适中，转换时间为几μs~100μs，转换精度高，在速度和复杂度之间达到很好的平衡。</p>
       </div>
-      <div class="compare-card" style="border-top-color:#27ae60;">
+      <div class="compare-card" style="border-top-color:var(--chip-tag-green-color);">
         <h4>🛡️ 双积分型</h4>
         <p><strong>特点：</strong>转换速度慢，转换时间几百μs~几ms，但抗干扰能力最强。</p>
       </div>
