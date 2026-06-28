@@ -240,9 +240,9 @@ document.addEventListener('DOMContentLoaded', function() {
 CHAPTERS = [
     {
         'num': '1', 'file': 'ch01', 'title': '数字逻辑概论',
-        'prev': 'index.html', 'prev_label': '课程首页',
+        'prev': 'ch10.html', 'prev_label': '← 第10章 模数与数模转换器',
         'next': 'ch02.html', 'next_label': '第2章 逻辑代数与HDL基础 →',
-        'tprev': 'index.html', 'tprev_label': '← 返回首页',
+        'tprev': 'ch10.html', 'tprev_label': '← 第10章',
         'tnext': 'ch02.html', 'tnext_label': '第2章 →',
         'content': '''
   <div class="section">
