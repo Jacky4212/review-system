@@ -211,6 +211,58 @@
     th, td { padding: 5px 8px; }
     .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; }
   }
+
+  /* === PPT Viewer === */
+  .ppt-section { margin-top: 10px; }
+  .ppt-file-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); margin-bottom: 14px; overflow: hidden;
+  }
+  .ppt-file-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background: var(--paper-dark);
+    border-bottom: 1px solid var(--card-border); gap: 10px; flex-wrap: wrap;
+  }
+  .ppt-file-header .ppt-name {
+    font-weight: 600; font-size: 0.9em; color: var(--ink);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .ppt-file-header .ppt-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ppt-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px; border-radius: 5px; font-size: 0.78em;
+    text-decoration: none; font-weight: 500; transition: all 0.15s;
+    cursor: pointer; border: 1px solid var(--card-border);
+  }
+  .ppt-btn-view {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .ppt-btn-view:hover { background: var(--accent-hover); }
+  .ppt-btn-dl {
+    background: var(--card-bg); color: var(--ink-light);
+  }
+  .ppt-btn-dl:hover { background: var(--paper-dark); color: var(--ink); }
+  .ppt-iframe-wrap {
+    width: 100%; height: 520px; border-top: 1px solid var(--card-border);
+    display: none;
+  }
+  .ppt-iframe-wrap.active { display: block; }
+  .ppt-iframe-wrap iframe {
+    width: 100%; height: 100%; border: none;
+  }
+  .ppt-toggle-all {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 6px 14px; border-radius: 6px; font-size: 0.82em;
+    cursor: pointer; border: 1px solid var(--card-border);
+    background: var(--card-bg); color: var(--accent); font-weight: 500;
+    margin-bottom: 10px; transition: all 0.15s;
+  }
+  .ppt-toggle-all:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .ppt-empty { text-align: center; color: var(--ink-light); padding: 20px; font-size: 0.9em; }
+  @media (max-width: 640px) {
+    .ppt-iframe-wrap { height: 320px; }
+    .ppt-file-header { padding: 8px 10px; }
+  }
 </style>
 </head>
 <body>
@@ -374,6 +426,124 @@ function toggleTheme(){
     </ul>
     <p>这些表示方法之间可以相互转换。</p>
   </div>
+
+  <div class="section ppt-section">
+  <h2>📊 PPT课件 <span style="font-weight:400;font-size:0.75em;color:var(--ink-light)">（共6个）</span></h2>
+  <button class="ppt-toggle-all" onclick="toggleAllPpt()">📂 展开全部课件</button>
+  
+  <div class="ppt-file-card">
+    <div class="ppt-file-header">
+      <span class="ppt-name">📊 第1部分 <span style="font-weight:400;color:var(--ink-light);font-size:0.85em">ch01-1.pptx</span></span>
+      <span class="ppt-actions">
+        <a class="ppt-btn ppt-btn-view" onclick="togglePpt('ch01-1_pptx')" title="在线预览">👁 预览</a>
+        <a class="ppt-btn ppt-btn-dl" href="ch01-1.pptx" download title="下载PPT">📥 下载</a>
+      </span>
+    </div>
+    <div class="ppt-iframe-wrap" id="ppt_ch01-1_pptx">
+      <iframe src="" data-src="https://view.officeapps.live.com/op/embed.aspx?src=https://jacky4212.github.io/review-system/%E6%95%B0%E5%AD%97%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF/ch01-1.pptx" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="ppt-file-card">
+    <div class="ppt-file-header">
+      <span class="ppt-name">📊 第2部分 <span style="font-weight:400;color:var(--ink-light);font-size:0.85em">ch01-2.pptx</span></span>
+      <span class="ppt-actions">
+        <a class="ppt-btn ppt-btn-view" onclick="togglePpt('ch01-2_pptx')" title="在线预览">👁 预览</a>
+        <a class="ppt-btn ppt-btn-dl" href="ch01-2.pptx" download title="下载PPT">📥 下载</a>
+      </span>
+    </div>
+    <div class="ppt-iframe-wrap" id="ppt_ch01-2_pptx">
+      <iframe src="" data-src="https://view.officeapps.live.com/op/embed.aspx?src=https://jacky4212.github.io/review-system/%E6%95%B0%E5%AD%97%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF/ch01-2.pptx" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="ppt-file-card">
+    <div class="ppt-file-header">
+      <span class="ppt-name">📊 第3部分 <span style="font-weight:400;color:var(--ink-light);font-size:0.85em">ch01-3.pptx</span></span>
+      <span class="ppt-actions">
+        <a class="ppt-btn ppt-btn-view" onclick="togglePpt('ch01-3_pptx')" title="在线预览">👁 预览</a>
+        <a class="ppt-btn ppt-btn-dl" href="ch01-3.pptx" download title="下载PPT">📥 下载</a>
+      </span>
+    </div>
+    <div class="ppt-iframe-wrap" id="ppt_ch01-3_pptx">
+      <iframe src="" data-src="https://view.officeapps.live.com/op/embed.aspx?src=https://jacky4212.github.io/review-system/%E6%95%B0%E5%AD%97%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF/ch01-3.pptx" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="ppt-file-card">
+    <div class="ppt-file-header">
+      <span class="ppt-name">📊 第4部分 <span style="font-weight:400;color:var(--ink-light);font-size:0.85em">ch01-4.pptx</span></span>
+      <span class="ppt-actions">
+        <a class="ppt-btn ppt-btn-view" onclick="togglePpt('ch01-4_pptx')" title="在线预览">👁 预览</a>
+        <a class="ppt-btn ppt-btn-dl" href="ch01-4.pptx" download title="下载PPT">📥 下载</a>
+      </span>
+    </div>
+    <div class="ppt-iframe-wrap" id="ppt_ch01-4_pptx">
+      <iframe src="" data-src="https://view.officeapps.live.com/op/embed.aspx?src=https://jacky4212.github.io/review-system/%E6%95%B0%E5%AD%97%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF/ch01-4.pptx" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="ppt-file-card">
+    <div class="ppt-file-header">
+      <span class="ppt-name">📊 第5部分 <span style="font-weight:400;color:var(--ink-light);font-size:0.85em">ch01-5.pptx</span></span>
+      <span class="ppt-actions">
+        <a class="ppt-btn ppt-btn-view" onclick="togglePpt('ch01-5_pptx')" title="在线预览">👁 预览</a>
+        <a class="ppt-btn ppt-btn-dl" href="ch01-5.pptx" download title="下载PPT">📥 下载</a>
+      </span>
+    </div>
+    <div class="ppt-iframe-wrap" id="ppt_ch01-5_pptx">
+      <iframe src="" data-src="https://view.officeapps.live.com/op/embed.aspx?src=https://jacky4212.github.io/review-system/%E6%95%B0%E5%AD%97%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF/ch01-5.pptx" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <div class="ppt-file-card">
+    <div class="ppt-file-header">
+      <span class="ppt-name">📊 第6部分 <span style="font-weight:400;color:var(--ink-light);font-size:0.85em">ch01-6.pptx</span></span>
+      <span class="ppt-actions">
+        <a class="ppt-btn ppt-btn-view" onclick="togglePpt('ch01-6_pptx')" title="在线预览">👁 预览</a>
+        <a class="ppt-btn ppt-btn-dl" href="ch01-6.pptx" download title="下载PPT">📥 下载</a>
+      </span>
+    </div>
+    <div class="ppt-iframe-wrap" id="ppt_ch01-6_pptx">
+      <iframe src="" data-src="https://view.officeapps.live.com/op/embed.aspx?src=https://jacky4212.github.io/review-system/%E6%95%B0%E5%AD%97%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF/ch01-6.pptx" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:0.8em;color:var(--ink-light);">💡 在线预览需要部署后可用 · 点击"下载"可在本地用PowerPoint打开</p>
+</div>
+<script>
+function togglePpt(id) {
+  var wrap = document.getElementById('ppt_' + id);
+  var iframe = wrap.querySelector('iframe');
+  var wasActive = wrap.classList.contains('active');
+  // Close all
+  document.querySelectorAll('.ppt-iframe-wrap').forEach(function(w) { w.classList.remove('active'); });
+  if (!wasActive) {
+    wrap.classList.add('active');
+    if (!iframe.src || iframe.src === 'about:blank' || iframe.src === window.location.href) {
+      iframe.src = iframe.getAttribute('data-src');
+    }
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+function toggleAllPpt() {
+  var wraps = document.querySelectorAll('.ppt-iframe-wrap');
+  var anyClosed = false;
+  wraps.forEach(function(w) { if (!w.classList.contains('active')) anyClosed = true; });
+  wraps.forEach(function(w) {
+    if (anyClosed) {
+      w.classList.add('active');
+      var iframe = w.querySelector('iframe');
+      if (!iframe.src || iframe.src === 'about:blank' || iframe.src === window.location.href) {
+        iframe.src = iframe.getAttribute('data-src');
+      }
+    } else {
+      w.classList.remove('active');
+    }
+  });
+  var btn = document.querySelector('.ppt-toggle-all');
+  if (btn) btn.textContent = anyClosed ? '📂 收起全部课件' : '📂 展开全部课件';
+}
+</script>
 
   <div class="nav-links">
     <a href="index.html">← 返回首页</a>
