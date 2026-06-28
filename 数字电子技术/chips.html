@@ -12,6 +12,9 @@
     --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
     --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
     --code-bg: #eee8d8; --code-text: #8a4b1e;
+    --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e;
+    --chip-tag555-bg: #fdf2e9; --chip-tag555-color: #e67e22;
+    --chip-tag161-bg: #e8f4fd; --chip-tag138-bg: #f0f8f0; --chip-tag138-color: #27ae60;
     --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
   }
   .dark-mode {
@@ -21,6 +24,9 @@
     --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
     --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
     --code-bg: #2a2a3e; --code-text: #c0a060;
+    --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830;
+    --chip-tag555-bg: #3d2a1a; --chip-tag555-color: #f0a060;
+    --chip-tag161-bg: #1a2a3d; --chip-tag138-bg: #1a3d1a; --chip-tag138-color: #60d080;
     background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -59,8 +65,8 @@
   .chip-header {background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.04);text-align:center}
   .chip-header h2 {font-size:1.8em;color:#1a3a5c;margin-bottom:8px}
   .chip-header p {color:var(--ink-light)}
-  .highlight {background:#fefce8;border-left:3px solid #eab308;padding:12px 16px;margin:14px 0;border-radius:4px;font-size:.95em}
-  .highlight strong {color:#92400e}
+  .highlight {background:var(--highlight-bg);border-left:3px solid var(--highlight-border);padding:12px 16px;margin:14px 0;border-radius:4px;font-size:.95em}
+  .highlight strong {color:var(--highlight-strong)}
   .def-box {background:var(--code-bg);border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.95em;border:1px solid var(--card-border)}
   .def-box strong {color:var(--accent)}
   .formula {text-align:center;font-size:1.05em;padding:12px 16px;background:var(--code-bg);border-radius:6px;margin:10px 0;font-weight:500;letter-spacing:.5px;border:1px solid var(--card-border);font-family:"Times New Roman","Cascadia Code",monospace}
@@ -70,11 +76,6 @@
   .dark-mode .checkpoint::before {color:#6a82f0}
   /* === 暗黑模式适配 === */
   .dark-mode .chip-header h2 {color:var(--ink)}
-  .dark-mode .highlight {background:#2d2a1a;border-left-color:#c8900a}
-  .dark-mode .highlight strong {color:#e8b830}
-  .dark-mode .chip-tag.tag555 {background:#3d2a1a;color:#f0a060}
-  .dark-mode .chip-tag.tag161 {background:#1a2a3d;color:var(--accent)}
-  .dark-mode .chip-tag.tag138 {background:#1a3d1a;color:#60d080}
   .dark-mode .tag-must {background:#3d1a1a;color:#e88080}
   .dark-mode .tag-key {background:#3d3a1a;color:#d0b040}
   .dark-mode .tag-freq {background:#1a2a3d;color:#80a0e0}
@@ -86,9 +87,9 @@
   .kp{font-weight:700;color:var(--ink)}
   .exp{font-weight:400;color:var(--ink-light)}
   .chip-tag{display:inline-block;padding:2px 12px;border-radius:12px;font-size:.78em;margin-right:4px}
-  .chip-tag.tag555{background:#fdf2e9;color:#e67e22}
-  .chip-tag.tag161{background:#e8f4fd;color:var(--accent)}
-  .chip-tag.tag138{background:#f0f8f0;color:#27ae60}
+  .chip-tag.tag555{background:var(--chip-tag555-bg);color:var(--chip-tag555-color)}
+  .chip-tag.tag161{background:var(--chip-tag161-bg);color:var(--accent)}
+  .chip-tag.tag138{background:var(--chip-tag138-bg);color:var(--chip-tag138-color)}
   .app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:14px 0}
   .app-card{background:var(--code-bg);border-radius:10px;padding:16px;border-top:3px solid var(--accent)}
   .app-card h4{margin-top:0;color:var(--accent)}
