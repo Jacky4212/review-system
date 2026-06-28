@@ -143,5 +143,40 @@
 <div class="footer">
   <p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 第9章 脉冲波形的变换与产生</p>
 </div>
+
+<!-- Right-side chapter nav -->
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-title">📂 跳转章节</div>
+  <a href="index.html">🏠 首页</a>
+  <a href="ch01.html">第1章 数字逻辑概论</a>
+  <a href="ch02.html">第2章 逻辑代数</a>
+  <a href="ch03.html">第3章 逻辑门电路</a>
+  <a href="ch04.html">第4章 组合逻辑</a>
+  <a href="ch05.html">第5章 锁存器/触发器</a>
+  <a href="ch06.html">第6章 时序逻辑</a>
+  <a href="ch07.html">第7章 半导体存储器</a>
+  <a href="ch08.html">第8章 FPGA/CPLD</a>
+  <a href="ch09.html">第9章 脉冲波形</a>
+  <a href="ch10.html">第10章 ADC/DAC</a>
+  <a href="chips.html">🔧 芯片专题</a>
+  <a href="methods.html">📋 方法汇总</a>
+</div>
+<script>
+function toggleChapterNav() {
+  document.getElementById('chapterNav').classList.toggle('open');
+}
+// Highlight current page
+document.addEventListener('DOMContentLoaded', function() {
+  var path = window.location.pathname.split('/').pop() || 'index.html';
+  var links = document.getElementById('chapterNav').getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (links[i].getAttribute('href') === path) {
+      links[i].classList.add('current');
+    }
+  }
+});
+</script>
+
 </body>
 </html>
