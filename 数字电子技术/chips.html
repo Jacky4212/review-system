@@ -124,7 +124,6 @@
   }
   .back2top:hover { opacity: 1; }
 
-  }
   .chapter-nav-toggle:hover { opacity: 1; }
   .chapter-nav-panel {
     position: fixed; right: -200px; top: 50%; transform: translateY(-50%);
@@ -204,17 +203,12 @@
   .sidebar-nav a:hover .tag { background: #e2e8f0; }
   .sidebar-nav a.current .tag { background: #dbeafe; color: #2563eb; }
 
-  /* Layout offsets */  .topbar { left: 210px; width: calc(100% - 210px); }
+  /* ===== Layout ===== */
+  body { display: flex; min-height: 100vh; }
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
   @media (max-width: 768px) {
     .sidebar { display: none; }
-    .container { margin-left: 0; }
-    .topbar { left: 0; width: 100%; }
-    .footer { margin-left: 0; }
-  }
-
-    .container { margin-left: 0; }
-    .topbar { left: 0; width: 100%; }
-    .footer { margin-left: 0; }
+    .main-wrap { margin-left: 0; }
   }
 
 </style>
