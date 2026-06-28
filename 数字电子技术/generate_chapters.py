@@ -184,7 +184,7 @@ CHAPTERS = [
     <ul>
       <li><strong>与运算</strong>（L = A · B = AB）：只有当决定某一事件的条件全部具备时，这一事件才会发生。</li>
       <li><strong>或运算</strong>（L = A + B）：只要有一个或几个条件具备时，事件就会发生。</li>
-      <li><strong>非运算</strong>（L = <span style="text-decoration:overline">A</span> = ¬A = A'）：条件具备时事件不发生，条件不具备时事件发生。</li>
+      <li><strong>非运算</strong>（L = <span style="text-decoration:overline">A</span> = A'）：条件具备时事件不发生，条件不具备时事件发生。</li>
       <li><strong>与非运算</strong>（L = <span style="text-decoration:overline">A·B</span> = <span style="text-decoration:overline">A</span>+<span style="text-decoration:overline">B</span>）：先与后非，输入全1时输出0。与-或表达式转换可用摩根定律。</li>
       <li><strong>或非运算</strong>（L = <span style="text-decoration:overline">A+B</span> = <span style="text-decoration:overline">A</span>·<span style="text-decoration:overline">B</span>）：先或后非，输入全0时输出1。与-或表达式转换可用摩根定律。</li>
       <li><strong>异或运算</strong>（L = A ⊕ B = <span style="text-decoration:overline">A</span>·B + A·<span style="text-decoration:overline">B</span>）：两个输入变量的值相异，输出为1，否则为0。</li>
