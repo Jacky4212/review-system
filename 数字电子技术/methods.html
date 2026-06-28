@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方法汇总 - 数字电子技术</title>
+<style>
+  :root { --primary: #1a3a5c; --accent: #2d7fc1; --bg: #f5f7fa; --card-bg: #fff; --text: #2c3e50; --text-light: #7f8c8d; --border: #e1e8ed; --code-bg: #f0f4f8; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+  .topbar { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a:hover { color: #fff; }
+  .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .section { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .section h2 { font-size: 1.4em; color: var(--primary); border-left: 4px solid var(--accent); padding-left: 14px; margin-bottom: 20px; }
+  .section h3 { font-size: 1.15em; color: var(--accent); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); }
+  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 10px; }
+  .section ul { margin: 8px 0 14px 22px; }
+  .section li { margin-bottom: 6px; }
+  .highlight { background: #fffbe6; border-left: 3px solid #f0c040; padding: 12px 16px; margin: 14px 0; border-radius: 6px; }
+  .def-box { background: var(--code-bg); border-radius: 8px; padding: 14px 18px; margin: 12px 0; }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--border); transition: all 0.2s; }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: #fff; border: none; font-size: 1.4em; cursor: pointer; opacity: 0.7; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .back2top:hover { opacity: 1; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
+  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
+  .footer { text-align: center; padding: 24px; color: var(--text-light); border-top: 1px solid var(--border); }
+  @media (max-width: 640px) { .section { padding: 20px 16px; } }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+    <a href="index.html">← 返回首页</a>
+    <h2>方法汇总</h2>
+    <a href="ch01.html">第1章 →</a>
+</div></div>
+<div class="container">
+
+<div class="section">
+<h2>📋 方法汇总——全课程分析方法一览</h2>
+<p>本文汇总数字电子技术课程中出现的所有分析、设计和转换方法，按章节排列。</p>
+</div>
+
+<!-- 第1章 -->
+<div class="section">
+<h2>第1章 数字逻辑概论</h2>
+
+<h3>1. 数制转换方法</h3>
+<p><strong>十进制 → 二进制（整数）：</strong>辗转相除法。将十进制数连续除以2，直至商为零，余数从低位到高位排列。</p>
+<p><strong>十进制 → 二进制（小数）：</strong>基数乘法。每次除去上次所得积中的整数再乘以2，直到满足误差要求。</p>
+
+<h3>2. 真值表 ↔ 逻辑表达式</h3>
+<p><strong>真值表 → 表达式：</strong>取F=1的行，每行写成一个乘积项（变量1取原变量、0取反变量），全部相加。</p>
+<p><strong>表达式 → 真值表：</strong>列出所有输入组合，逐一代入表达式计算输出。</p>
+
+<h3>3. 真值表 ↔ 逻辑图</h3>
+<p><strong>真值表 → 逻辑图：</strong>真值表→表达式→化简→逻辑符号连接。</p>
+<p><strong>逻辑图 → 真值表：</strong>逐级写表达式→化简→代入所有输入组合。</p>
+</div>
+
+<!-- 第2章 -->
+<div class="section">
+<h2>第2章 逻辑代数与硬件描述语言</h2>
+
+<h3>1. 逻辑代数化简法</h3>
+<table>
+<tr><th>方法</th><th>依据</th><th>说明</th></tr>
+<tr><td><strong>并项法</strong></td><td>A + <span style="text-decoration:overline">A</span> = 1</td><td>将两项合并为一项，消去一个变量</td></tr>
+<tr><td><strong>吸收法</strong></td><td>A + AB = A</td><td>吸收多余乘积项</td></tr>
+<tr><td><strong>消去法</strong></td><td>A + <span style="text-decoration:overline">A</span>B = A + B</td><td>消去多余因子</td></tr>
+<tr><td><strong>配项法</strong></td><td>A = A(B+<span style="text-decoration:overline">B</span>)</td><td>通过配项简化</td></tr>
+</table>
+
+<h3>2. 卡诺图化简法</h3>
+<p>步骤：</p>
+<ul>
+<li>将逻辑函数写成最小项表达式</li>
+<li>按最小项表达式填卡诺图，含最小项的方格填1，其余填0</li>
+<li>合并相邻的1方格圈成一组（包围圈），每组含2ⁿ个方格</li>
+<li>将所有包围圈对应的乘积项相加</li>
+</ul>
+<p><strong>无关项处理：</strong>无关项的值可取0或1，根据使函数尽量简化而定。</p>
+
+<h3>3. 最小项与最大项表达式</h3>
+<table>
+<tr><th></th><th>最小项 Σm</th><th>最大项 ΠM</th></tr>
+<tr><td>看</td><td>F=<strong>1</strong>的项</td><td>F=<strong>0</strong>的项</td></tr>
+<tr><td>变量=0</td><td>反变量</td><td>原变量</td></tr>
+<tr><td>变量=1</td><td>原变量</td><td>反变量</td></tr>
+<tr><td>连接</td><td>相加（或）</td><td>相乘（与）</td></tr>
+</table>
+
+<h3>4. 三大基本规则</h3>
+<p><strong>代入规则：</strong>用函数式代入等式中的所有A，等式仍成立。</p>
+<p><strong>反演规则：</strong>·⇔+，0⇔1，原⇔反，得到反函数。</p>
+<p><strong>对偶规则：</strong>·⇔+，0⇔1，变量不变，得到对偶式。等式两边对偶后仍相等。</p>
+</div>
+
+<!-- 第4章 -->
+<div class="section">
+<h2>第4章 组合逻辑电路</h2>
+
+<h3>1. 组合逻辑电路分析方法</h3>
+<ul>
+<li>由逻辑图写出各输出端的逻辑表达式</li>
+<li>化简和变换逻辑表达式</li>
+<li>列出真值表</li>
+<li>根据真值表确定逻辑功能</li>
+</ul>
+
+<h3>2. 组合逻辑电路设计方法</h3>
+<ul>
+<li>逻辑抽象：确定输入、输出变量，定义逻辑状态</li>
+<li>根据逻辑描述列出真值表</li>
+<li>由真值表写出逻辑表达式</li>
+<li>简化和变换逻辑表达式，画出逻辑图</li>
+</ul>
+
+<h3>3. 竞争冒险消除方法</h3>
+<ul>
+<li>发现并消除互补变量</li>
+<li>增加乘积项，避免互补项相加</li>
+<li>输出端并联电容器（慢速工作时）</li>
+</ul>
+</div>
+
+<!-- 第6章 -->
+<div class="section">
+<h2>第6章 时序逻辑电路</h2>
+
+<h3>1. 同步时序电路分析方法</h3>
+<ul>
+<li>了解电路组成（输入、输出、触发器类型）</li>
+<li>写出输出方程、各触发器的激励方程</li>
+<li>将激励方程代入特性方程得状态转换方程</li>
+<li>列出状态转换表或画出状态转换图、波形图</li>
+<li>确定逻辑功能</li>
+</ul>
+
+<h3>2. 同步时序电路设计方法</h3>
+<ul>
+<li>根据逻辑功能建立原始状态转换图/表</li>
+<li>状态化简——合并等价状态</li>
+<li>状态编码（状态分配）</li>
+<li>选择触发器类型</li>
+<li>求出激励方程和输出方程</li>
+<li>画出逻辑图并检查自启动能力</li>
+</ul>
+
+<h3>3. 异步时序电路分析方法</h3>
+<p>分析时必须考虑各触发器的时钟信号作用情况，每次状态转换从输入信号能触发的第一个触发器开始逐级确定。</p>
+
+<h3>4. 构成任意进制计数器的方法</h3>
+<ul>
+<li><strong>反馈清零法：</strong>利用异步清零端，跳过M-N个状态</li>
+<li><strong>反馈置数法：</strong>利用同步置数端，跳过M-N个状态</li>
+</ul>
+</div>
+
+<!-- 第10章 -->
+<div class="section">
+<h2>第10章 模数与数模转换</h2>
+
+<h3>1. A/D转换的四个过程</h3>
+<p>取样 → 保持 → 量化 → 编码</p>
+
+<h3>2. 量化方式</h3>
+<ul>
+<li><strong>只舍不入：</strong>不足一个量化单位的部分舍弃，最大量化误差 = Δ</li>
+<li><strong>四舍五入：</strong>不足半个量化单位舍弃，≥半个量化单位按一个处理，最大量化误差 = Δ/2</li>
+</ul>
+</div>
+
+<div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="ch01.html">第1章 数字逻辑概论 →</a>
+</div>
+
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>内容来源: 华中科技大学《数字电子技术基础》课程PPT · 方法汇总</p></div>
+</body>
+</html>
