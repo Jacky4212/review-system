@@ -6,310 +6,205 @@
 <title>数字电子技术 - 复习系统</title>
 <style>
   :root {
-    --primary: #1a3a5c;
-    --accent: #2d7fc1;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
+    --paper: #fdf6e3; --paper-dark: #f5ecd7;
+    --ink: #2c2c2c; --ink-light: #555;
+    --accent: #2d7fc1; --accent-hover: #1d4ed8;
+    --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
+    --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
+    --code-bg: #eee8d8; --code-text: #8a4b1e;
+    --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+  }
+  .dark-mode {
+    --paper: #1a1a2e; --paper-dark: #22223a;
+    --ink: #e0e0ec; --ink-light: #8888aa;
+    --accent: #6a82f0; --accent-hover: #5a72e0;
+    --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
+    --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
+    --code-bg: #2a2a3e; --code-text: #c0a060;
+    background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+    font-family: var(--font); font-size: 12pt; line-height: 1.75;
+    color: var(--ink); background: var(--paper);
   }
-  .header {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 40px 20px;
-    text-align: center;
-  }
-  .header h1 { font-size: 2.2em; margin-bottom: 8px; }
-  .header p { opacity: 0.9; font-size: 1.1em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
-  .info-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .info-card h2 {
-    font-size: 1.4em;
-    color: var(--primary);
-    border-left: 4px solid var(--accent);
-    padding-left: 14px;
-    margin-bottom: 16px;
-  }
-  .info-card p { color: var(--text-light); margin-bottom: 8px; }
-  .category-title {
-    font-size: 0.95em;
-    font-weight: 600;
-    color: var(--text-light);
-    margin: 24px 0 10px;
-    padding: 6px 14px;
-    background: #eef3f7;
-    border-radius: 6px;
-  }
-  .chapter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-  .chapter-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    border-left: 4px solid var(--accent);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    display: block;
-    color: var(--text);
-  }
-  .chapter-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  }
-  .chapter-card .num {
-    font-size: 0.85em;
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .chapter-card h3 { font-size: 1.15em; margin: 4px 0 8px; }
-  .chapter-card .desc {
-    font-size: 0.9em;
-    color: var(--text-light);
-    line-height: 1.5;
-  }
-  .chapter-card .tag {
-    display: inline-block;
-    background: #e8f4fd;
-    color: var(--accent);
-    font-size: 0.78em;
-    padding: 2px 10px;
-    border-radius: 12px;
-    margin-top: 10px;
-  }
-  .chapter-card.active {
-    border-left-color: #e74c3c;
-    background: #fff5f5;
-  }
-  .chapter-card.active .tag { background: #fde8e8; color: #e74c3c; }
-  .footer {
-    text-align: center;
-    padding: 20px;
-    color: #94a3b8;
-    font-size: 0.78em;
-    border-top: 1px solid #e8ecf0;
-  }
-  .footer a { color: var(--accent); text-decoration: none; }
-  @media (max-width: 640px) {
-    .header h1 { font-size: 1.6em; }
-    .chapter-grid { grid-template-columns: 1fr; }
-  }
-
-/* ===== Left Sidebar ===== */
-  .sidebar {
-    position: fixed; top: 0; left: 0; width: 210px; height: 100vh;
-    background: #ffffff; border-right: 1px solid #edf2f7;
-    z-index: 100; overflow-y: auto;
-    display: flex; flex-direction: column;
-  }
-  .sidebar-header {
-    padding: 22px 18px 16px;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  .sidebar-header .site-name {
-    font-size: 1rem; font-weight: 700;
-    color: #0f172a; letter-spacing: -0.01em;
-  }
-  .sidebar-header .site-sub {
-    font-size: 0.7rem; color: #94a3b8;
-    margin-top: 2px; font-weight: 400;
-  }
-  .sidebar-nav { flex: 1; padding: 10px 0 16px; }
-  .sidebar-nav .group-label {
-    font-size: 0.62rem; font-weight: 600; color: #94a3b8;
-    padding: 14px 18px 4px; letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .sidebar-nav a {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 18px; margin: 1px 8px; border-radius: 6px;
-    font-size: 0.8rem; color: #334155;
-    text-decoration: none; transition: all 0.15s ease;
-    border-left: 3px solid transparent;
-  }
-  .sidebar-nav a:hover {
-    background: #f1f5f9; color: #0f172a;
-    border-left-color: #cbd5e1;
-  }
-  .sidebar-nav a.current {
-    background: #eff6ff; color: #2563eb;
-    border-left-color: #2563eb; font-weight: 600;
-  }
-  .sidebar-nav a .tag {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px; border-radius: 4px;
-    background: #f1f5f9; font-size: 0.65rem; font-weight: 600;
-    color: #64748b; flex-shrink: 0;
-  }
-  .sidebar-nav a:hover .tag { background: #e2e8f0; }
-  .sidebar-nav a.current .tag { background: #dbeafe; color: #2563eb; }
-  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
-
-
+  /* === Sidebar === */
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)}
+  .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px}
+  .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap {flex:1;min-width:0;margin-left:210px;display:flex;flex-direction:column}
+  .header{background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;padding:40px 20px;text-align:center}
+  .header h1{font-size:2.2em;margin-bottom:8px}
+  .header p{opacity:.9;font-size:1.1em}
+  .info-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px;margin-bottom:30px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .info-card h2{font-size:1.3em;color:#1a3a5c;border-bottom:2px solid var(--divider);padding-bottom:8px;margin-bottom:16px}
+  .info-card p{color:var(--ink-light);margin-bottom:8px}
+  .category-title{font-size:.9em;font-weight:600;color:var(--ink-light);margin:24px 0 10px;padding:6px 14px;background:var(--paper-dark);border-radius:6px}
+  .chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px}
+  .chapter-card{background:var(--card-bg);border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.04);border-left:4px solid var(--accent);transition:transform .2s,box-shadow .2s;cursor:pointer;text-decoration:none;display:block;color:var(--ink);border:1px solid var(--card-border);border-left-width:4px}
+  .chapter-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+  .chapter-card .num{font-size:.85em;color:var(--accent);font-weight:600}
+  .chapter-card h3{font-size:1.15em;margin:4px 0 8px}
+  .chapter-card .desc{font-size:.9em;color:var(--ink-light);line-height:1.5}
+  .chapter-card .tag{display:inline-block;font-size:.78em;padding:2px 10px;border-radius:12px;margin-right:4px;margin-top:8px}
+  .chapter-card.active{border-left-color:#e74c3c}
+  .nav-links{margin-top:30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .nav-links a{display:inline-block;padding:10px 24px;background:var(--card-bg);border-radius:8px;text-decoration:none;color:var(--accent);border:1px solid var(--card-border);transition:all .2s;font-size:.93em;font-weight:500}
+  .nav-links a:hover{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  .back2top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;border:none;font-size:1.3em;cursor:pointer;opacity:.75;transition:all .2s;z-index:98;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+  .back2top:hover{opacity:1;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+  .theme-toggle{position:fixed;top:14px;right:16px;z-index:200;width:38px;height:38px;border-radius:50%;border:1px solid var(--divider);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .2s}
+  .theme-toggle:hover{box-shadow:0 4px 16px rgba(0,0,0,.18);transform:scale(1.05)}
+  .chapter-nav-toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:8px 0 0 8px;background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;border:none;font-size:1.1em;cursor:pointer;z-index:97;opacity:.8;transition:all .2s;box-shadow:-2px 0 10px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}
+  .chapter-nav-toggle:hover{opacity:1}
+  .chapter-nav-panel{position:fixed;right:-260px;top:50%;transform:translateY(-50%);width:240px;background:var(--card-bg);border-radius:14px 0 0 14px;box-shadow:-6px 0 28px rgba(0,0,0,.15);z-index:96;transition:right .35s cubic-bezier(0.4,0,0.2,1);padding:16px 0 12px;max-height:85vh;overflow-y:auto;border:1px solid var(--card-border)}
+  .chapter-nav-panel.open{right:0}
+  .chapter-nav-panel .nav-header{padding:0 18px 12px;border-bottom:2px solid var(--accent);margin-bottom:8px}
+  .chapter-nav-panel .nav-header .nav-title{font-size:.95em;font-weight:700;color:#1a3a5c}
+  .chapter-nav-panel .nav-header .nav-sub{font-size:.72em;color:var(--ink-light);margin-top:2px}
+  .chapter-nav-panel .nav-section{font-size:.68em;font-weight:600;color:var(--ink-light);padding:10px 18px 3px;text-transform:uppercase;letter-spacing:.5px}
+  .chapter-nav-panel a{display:flex;align-items:center;gap:8px;padding:7px 18px;font-size:.88em;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent;margin:1px 0}
+  .chapter-nav-panel a:hover{background:var(--paper-dark);border-left-color:var(--accent);color:var(--accent)}
+  .chapter-nav-panel a.current{background:var(--paper-dark);border-left-color:var(--accent);color:var(--accent);font-weight:600}
+  .chapter-nav-panel a .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:var(--paper-dark);font-size:.78em;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .chapter-nav-panel a:hover .num{background:var(--accent);color:#fff}
+  .chapter-nav-panel a.current .num{background:var(--accent);color:#fff}
+  .footer{text-align:center;padding:24px;color:var(--ink-light);font-size:.82em;border-top:1px solid var(--divider)}
+  @media(max-width:768px){.sidebar{display:none}.main-wrap{margin-left:0}body{font-size:11pt}}
+  @media(max-width:640px){.section{padding:18px 16px}.topbar h2{font-size:1em}.chapter-nav-panel{width:200px}table{font-size:.85em}th,td{padding:5px 8px}.back2top{right:10px;bottom:20px;width:38px;height:38px;font-size:1.1em}}
 </style>
 </head>
 <body>
 <nav class="sidebar">
-  <div class="sidebar-header">
-    <div class="site-name">数字电子技术</div>
-    <div class="site-sub">基础 · 复习系统</div>
-  </div>
+  <div class="sidebar-header"><div class="site-name">数字电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
   <div class="sidebar-nav">
     <div class="group-label">基础理论</div>
     <a href="ch01.html"><span class="tag">1</span>数字逻辑概论</a>
     <a href="ch02.html"><span class="tag">2</span>逻辑代数与HDL</a>
     <a href="ch03.html"><span class="tag">3</span>逻辑门电路</a>
-
     <div class="group-label">组合与时序</div>
     <a href="ch04.html"><span class="tag">4</span>组合逻辑电路</a>
     <a href="ch05.html"><span class="tag">5</span>锁存器/触发器</a>
     <a href="ch06.html"><span class="tag">6</span>时序逻辑电路</a>
-
     <div class="group-label">存储与可编程</div>
     <a href="ch07.html"><span class="tag">7</span>半导体存储器</a>
     <a href="ch08.html"><span class="tag">8</span>FPGA / CPLD</a>
-
     <div class="group-label">脉冲与接口</div>
     <a href="ch09.html"><span class="tag">9</span>脉冲波形</a>
     <a href="ch10.html"><span class="tag">10</span>ADC / DAC</a>
-
     <div class="group-label">专题</div>
     <a href="chips.html"><span class="tag">&#9679;</span>常用芯片专题</a>
     <a href="methods.html"><span class="tag">&#9679;</span>方法汇总</a>
-    <a href="index.html" style="margin-top:6px;border-top:1px solid #f1f5f9;padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px"><span class="tag">&#8962;</span>返回首页</a>
   </div>
 </nav>
-
+<script>
+(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();
+</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>
+(function(){var d=localStorage.getItem('digitalelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();
+function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('digitalelec-theme',isDark?'dark':'light');}
+</script>
 <div class="main-wrap">
 <div class="header">
   <h1>📖 数字电子技术基础</h1>
   <p>华中科技大学 · 电信学院 · 电子技术基础教材编写组</p>
 </div>
-
 <div class="container">
-
   <div class="info-card">
     <h2>课程说明</h2>
     <p>本复习网站基于课程 PPT 内容整理，涵盖数字电子技术的核心知识点。</p>
     <p>内容均来源于 PPT 原话，适合考前复习与知识梳理。</p>
   </div>
-
   <div class="info-card">
     <h2>📂 章节导航</h2>
-
     <div class="category-title">第一部分：基础理论</div>
     <div class="chapter-grid">
-      <a href="ch01.html" class="chapter-card active">
-        <div class="num">第1章</div>
-        <h3>数字逻辑概论</h3>
+      <a href="ch01.html" class="chapter-card" style="border-left-color:#2d7fc1;">
+        <div class="num">第1章</div><h3>数字逻辑概论</h3>
         <div class="desc">数制转换 · 二进制代码 · BCD/格雷码 · 基本逻辑运算 · 逻辑函数</div>
+        <span class="tag" style="background:#e8f4fd;color:#2d7fc1;">基础知识</span>
       </a>
-      <a href="ch02.html" class="chapter-card active">
-        <div class="num">第2章</div>
-        <h3>逻辑代数与HDL基础</h3>
+      <a href="ch02.html" class="chapter-card" style="border-left-color:#27ae60;">
+        <div class="num">第2章</div><h3>逻辑代数与HDL基础</h3>
         <div class="desc">布尔代数 · 卡诺图化简 · 最小项/最大项 · Verilog HDL入门</div>
+        <span class="tag" style="background:#e8f4fd;color:#27ae60;">核心方法</span>
       </a>
-      <a href="ch03.html" class="chapter-card active">
-        <div class="num">第3章</div>
-        <h3>逻辑门电路</h3>
+      <a href="ch03.html" class="chapter-card" style="border-left-color:#e67e22;">
+        <div class="num">第3章</div><h3>逻辑门电路</h3>
         <div class="desc">MOS管/BJT开关 · CMOS反相器 · TTL门电路 · 类NMOS门电路</div>
+        <span class="tag" style="background:#e8f4fd;color:#e67e22;">基础器件</span>
       </a>
     </div>
-
     <div class="category-title">第二部分：组合与时序电路</div>
     <div class="chapter-grid">
-      <a href="ch04.html" class="chapter-card active">
-        <div class="num">第4章</div>
-        <h3>组合逻辑电路</h3>
+      <a href="ch04.html" class="chapter-card" style="border-left-color:#8e44ad;">
+        <div class="num">第4章</div><h3>组合逻辑电路</h3>
         <div class="desc">分析/设计方法 · 编码器/译码器 · 数据选择器 · 加法器 · 竞争冒险</div>
+        <span class="tag" style="background:#e8f4fd;color:#8e44ad;">核心章节</span>
       </a>
-      <a href="ch05.html" class="chapter-card active">
-        <div class="num">第5章</div>
-        <h3>锁存器和触发器</h3>
+      <a href="ch05.html" class="chapter-card" style="border-left-color:#c0392b;">
+        <div class="num">第5章</div><h3>锁存器和触发器</h3>
         <div class="desc">SR锁存器 · D锁存器 · 边沿触发器 · D/JK/T触发器 · 特性方程</div>
+        <span class="tag" style="background:#e8f4fd;color:#c0392b;">核心章节</span>
       </a>
-      <a href="ch06.html" class="chapter-card active">
-        <div class="num">第6章</div>
-        <h3>时序逻辑电路</h3>
+      <a href="ch06.html" class="chapter-card" style="border-left-color:#16a085;">
+        <div class="num">第6章</div><h3>时序逻辑电路</h3>
         <div class="desc">同步/异步分析 · 计数器 · 寄存器 · 移位寄存器 · 自启动</div>
+        <span class="tag" style="background:#e8f4fd;color:#16a085;">核心章节</span>
       </a>
     </div>
-
     <div class="category-title">第三部分：存储与可编程</div>
     <div class="chapter-grid">
-      <a href="ch07.html" class="chapter-card active">
-        <div class="num">第7章</div>
-        <h3>半导体存储器</h3>
+      <a href="ch07.html" class="chapter-card" style="border-left-color:#2980b9;">
+        <div class="num">第7章</div><h3>半导体存储器</h3>
         <div class="desc">ROM · RAM · SRAM/DRAM · NOR/NAND Flash · 存储器扩展</div>
+        <span class="tag" style="background:#e8f4fd;color:#2980b9;">存储技术</span>
       </a>
-      <a href="ch08.html" class="chapter-card active">
-        <div class="num">第8章</div>
-        <h3>FPGA和CPLD</h3>
+      <a href="ch08.html" class="chapter-card" style="border-left-color:#d35400;">
+        <div class="num">第8章</div><h3>FPGA和CPLD</h3>
         <div class="desc">LUT查找表 · FPGA结构 · CPLD宏单元 · 开发流程 · ISP编程</div>
+        <span class="tag" style="background:#e8f4fd;color:#d35400;">可编程逻辑</span>
       </a>
     </div>
-
     <div class="category-title">第四部分：脉冲与接口</div>
     <div class="chapter-grid">
-      <a href="ch09.html" class="chapter-card active">
-        <div class="num">第9章</div>
-        <h3>脉冲波形的变换与产生</h3>
+      <a href="ch09.html" class="chapter-card" style="border-left-color:#e91e63;">
+        <div class="num">第9章</div><h3>脉冲波形的变换与产生</h3>
         <div class="desc">单稳态 · 施密特触发 · 多谐振荡 · 石英晶体振荡 · 555定时器</div>
+        <span class="tag" style="background:#e8f4fd;color:#e91e63;">波形电路</span>
       </a>
-      <a href="ch10.html" class="chapter-card active">
-        <div class="num">第10章</div>
-        <h3>模数与数模转换器</h3>
+      <a href="ch10.html" class="chapter-card" style="border-left-color:#1abc9c;">
+        <div class="num">第10章</div><h3>模数与数模转换器</h3>
         <div class="desc">DAC倒T形网络 · ADC并行/逐次/双积分 · 量化误差 · 采样定理</div>
+        <span class="tag" style="background:#e8f4fd;color:#1abc9c;">接口电路</span>
       </a>
     </div>
-
     <div class="category-title">专题</div>
     <div class="chapter-grid">
-      <a href="chips.html" class="chapter-card active" style="border-left-color:#8e44ad;">
-        <div class="num">🔧</div>
-        <h3>常用芯片专题</h3>
+      <a href="chips.html" class="chapter-card" style="border-left-color:#e67e22;">
+        <div class="num">🔧</div><h3>常用芯片专题</h3>
         <div class="desc">555定时器 · 74LVC161计数器 · 74HC138译码器 · 功能表与典型应用</div>
+        <span class="tag" style="background:#fdf2e9;color:#e67e22;">芯片手册</span>
       </a>
-      <a href="methods.html" class="chapter-card active" style="border-left-color:#e67e22;">
-        <div class="num">📋</div>
-        <h3>方法汇总</h3>
+      <a href="methods.html" class="chapter-card" style="border-left-color:#2980b9;">
+        <div class="num">📋</div><h3>方法汇总</h3>
         <div class="desc">全课程分析方法一览 · 数制转换 · 逻辑化简 · 电路分析设计 · A/D转换</div>
+        <span class="tag" style="background:#e8f4fd;color:#2980b9;">方法速查</span>
       </a>
     </div>
-
   </div>
-
-
 </div>
-
-<div class="footer">
-  <p>华中科技大学《数字电子技术基础》</p>
-</div>
-<script>
-(function(){var p=window.location.pathname.split('/').pop()||'index.html';
-document.querySelectorAll('.sidebar-nav a').forEach(function(a){
-  if(a.getAttribute('href')===p)a.classList.add('current');
-});})();
-</script>
+<div class="footer"><p>华中科技大学《数字电子技术基础》</p></div>
 </div>
 </body>
 </html>

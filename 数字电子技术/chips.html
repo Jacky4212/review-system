@@ -3,248 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>常用芯片专题 - 555 · 161 · 138 - 数字电子技术</title>
+<title>常用芯片专题 - 数字电子技术</title>
 <style>
   :root {
-    --primary: #1a3a5c;
-    --accent: #2d7fc1;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
-    --code-bg: #f0f4f8;
+    --paper: #fdf6e3; --paper-dark: #f5ecd7;
+    --ink: #2c2c2c; --ink-light: #555;
+    --accent: #e67e22; --accent-hover: #1d4ed8;
+    --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
+    --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
+    --code-bg: #eee8d8; --code-text: #8a4b1e;
+    --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+  }
+  .dark-mode {
+    --paper: #1a1a2e; --paper-dark: #22223a;
+    --ink: #e0e0ec; --ink-light: #8888aa;
+    --accent: #6a82f0; --accent-hover: #5a72e0;
+    --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
+    --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
+    --code-bg: #2a2a3e; --code-text: #c0a060;
+    background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
+    font-family: var(--font); font-size: 12pt; line-height: 1.75;
+    color: var(--ink); background: var(--paper);
   }
-  .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 20px;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .topbar-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-  }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
-  .topbar a:hover { color: #fff; }
-  .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
-
-  .chip-header {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    text-align: center;
-  }
-  .chip-header h2 { font-size: 1.8em; color: var(--primary); margin-bottom: 8px; }
-  .chip-header p { color: var(--text-light); }
-
-  .section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .section h2 {
-    font-size: 1.4em; color: var(--primary);
-    border-left: 4px solid var(--accent); padding-left: 14px; margin-bottom: 20px;
-  }
-  .section h3 {
-    font-size: 1.15em; color: var(--accent);
-    margin: 20px 0 10px; padding-bottom: 6px;
-    border-bottom: 1px dashed var(--border);
-  }
-  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
-  .section p { margin-bottom: 10px; }
-  .section ul { margin: 8px 0 14px 22px; }
-  .section li { margin-bottom: 6px; }
-
-  .highlight {
-    background: #fffbe6; border-left: 3px solid #f0c040;
-    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
-  }
-  .highlight strong { color: #c0392b; }
-
-  .def-box {
-    background: var(--code-bg); border-radius: 8px;
-    padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
-  }
-  .def-box strong { color: var(--accent); }
-
-  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
-  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
-  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
-
-  .chip-tag { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 0.78em; margin-right: 4px; }
-  .chip-tag.tag555 { background: #fdf2e9; color: #e67e22; }
-  .chip-tag.tag161 { background: #e8f4fd; color: var(--accent); }
-  .chip-tag.tag138 { background: #f0f8f0; color: #27ae60; }
-
-  .app-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px; margin: 14px 0;
-  }
-  .app-card {
-    background: var(--code-bg); border-radius: 10px; padding: 16px;
-    border-top: 3px solid var(--accent);
-  }
-  .app-card h4 { margin-top: 0; color: var(--accent); }
-  .formula {
-    text-align: center; font-size: 1.1em; padding: 10px;
-    background: var(--code-bg); border-radius: 8px; margin: 10px 0;
-    font-family: "Times New Roman", serif;
-  }
-  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .nav-links a {
-    display: inline-block; padding: 10px 24px;
-    background: var(--card-bg); border-radius: 8px;
-    text-decoration: none; color: var(--accent);
-    border: 1px solid var(--border); transition: all 0.2s; font-size: 0.95em;
-  }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .back2top {
-    position: fixed; bottom: 30px; right: 30px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--primary); color: #fff; border: none;
-    font-size: 1.4em; cursor: pointer; opacity: 0.7;
-    transition: opacity 0.2s; z-index: 99;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .back2top:hover { opacity: 1; }
-
-  .chapter-nav-toggle:hover { opacity: 1; }
-  .chapter-nav-panel {
-    position: fixed; right: -200px; top: 50%; transform: translateY(-50%);
-    width: 180px; background: var(--card-bg); border-radius: 8px 0 0 8px;
-    box-shadow: -4px 0 16px rgba(0,0,0,0.12); z-index: 97;
-    transition: right 0.3s ease; padding: 12px 0; max-height: 80vh; overflow-y: auto;
-  }
-  .chapter-nav-panel.open { right: 0; }
-  .chapter-nav-panel .nav-title {
-    font-size: 0.8em; color: var(--text-light); padding: 4px 16px 8px;
-    border-bottom: 1px solid var(--border); margin-bottom: 6px; font-weight: 600;
-  }
-  .chapter-nav-panel a {
-    display: block; padding: 6px 16px; font-size: 0.85em;
-    color: var(--text); text-decoration: none;
-    border-left: 3px solid transparent;
-  }
-  .chapter-nav-panel a:hover { background: var(--code-bg); border-left-color: var(--accent); }
-  .chapter-nav-panel a.current { border-left-color: var(--accent); font-weight: 600; }
-  .back2top { right: 54px; }
-
-  @media (max-width: 640px) { .back2top { bottom: 16px; right: 16px; width: 38px; height: 38px; font-size: 1.1em; } }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
-  @media (max-width: 640px) {
-    .section { padding: 20px 16px; }
-    .topbar h2 { font-size: 1em; }
-    table { font-size: 0.82em; }
-    th, td { padding: 4px 6px; }
-  }
-
-/* ===== Left Sidebar ===== */
-  .sidebar {
-    position: fixed; top: 0; left: 0; width: 210px; height: 100vh;
-    background: #ffffff; border-right: 1px solid #edf2f7;
-    z-index: 100; overflow-y: auto;
-    display: flex; flex-direction: column;
-  }
-  .sidebar-header {
-    padding: 22px 18px 16px;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  .sidebar-header .site-name {
-    font-size: 1rem; font-weight: 700;
-    color: #0f172a; letter-spacing: -0.01em;
-  }
-  .sidebar-header .site-sub {
-    font-size: 0.7rem; color: #94a3b8;
-    margin-top: 2px; font-weight: 400;
-  }
-  .sidebar-nav { flex: 1; padding: 10px 0 16px; }
-  .sidebar-nav .group-label {
-    font-size: 0.62rem; font-weight: 600; color: #94a3b8;
-    padding: 14px 18px 4px; letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .sidebar-nav a {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 18px; margin: 1px 8px; border-radius: 6px;
-    font-size: 0.8rem; color: #334155;
-    text-decoration: none; transition: all 0.15s ease;
-    border-left: 3px solid transparent;
-  }
-  .sidebar-nav a:hover {
-    background: #f1f5f9; color: #0f172a;
-    border-left-color: #cbd5e1;
-  }
-  .sidebar-nav a.current {
-    background: #eff6ff; color: #2563eb;
-    border-left-color: #2563eb; font-weight: 600;
-  }
-  .sidebar-nav a .tag {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px; border-radius: 4px;
-    background: #f1f5f9; font-size: 0.65rem; font-weight: 600;
-    color: #64748b; flex-shrink: 0;
-  }
-  .sidebar-nav a:hover .tag { background: #e2e8f0; }
-  .sidebar-nav a.current .tag { background: #dbeafe; color: #2563eb; }
-
-  /* ===== Layout ===== */
-  body { display: flex; min-height: 100vh; }
-  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main-wrap { margin-left: 0; }
-  }
-
+  /* === Sidebar === */
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)}
+  .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px}
+  .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap {flex:1;min-width:0;margin-left:210px;display:flex;flex-direction:column}
+  .topbar {background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;padding:20px;position:sticky;top:0;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+  .topbar-inner {max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .topbar a {color:rgba(255,255,255,.85);text-decoration:none;font-size:.9em;transition:color .15s}
+  .topbar a:hover {color:#fff}
+  .topbar h2 {font-size:1.2em}
+  .container {max-width:1100px;margin:0 auto;padding:30px 20px;flex:1}
+  .section {background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .section h2 {font-size:1.3em;color:#1a3a5c;border-bottom:2px solid var(--divider);padding-bottom:8px;margin-bottom:16px}
+  .section h3 {font-size:1.08em;color:var(--accent);margin:18px 0 8px;padding-bottom:4px;border-bottom:1px dashed var(--divider)}
+  .section h3:first-of-type {margin-top:0}
+  .section h4 {font-size:1em;color:var(--ink);margin:14px 0 6px;font-weight:600}
+  .section p {margin-bottom:8px;font-size:.95em}
+  .section ul,.section ol {margin:8px 0 14px 22px;font-size:.95em}
+  .section li {margin-bottom:6px}
+  .section-num {font-size:.8rem;color:var(--ink-light);font-weight:600;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--divider)}
+  .chip-header {background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.04);text-align:center}
+  .chip-header h2 {font-size:1.8em;color:#1a3a5c;margin-bottom:8px}
+  .chip-header p {color:var(--ink-light)}
+  .highlight {background:#fefce8;border-left:3px solid #eab308;padding:12px 16px;margin:14px 0;border-radius:4px;font-size:.95em}
+  .highlight strong {color:#92400e}
+  .def-box {background:var(--code-bg);border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.95em;border:1px solid var(--card-border)}
+  .def-box strong {color:var(--accent)}
+  .formula {text-align:center;font-size:1.05em;padding:12px 16px;background:var(--code-bg);border-radius:6px;margin:10px 0;font-weight:500;letter-spacing:.5px;border:1px solid var(--card-border);font-family:"Times New Roman","Cascadia Code",monospace}
+  .checkpoint {background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius);padding:12px 16px;margin:18px 0;font-size:.93em}
+  .checkpoint::before {content:'🧠 自查：';font-weight:700;color:#1e40af}
+  .dark-mode .checkpoint {background:#1e2a3a;border-color:#2d4a5a}
+  .dark-mode .checkpoint::before {color:#6a82f0}
+  .tag-must{background:#fee2e2;color:#991b1b;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-key{background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-freq{background:#dbeafe;color:#1e40af;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .tag-info{background:#f0fdf4;color:#166534;padding:1px 7px;border-radius:3px;font-size:.8em;font-weight:600}
+  .kp{font-weight:700;color:var(--ink)}
+  .exp{font-weight:400;color:var(--ink-light)}
+  .chip-tag{display:inline-block;padding:2px 12px;border-radius:12px;font-size:.78em;margin-right:4px}
+  .chip-tag.tag555{background:#fdf2e9;color:#e67e22}
+  .chip-tag.tag161{background:#e8f4fd;color:var(--accent)}
+  .chip-tag.tag138{background:#f0f8f0;color:#27ae60}
+  .app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:14px 0}
+  .app-card{background:var(--code-bg);border-radius:10px;padding:16px;border-top:3px solid var(--accent)}
+  .app-card h4{margin-top:0;color:var(--accent)}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.93em}
+  th,td{border:1px solid var(--card-border);padding:8px 12px;text-align:center}
+  th{background:var(--paper-dark);font-weight:700;color:#1a3a5c}
+  .dark-mode th{color:var(--ink)}
+  .nav-links{margin-top:30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .nav-links a{display:inline-block;padding:10px 24px;background:var(--card-bg);border-radius:8px;text-decoration:none;color:var(--accent);border:1px solid var(--card-border);transition:all .2s;font-size:.93em;font-weight:500}
+  .nav-links a:hover{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  .back2top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;border:none;font-size:1.3em;cursor:pointer;opacity:.75;transition:all .2s;z-index:98;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+  .back2top:hover{opacity:1;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+  .theme-toggle{position:fixed;top:14px;right:16px;z-index:200;width:38px;height:38px;border-radius:50%;border:1px solid var(--divider);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .2s}
+  .theme-toggle:hover{box-shadow:0 4px 16px rgba(0,0,0,.18);transform:scale(1.05)}
+  .chapter-nav-toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:8px 0 0 8px;background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;border:none;font-size:1.1em;cursor:pointer;z-index:97;opacity:.8;transition:all .2s;box-shadow:-2px 0 10px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}
+  .chapter-nav-toggle:hover{opacity:1}
+  .chapter-nav-panel{position:fixed;right:-260px;top:50%;transform:translateY(-50%);width:240px;background:var(--card-bg);border-radius:14px 0 0 14px;box-shadow:-6px 0 28px rgba(0,0,0,.15);z-index:96;transition:right .35s cubic-bezier(0.4,0,0.2,1);padding:16px 0 12px;max-height:85vh;overflow-y:auto;border:1px solid var(--card-border)}
+  .chapter-nav-panel.open{right:0}
+  .chapter-nav-panel .nav-header{padding:0 18px 12px;border-bottom:2px solid var(--accent);margin-bottom:8px}
+  .chapter-nav-panel .nav-header .nav-title{font-size:.95em;font-weight:700;color:#1a3a5c}
+  .chapter-nav-panel .nav-header .nav-sub{font-size:.72em;color:var(--ink-light);margin-top:2px}
+  .chapter-nav-panel .nav-section{font-size:.68em;font-weight:600;color:var(--ink-light);padding:10px 18px 3px;text-transform:uppercase;letter-spacing:.5px}
+  .chapter-nav-panel a{display:flex;align-items:center;gap:8px;padding:7px 18px;font-size:.88em;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent;margin:1px 0}
+  .chapter-nav-panel a:hover{background:var(--paper-dark);border-left-color:var(--accent);color:var(--accent)}
+  .chapter-nav-panel a.current{background:var(--paper-dark);border-left-color:var(--accent);color:var(--accent);font-weight:600}
+  .chapter-nav-panel a .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:var(--paper-dark);font-size:.78em;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .chapter-nav-panel a:hover .num{background:var(--accent);color:#fff}
+  .chapter-nav-panel a.current .num{background:var(--accent);color:#fff}
+  .footer{text-align:center;padding:24px;color:var(--ink-light);font-size:.82em;border-top:1px solid var(--divider)}
+  @media(max-width:768px){.sidebar{display:none}.main-wrap{margin-left:0}body{font-size:11pt}}
+  @media(max-width:640px){.section{padding:18px 16px}.topbar h2{font-size:1em}.chapter-nav-panel{width:200px}table{font-size:.85em}th,td{padding:5px 8px}.back2top{right:10px;bottom:20px;width:38px;height:38px;font-size:1.1em}}
 </style>
 </head>
 <body>
 <nav class="sidebar">
-  <div class="sidebar-header">
-    <div class="site-name">数字电子技术</div>
-    <div class="site-sub">基础 · 复习系统</div>
-  </div>
+  <div class="sidebar-header"><div class="site-name">数字电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
   <div class="sidebar-nav">
     <div class="group-label">基础理论</div>
     <a href="ch01.html"><span class="tag">1</span>数字逻辑概论</a>
     <a href="ch02.html"><span class="tag">2</span>逻辑代数与HDL</a>
     <a href="ch03.html"><span class="tag">3</span>逻辑门电路</a>
-
     <div class="group-label">组合与时序</div>
     <a href="ch04.html"><span class="tag">4</span>组合逻辑电路</a>
     <a href="ch05.html"><span class="tag">5</span>锁存器/触发器</a>
     <a href="ch06.html"><span class="tag">6</span>时序逻辑电路</a>
-
     <div class="group-label">存储与可编程</div>
     <a href="ch07.html"><span class="tag">7</span>半导体存储器</a>
     <a href="ch08.html"><span class="tag">8</span>FPGA / CPLD</a>
-
     <div class="group-label">脉冲与接口</div>
     <a href="ch09.html"><span class="tag">9</span>脉冲波形</a>
     <a href="ch10.html"><span class="tag">10</span>ADC / DAC</a>
-
     <div class="group-label">专题</div>
     <a href="chips.html"><span class="tag">&#9679;</span>常用芯片专题</a>
     <a href="methods.html"><span class="tag">&#9679;</span>方法汇总</a>
-    <a href="index.html" style="margin-top:6px;border-top:1px solid #f1f5f9;padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px"><span class="tag">&#8962;</span>返回首页</a>
   </div>
 </nav>
-
+<script>
+(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();
+</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>
+(function(){var d=localStorage.getItem('digitalelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();
+function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('digitalelec-theme',isDark?'dark':'light');}
+</script>
 <div class="main-wrap">
 <div class="topbar">
   <div class="topbar-inner">
@@ -253,10 +151,8 @@
     <a href="index.html">首页 →</a>
   </div>
 </div>
-
 <div class="container">
-
-  <div class="chip-header">
+<div class="chip-header">
     <h2>🔧 常用中规模集成电路模块</h2>
     <p>555定时器 · 74LVC161计数器 · 74HC138译码器</p>
   </div>
@@ -451,20 +347,41 @@
     <a href="index.html">← 返回首页</a>
     <a href="ch10.html">← 第10章 模数与数模转换器</a>
   </div>
-
+  <div class="nav-links">
+    <a href="index.html">← 返回首页</a>
+    <a href="ch10.html">← 第10章 模数与数模转换器</a>
+  </div>
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>华中科技大学《数字电子技术基础》</p></div>
 </div>
 
-<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
-<div class="footer">
-  <p>华中科技大学《数字电子技术基础》</p>
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+<div class="nav-header"><div class="nav-title">📂 章节导航</div><div class="nav-sub">数字电子技术基础</div></div>
+<div class="nav-section">基础理论</div>
+<a href="ch01.html"><span class="num">1</span> 数字逻辑概论</a>
+<a href="ch02.html"><span class="num">2</span> 逻辑代数与HDL</a>
+<a href="ch03.html"><span class="num">3</span> 逻辑门电路</a>
+<div class="nav-section">组合与时序</div>
+<a href="ch04.html"><span class="num">4</span> 组合逻辑电路</a>
+<a href="ch05.html"><span class="num">5</span> 锁存器/触发器</a>
+<a href="ch06.html"><span class="num">6</span> 时序逻辑电路</a>
+<div class="nav-section">存储与可编程</div>
+<a href="ch07.html"><span class="num">7</span> 半导体存储器</a>
+<a href="ch08.html"><span class="num">8</span> FPGA / CPLD</a>
+<div class="nav-section">脉冲与接口</div>
+<a href="ch09.html"><span class="num">9</span> 脉冲波形</a>
+<a href="ch10.html"><span class="num">10</span> ADC / DAC</a>
+<div class="nav-section">专题</div>
+<a href="chips.html"><span class="num">🔧</span> 常用芯片</a>
+<a href="methods.html"><span class="num">📋</span> 方法汇总</a>
+<a href="index.html"><span class="num">🏠</span> 返回首页</a>
 </div>
 <script>
-(function(){var p=window.location.pathname.split('/').pop()||'index.html';
-document.querySelectorAll('.sidebar-nav a').forEach(function(a){
-  if(a.getAttribute('href')===p)a.classList.add('current');
-});})();
+function toggleChapterNav(){var p=document.getElementById('chapterNav');var b=document.querySelector('.chapter-nav-toggle');p.classList.toggle('open');b.classList.toggle('open')}
+document.addEventListener('click',function(e){var p=document.getElementById('chapterNav');var b=document.querySelector('.chapter-nav-toggle');if(p&&p.classList.contains('open')&&!p.contains(e.target)&&!b.contains(e.target)){p.classList.remove('open');b.classList.remove('open')}});
+document.addEventListener('DOMContentLoaded',function(){var path=window.location.pathname.split('/').pop()||'index.html';var links=document.getElementById('chapterNav');if(!links)return;var as=links.getElementsByTagName('a');for(var i=0;i<as.length;i++){if(as[i].getAttribute('href')===path)as[i].classList.add('current')}});
 </script>
-</div>
 </body>
 </html>

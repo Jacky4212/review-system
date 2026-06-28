@@ -6,159 +6,211 @@
 <title>第9章 脉冲波形的变换与产生 - 数字电子技术</title>
 <style>
   :root {
-    --primary: #1a3a5c; --accent: #2d7fc1; --bg: #f5f7fa; --card-bg: #ffffff;
-    --text: #2c3e50; --text-light: #7f8c8d; --border: #e1e8ed; --code-bg: #f0f4f8;
+    --paper: #fdf6e3; --paper-dark: #f5ecd7;
+    --ink: #2c2c2c; --ink-light: #555;
+    --accent: #e91e63; --accent-hover: #1d4ed8;
+    --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
+    --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
+    --code-bg: #eee8d8; --code-text: #8a4b1e;
+    --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+  }
+  .dark-mode {
+    --paper: #1a1a2e; --paper-dark: #22223a;
+    --ink: #e0e0ec; --ink-light: #8888aa;
+    --accent: #6a82f0; --accent-hover: #5a72e0;
+    --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
+    --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
+    --code-bg: #2a2a3e; --code-text: #c0a060;
+    background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.8;
+    font-family: var(--font); font-size: 12pt; line-height: 1.75;
+    color: var(--ink); background: var(--paper);
   }
+  /* === Sidebar === */
+  .sidebar {
+    position: fixed; top: 0; left: 0; width: 210px; height: 100vh;
+    background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);
+    z-index: 100; overflow-y: auto; display: flex; flex-direction: column;
+  }
+  .sidebar-header { padding: 22px 18px 16px; border-bottom: 1px solid var(--sidebar-border); }
+  .sidebar-header .site-name { font-size: 1rem; font-weight: 700; color: var(--ink); }
+  .sidebar-header .site-sub { font-size: 0.7rem; color: var(--ink-light); margin-top: 2px; }
+  .sidebar-nav { flex: 1; padding: 10px 0 16px; }
+  .sidebar-nav .group-label {
+    font-size: 0.62rem; font-weight: 600; color: var(--ink-light);
+    padding: 14px 18px 4px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .sidebar-nav a {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 18px; margin: 1px 8px; border-radius: 6px;
+    font-size: 0.82rem; color: var(--ink);
+    text-decoration: none; transition: all 0.15s ease;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-nav a:hover { background: var(--paper-dark); border-left-color: var(--divider); }
+  .sidebar-nav a.current {
+    background: var(--card-bg); color: var(--accent);
+    border-left-color: var(--accent); font-weight: 600;
+  }
+  .sidebar-nav a .tag {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 4px;
+    background: var(--paper-dark); font-size: 0.65rem; font-weight: 600;
+    color: var(--ink-light); flex-shrink: 0;
+  }
+  .sidebar-nav a.current .tag { background: var(--accent); color: #fff; }
+  /* === Layout === */
+  body { display: flex; min-height: 100vh; }
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
   .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; padding: 20px;
+    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px;
     position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; }
   .topbar a:hover { color: #fff; }
   .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
   .section {
-    background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
   .section h2 {
-    font-size: 1.4em; color: var(--primary); border-left: 4px solid var(--accent);
-    padding-left: 14px; margin-bottom: 20px;
+    font-size: 1.3em; color: #1a3a5c;
+    border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px;
   }
   .section h3 {
-    font-size: 1.15em; color: var(--accent); margin: 20px 0 10px;
-    padding-bottom: 6px; border-bottom: 1px dashed var(--border);
+    font-size: 1.08em; color: var(--accent); margin: 18px 0 8px;
+    padding-bottom: 4px; border-bottom: 1px dashed var(--divider);
   }
-  .section h4 { font-size: 1em; color: var(--text); margin: 14px 0 6px; font-weight: 600; }
-  .section p { margin-bottom: 10px; }
-  .section ul { margin: 8px 0 14px 22px; }
+  .section h3:first-of-type { margin-top: 0; }
+  .section h4 { font-size: 1em; color: var(--ink); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 8px; font-size: 0.95em; }
+  .section ul, .section ol { margin: 8px 0 14px 22px; font-size: 0.95em; }
   .section li { margin-bottom: 6px; }
-  .highlight {
-    background: #fffbe6; border-left: 3px solid #f0c040;
-    padding: 12px 16px; margin: 14px 0; border-radius: 6px; font-size: 0.95em;
+  .section-num {
+    font-size: 0.8rem; color: var(--ink-light); font-weight: 600;
+    letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--divider);
   }
-  .highlight strong { color: #c0392b; }
+  /* === Utility blocks === */
+  .highlight {
+    background: #fefce8; border-left: 3px solid #eab308;
+    padding: 12px 16px; margin: 14px 0; border-radius: 4px; font-size: 0.95em;
+  }
+  .highlight strong { color: #92400e; }
   .def-box {
-    background: var(--code-bg); border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+    background: var(--code-bg); border-radius: 6px;
+    padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+    border: 1px solid var(--card-border);
   }
   .def-box strong { color: var(--accent); }
+  .formula {
+    text-align: center; font-size: 1.05em; padding: 12px 16px;
+    background: var(--code-bg); border-radius: 6px; margin: 10px 0;
+    font-weight: 500; letter-spacing: 0.5px;
+    border: 1px solid var(--card-border);
+    font-family: "Times New Roman", "Cascadia Code", monospace;
+  }
+  .checkpoint {
+    background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius);
+    padding: 12px 16px; margin: 18px 0; font-size: 0.93em;
+  }
+  .checkpoint::before { content: '🧠 自查：'; font-weight: 700; color: #1e40af; }
+  .dark-mode .checkpoint { background: #1e2a3a; border-color: #2d4a5a; }
+  .dark-mode .checkpoint::before { color: #6a82f0; }
+  /* === Priority tags === */
+  .tag-must { background: #fee2e2; color: #991b1b; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-key  { background: #fef3c7; color: #92400e; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-freq { background: #dbeafe; color: #1e40af; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-info { background: #f0fdf4; color: #166534; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .kp { font-weight: 700; color: var(--ink); }
+  .exp { font-weight: 400; color: var(--ink-light); }
+  /* === Tables === */
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; }
+  th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; }
+  .dark-mode th { color: var(--ink); }
+  /* === Buttons & Navigation === */
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   .nav-links a {
-    display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px;
-    text-decoration: none; color: var(--accent); border: 1px solid var(--border);
-    transition: all 0.2s; font-size: 0.95em;
+    display: inline-block; padding: 10px 24px; background: var(--card-bg);
+    border-radius: 8px; text-decoration: none; color: var(--accent);
+    border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em;
+    font-weight: 500;
   }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
   .back2top {
     position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
-    background: var(--primary); color: #fff; border: none; font-size: 1.4em; cursor: pointer;
-    opacity: 0.7; transition: opacity 0.2s; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none;
+    font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.18);
   }
-  .back2top:hover { opacity: 1; }
-
-/* ===== Right-side Chapter Nav ===== */
+  .back2top:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  /* Theme toggle */
+  .theme-toggle {
+    position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px;
+    border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;
+  }
+  .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
+  /* Chapter nav toggle */
   .chapter-nav-toggle {
     position: fixed; right: 0; top: 50%; transform: translateY(-50%);
-    width: 40px; height: 40px; border-radius: 10px 0 0 10px;
-    background: linear-gradient(135deg, var(--primary), #2a5a8a);
-    color: #fff; border: none; font-size: 1.2em; cursor: pointer; z-index: 98;
-    opacity: 0.85; transition: all 0.3s ease;
-    box-shadow: -3px 0 12px rgba(0,0,0,0.18);
+    width: 38px; height: 38px; border-radius: 8px 0 0 8px;
+    background: linear-gradient(135deg, #1a3a5c, var(--accent));
+    color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97;
+    opacity: 0.8; transition: all 0.2s;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.15);
     display: flex; align-items: center; justify-content: center;
   }
-  .chapter-nav-toggle:hover { opacity: 1; transform: translateY(-50%) scale(1.08); }
-  .chapter-nav-toggle.open { border-radius: 0; }
-
+  .chapter-nav-toggle:hover { opacity: 1; }
   .chapter-nav-panel {
     position: fixed; right: -260px; top: 50%; transform: translateY(-50%);
-    width: 240px; background: rgba(255,255,255,0.97);
-    border-radius: 14px 0 0 14px;
-    box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 97;
+    width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px;
+    box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96;
     transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 16px 0 12px; max-height: 85vh; overflow-y: auto;
-    backdrop-filter: blur(8px);
+    border: 1px solid var(--card-border);
   }
   .chapter-nav-panel.open { right: 0; }
-
-  .chapter-nav-panel .nav-header {
-    padding: 0 18px 12px;
-    border-bottom: 2px solid var(--accent);
-    margin-bottom: 8px;
-  }
-  .chapter-nav-panel .nav-header .nav-title {
-    font-size: 0.95em; font-weight: 700; color: var(--primary);
-    letter-spacing: 1px;
-  }
-  .chapter-nav-panel .nav-header .nav-sub {
-    font-size: 0.72em; color: var(--text-light); margin-top: 2px;
-  }
-  .chapter-nav-panel .nav-section {
-    font-size: 0.7em; font-weight: 600; color: var(--text-light);
-    padding: 10px 18px 3px; letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
+  .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; }
+  .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: #1a3a5c; }
+  .chapter-nav-panel .nav-header .nav-sub { font-size: 0.72em; color: var(--ink-light); margin-top: 2px; }
+  .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; }
   .chapter-nav-panel a {
-    display: flex; align-items: center; gap: 8px;
-    padding: 7px 18px; font-size: 0.88em;
-    color: var(--text); text-decoration: none;
-    transition: all 0.15s ease;
-    border-left: 3px solid transparent;
-    margin: 1px 0;
+    display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em;
+    color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0;
   }
-  .chapter-nav-panel a:hover {
-    background: linear-gradient(90deg, #e8f4fd, transparent);
-    border-left-color: var(--accent);
-    color: var(--accent);
-  }
-  .chapter-nav-panel a.current {
-    background: linear-gradient(90deg, #e8f4fd, transparent);
-    border-left-color: var(--accent);
-    color: var(--accent);
-    font-weight: 600;
-  }
+  .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); }
+  .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
   .chapter-nav-panel a .num {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 5px;
-    background: var(--code-bg); font-size: 0.78em; font-weight: 600;
-    color: var(--text-light); flex-shrink: 0;
+    width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark);
+    font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0;
   }
   .chapter-nav-panel a:hover .num { background: var(--accent); color: #fff; }
   .chapter-nav-panel a.current .num { background: var(--accent); color: #fff; }
-
-  .back2top { right: 54px; }
-  @media (max-width: 640px) {
-    .chapter-nav-panel { width: 200px; font-size: 0.9em; }
-    .chapter-nav-panel a { padding: 6px 14px; }
-    .back2top { right: 48px; width: 38px; height: 38px; font-size: 1.1em; }
-  }
-  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.93em; }
-  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: center; }
-  th { background: var(--code-bg); font-weight: 600; color: var(--primary); }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
-  @media (max-width: 640px) { .section { padding: 20px 16px; } .topbar h2 { font-size: 1em; } }
-
-/* ===== Layout ===== */
-  body { display: flex; min-height: 100vh; }
-  .sidebar {
-    position: fixed; top: 0; left: 0; width: 210px; height: 100vh;
-    background: #ffffff; border-right: 1px solid #edf2f7;
-    z-index: 100; overflow-y: auto;
-    display: flex; flex-direction: column; flex-shrink: 0;
-  }
-  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
-  .footer { text-align: center; padding: 20px; color: #94a3b8; font-size: 0.78em; border-top: 1px solid #e8ecf0; }
+  /* === Footer === */
+  .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  /* === Responsive === */
   @media (max-width: 768px) {
     .sidebar { display: none; }
     .main-wrap { margin-left: 0; }
+    body { font-size: 11pt; }
   }
-
+  @media (max-width: 640px) {
+    .section { padding: 18px 16px; }
+    .topbar h2 { font-size: 1em; }
+    .chapter-nav-panel { width: 200px; }
+    table { font-size: 0.85em; }
+    th, td { padding: 5px 8px; }
+    .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; }
+  }
 </style>
 </head>
 <body>
@@ -189,15 +241,32 @@
     <div class="group-label">专题</div>
     <a href="chips.html"><span class="tag">&#9679;</span>常用芯片专题</a>
     <a href="methods.html"><span class="tag">&#9679;</span>方法汇总</a>
-    <a href="index.html" style="margin-top:6px;border-top:1px solid #f1f5f9;padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
   </div>
 </nav>
+
 <script>
 (function(){var p=window.location.pathname.split('/').pop()||'index.html';
 document.querySelectorAll('.sidebar-nav a').forEach(function(a){
   if(a.getAttribute('href')===p)a.classList.add('current');
 });})();
 </script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+
+<script>
+(function(){
+  var d=localStorage.getItem('digitalelec-theme');
+  if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}
+})();
+function toggleTheme(){
+  var b=document.body;b.classList.toggle('dark-mode');
+  var btn=document.querySelector('.theme-toggle');
+  var isDark=b.classList.contains('dark-mode');
+  btn.textContent=isDark?'☀️':'🌙';
+  localStorage.setItem('digitalelec-theme',isDark?'dark':'light');
+}
+</script>
+<div class="main-wrap">
 <div class="topbar">
   <div class="topbar-inner">
     <a href="ch08.html">← 第8章</a>
@@ -225,7 +294,7 @@ document.querySelectorAll('.sidebar-nav a').forEach(function(a){
       ② 在外来触发信号作用下，由稳态翻转到暂稳态。<br>
       ③ 暂稳态的持续时间仅取决于RC参数值，经过一段时间后电路会自动返回到稳态。
     </div>
-    <p>输出脉冲宽度：<strong>t<sub>w</sub> ≈ 0.7RC</strong>（由RC充放电时间常数决定）</p>
+    <div class="formula">输出脉冲宽度：<strong>t<sub>w</sub> ≈ 0.7RC</strong></div>
     <p>集成单稳态触发器74121：输出脉冲宽度 t<sub>w</sub> ≈ 0.7·R<sub>ext</sub>·C<sub>ext</sub></p>
   </div>
 
@@ -243,7 +312,7 @@ document.querySelectorAll('.sidebar-nav a').forEach(function(a){
     <h2>9.3 多谐振荡电路</h2>
     <p>多谐振荡器不需要外加触发信号就能自动产生矩形脉冲波。</p>
     <p>基本组成：开关器件（产生高、低电平）+ 反馈延迟环节（RC电路的充放电特性实现延时）。</p>
-    <p>由门电路组成的多谐振荡电路周期：<strong>T ≈ 2.2RC</strong>。频率稳定性较差。</p>
+    <div class="formula">由门电路组成的多谐振荡电路周期：<strong>T ≈ 2.2RC</strong></div>
     <h3>石英晶体多谐振荡电路</h3>
     <p>当f等于串联谐振频率f<sub>s</sub>时，石英晶体呈纯电阻特性，正反馈最强。频率稳定性极高。</p>
   </div>
@@ -269,39 +338,34 @@ document.querySelectorAll('.sidebar-nav a').forEach(function(a){
 <div class="footer">
   <p>华中科技大学《数字电子技术基础》</p>
 </div>
+</div>
 
-<!-- Right-side chapter nav -->
-<!-- Right-side chapter navigation -->
 <button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
 <div class="chapter-nav-panel" id="chapterNav">
   <div class="nav-header">
     <div class="nav-title">📂 章节导航</div>
     <div class="nav-sub">数字电子技术基础</div>
   </div>
-
   <div class="nav-section">基础理论</div>
   <a href="ch01.html"><span class="num">1</span> 数字逻辑概论</a>
   <a href="ch02.html"><span class="num">2</span> 逻辑代数与HDL</a>
   <a href="ch03.html"><span class="num">3</span> 逻辑门电路</a>
-
   <div class="nav-section">组合与时序</div>
   <a href="ch04.html"><span class="num">4</span> 组合逻辑电路</a>
   <a href="ch05.html"><span class="num">5</span> 锁存器/触发器</a>
   <a href="ch06.html"><span class="num">6</span> 时序逻辑电路</a>
-
   <div class="nav-section">存储与可编程</div>
   <a href="ch07.html"><span class="num">7</span> 半导体存储器</a>
   <a href="ch08.html"><span class="num">8</span> FPGA / CPLD</a>
-
   <div class="nav-section">脉冲与接口</div>
   <a href="ch09.html"><span class="num">9</span> 脉冲波形</a>
   <a href="ch10.html"><span class="num">10</span> ADC / DAC</a>
-
   <div class="nav-section">专题</div>
   <a href="chips.html"><span class="num">🔧</span> 常用芯片</a>
   <a href="methods.html"><span class="num">📋</span> 方法汇总</a>
   <a href="index.html"><span class="num">🏠</span> 返回首页</a>
 </div>
+
 <script>
 function toggleChapterNav() {
   var panel = document.getElementById('chapterNav');
@@ -309,28 +373,23 @@ function toggleChapterNav() {
   panel.classList.toggle('open');
   btn.classList.toggle('open');
 }
-// Close panel when clicking outside
 document.addEventListener('click', function(e) {
   var panel = document.getElementById('chapterNav');
   var btn = document.querySelector('.chapter-nav-toggle');
-  if (panel.classList.contains('open') &&
-      !panel.contains(e.target) &&
-      !btn.contains(e.target)) {
+  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
     panel.classList.remove('open');
     btn.classList.remove('open');
   }
 });
-// Highlight current page
 document.addEventListener('DOMContentLoaded', function() {
   var path = window.location.pathname.split('/').pop() || 'index.html';
-  var links = document.getElementById('chapterNav').getElementsByTagName('a');
-  for (var i = 0; i < links.length; i++) {
-    if (links[i].getAttribute('href') === path) {
-      links[i].classList.add('current');
-    }
+  var links = document.getElementById('chapterNav');
+  if (!links) return;
+  var as = links.getElementsByTagName('a');
+  for (var i = 0; i < as.length; i++) {
+    if (as[i].getAttribute('href') === path) as[i].classList.add('current');
   }
 });
 </script>
-
 </body>
 </html>
