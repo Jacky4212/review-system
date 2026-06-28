@@ -36,7 +36,7 @@
   .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
   .topbar a:hover { color: #fff; }
   .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
 
   .chip-header {
     background: var(--card-bg);
@@ -204,11 +204,7 @@
   .sidebar-nav a:hover .tag { background: #e2e8f0; }
   .sidebar-nav a.current .tag { background: #dbeafe; color: #2563eb; }
 
-  /* Layout offsets */
-  .container { margin-left: 210px; }
-  .topbar { left: 210px; width: calc(100% - 210px); }
-  .footer { margin-left: 210px; }
-
+  /* Layout offsets */  .topbar { left: 210px; width: calc(100% - 210px); }
   @media (max-width: 768px) {
     .sidebar { display: none; }
     .container { margin-left: 0; }
@@ -254,13 +250,8 @@
     <a href="index.html" style="margin-top:6px;border-top:1px solid #f1f5f9;padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
   </div>
 </nav>
-<script>
-(function(){var p=window.location.pathname.split('/').pop()||'index.html';
-document.querySelectorAll('.sidebar-nav a').forEach(function(a){
-  if(a.getAttribute('href')===p)a.classList.add('current');
-});})();
-</script>
 
+<div class="main-wrap">
 <div class="topbar">
   <div class="topbar-inner">
     <a href="ch10.html">← 第10章</a>
@@ -474,9 +465,12 @@ document.querySelectorAll('.sidebar-nav a').forEach(function(a){
 <div class="footer">
   <p>华中科技大学《数字电子技术基础》</p>
 </div>
-
-
-
-
+<script>
+(function(){var p=window.location.pathname.split('/').pop()||'index.html';
+document.querySelectorAll('.sidebar-nav a').forEach(function(a){
+  if(a.getAttribute('href')===p)a.classList.add('current');
+});})();
+</script>
+</div>
 </body>
 </html>
