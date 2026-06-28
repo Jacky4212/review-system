@@ -276,6 +276,21 @@ doc.add_paragraph('.tag-xxx — 芯片/技术标签（如 .tag-rom .tag-adc）',
 doc.add_paragraph('.compare-grid + .compare-card — 对比卡片网格', style='List Bullet')
 doc.add_paragraph('table + th/td — 功能表/真值表', style='List Bullet')
 
+doc.add_paragraph('')
+p = doc.add_paragraph()
+p.add_run('5. 导航系统规范：').bold = True
+nav_rules = [
+    '左侧固定侧边栏（sidebar）：所有页面统一，包含全部章节链接，分组显示',
+    '侧边栏设计原则：白底、蓝色高亮当前页、悬停灰底、左侧蓝色指示条',
+    '侧边栏包含：课程名头部 -> 5个分组(基础理论/组合与时序/存储与可编程/脉冲与接口/专题) -> 返回首页',
+    '顶部粘性栏（topbar）：保留上下章快速跳转 <- 第N章 / 第M章 ->',
+    '底部不再放置导航按钮，避免冗余',
+    '移动端（<768px）自动隐藏侧边栏',
+    '页脚统一简洁：仅显示"华中科技大学《数字电子技术基础》"',
+]
+for r in nav_rules:
+    doc.add_paragraph(r, style='List Number')
+
 # ---------- Step 4 ----------
 p = doc.add_paragraph()
 p.add_run('验证流程：').bold = True
