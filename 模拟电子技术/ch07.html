@@ -5,1269 +5,189 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>第7章 模拟集成电路 - 模拟电子技术</title>
 <style>
-  :root {
-    --primary: #1a3a5c;
-    --accent: #16a085;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
-    --code-bg: #f0f4f8;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-  }
-  .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .topbar-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
-  .topbar a:hover { color: #fff; }
-  .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
-  .section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .section-num {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section h3 {
-    font-size: 1.1em;
-    color: var(--accent);
-    margin: 18px 0 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px dashed var(--border);
-  }
-  .section h3:first-of-type { margin-top: 0; }
-  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section p:last-child { margin-bottom: 0; }
-  .highlight {
-    background: #fffbe6;
-    border-left: 3px solid #f0c040;
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-size: 0.95em;
-  }
-  .def-box {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 10px 0;
-    font-size: 0.95em;
-  }
-  .def-box strong { color: var(--accent); }
-  .formula {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin: 10px 0;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 0.95em;
-  }
-  th, td {
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    text-align: center;
-  }
-  th {
-    background: var(--code-bg);
-    font-weight: 600;
-    color: var(--primary);
-  }
-  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .nav-links a {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--accent);
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-    font-size: 0.95em;
-  }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .nav-links span { flex: 1; }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
-  @media (max-width: 640px) {
-    .section { padding: 16px; }
-    .topbar h2 { font-size: 1em; }
-    table { font-size: 0.85em; }
-    th, td { padding: 6px 8px; }
-  }
+  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #d35400; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e; --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af; --tag-must-bg: #fee2e2; --tag-must-color: #991b1b; --tag-key-bg: #fef3c7; --tag-freq-bg: #dbeafe; --tag-info-bg: #f0fdf4; --tag-info-color: #166534; --chip-tag-orange-bg: #fdf2e9; --chip-tag-orange-color: #e67e22; --chip-tag-blue-bg: #e8f4fd; --chip-tag-green-bg: #f0f8f0; --chip-tag-green-color: #27ae60; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
+  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #f0a060; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830; --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0; --tag-must-bg: #3d1a1a; --tag-must-color: #e88080; --tag-key-bg: #3d3a1a; --tag-freq-bg: #1a2a3d; --tag-info-bg: #1a3d2a; --tag-info-color: #80c090; --chip-tag-orange-bg: #3d2a1a; --chip-tag-orange-color: #f0a060; --chip-tag-blue-bg: #1a2a3d; --chip-tag-green-bg: #1a3d1a; --chip-tag-green-color: #60d080; --heading-color: var(--ink); background-color: var(--paper); }
+  * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: var(--font); font-size: 12pt; line-height: 1.75; color: var(--ink); background: var(--paper); display: flex; min-height: 100vh; }
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)} .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px} .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
+  .topbar { background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
+  .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .section h2 { font-size: 1.3em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px; }
+  .section h3 { font-size: 1.08em; color: var(--accent); margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--divider); } .section h3:first-of-type { margin-top: 0; }
+  .section h4 { font-size: 1em; color: var(--ink); margin: 14px 0 6px; font-weight: 600; } .section p { margin-bottom: 8px; font-size: 0.95em; }
+  .section ul, .section ol { margin: 8px 0 14px 22px; font-size: 0.95em; } .section li { margin-bottom: 6px; }
+  .highlight { background: var(--highlight-bg); border-left: 3px solid var(--highlight-border); padding: 12px 16px; margin: 14px 0; border-radius: 4px; font-size: 0.95em; } .highlight strong { color: var(--highlight-strong); }
+  .def-box { background: var(--code-bg); border-radius: 6px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em; border: 1px solid var(--card-border); } .def-box strong { color: var(--accent); }
+  .formula { text-align: center; font-size: 1.05em; padding: 12px 16px; background: var(--code-bg); border-radius: 6px; margin: 10px 0; font-weight: 500; letter-spacing: 0.5px; border: 1px solid var(--card-border); font-family: "Times New Roman", "Cascadia Code", monospace; }
+  .checkpoint { background: var(--checkpoint-bg); border: 1px solid var(--checkpoint-border); border-radius: var(--radius); padding: 12px 16px; margin: 18px 0; font-size: 0.93em; } .checkpoint::before { content: '🧠 自查：'; font-weight: 700; color: var(--checkpoint-color); } .dark-mode .checkpoint { background: #1e2a3a; border-color: #2d4a5a; } .dark-mode .checkpoint::before { color: #6a82f0; }
+  .tag-must { background: var(--tag-must-bg); color: var(--tag-must-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-key { background: var(--tag-key-bg); color: #92400e; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-freq { background: var(--tag-freq-bg); color: #1e40af; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-info { background: var(--tag-info-bg); color: var(--tag-info-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .kp { font-weight: 700; color: var(--ink); } .exp { font-weight: 400; color: var(--ink-light); }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; } th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; } th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; } .dark-mode th { color: var(--ink); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; } .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; box-shadow: 0 2px 10px rgba(0,0,0,0.18); } .back2top:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  .theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; } .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
+  .chapter-nav-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px 0 0 8px; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97; opacity: 0.8; transition: all 0.2s; box-shadow: -2px 0 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; } .chapter-nav-toggle:hover { opacity: 1; }
+  .chapter-nav-panel { position: fixed; right: -260px; top: 50%; transform: translateY(-50%); width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px; box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96; transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1); padding: 16px 0 12px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--card-border); } .chapter-nav-panel.open { right: 0; } .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; } .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: #1a3a5c; } .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; } .chapter-nav-panel a { display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em; color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0; } .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); } .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; } .chapter-nav-panel a .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark); font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0; } .chapter-nav-panel a:hover .num { background: var(--accent); color: #fff; } .chapter-nav-panel a.current .num { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } body { font-size: 11pt; } } @media (max-width: 640px) { .section { padding: 18px 16px; } .topbar h2 { font-size: 1em; } .chapter-nav-panel { width: 200px; } table { font-size: 0.85em; } th, td { padding: 5px 8px; } .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; } }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-inner">
-    <a href="index.html">&larr; 返回首页</a>
-    <h2>第7章 模拟集成电路</h2>
-    <a href="ch08.html">第8章 反馈放大电路 &rarr;</a>
+<nav class="sidebar">
+  <div class="sidebar-header"><div class="site-name">模拟电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div><a href="ch01.html"><span class="tag">1</span>绪论</a><a href="ch02.html"><span class="tag">2</span>运算放大器</a><a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div><a href="ch04.html"><span class="tag">4</span>MOS场效应管</a><a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div><a href="ch07.html"><span class="tag">7</span>模拟集成电路</a><a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与输出</div><a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
   </div>
-</div>
+</nav>
+<script>(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
+<div class="main-wrap">
+<div class="topbar"><div class="topbar-inner"><a href="ch05.html">← 第5章</a><h2>第7章 模拟集成电路</h2><a href="ch08.html">第8章 →</a></div></div>
 <div class="container">
-    <div class="section">
-      <div class="section-num">第 1 页</div>
-      <h3>7  模拟集成电路</h3>
-      <p>7.1 模拟集成电路中的直流偏置技术
-7.2 差分式放大电路 
-*7.3 带有源负载的差分式放大电路
-7.4 集成运算放大器电路简介
-7.5 运放主要参数和相关应用问题</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 2 页</div>
-      <h3>7.1.1  MOSFET电流源
-7.1.2  BJT电流源</h3>
-      <h3>7.1  模拟集成电路中的直流偏置技术</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 3 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <h3>1. 镜像电流源</h3>
-      <h3>T1、T2的参数全同</h3>
-      <h3>只要满足 V<sub>GS</sub> &gt; V<sub>TN</sub></h3>
-      <h3>必有 V<sub>DS1</sub> &gt; V<sub>GS</sub>-V<sub>TN</sub></h3>
-      <h3>T1一定工作在恒流区</h3>
-      <h3>又因为 V<sub>GS2</sub> = V<sub>GS1</sub> = V<sub>GS</sub></h3>
-      <h3>T2漏极接负载构成回路后，只要满足V<sub>DS2</sub> &gt; V<sub>GS</sub>-V<sub>TN</sub> ，就一定工作在恒流区，且有</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 4 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <h3>再根据</h3>
-      <p>便可求出I<sub>O</sub>的电流值。</p>
-      <p>I<sub>O</sub>的电流值与负载无关。</p>
-      <p>负载在一定范围内变化时（保证V<sub>DS2</sub> &gt; V<sub>GS</sub>-V<sub>TN</sub>），I<sub>O</sub>的电流值将保持不变，反映出I<sub>O</sub>的恒流特性。</p>
-      <h3>1. 镜像电流源</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 5 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <h3>MOS管分别处于放大和恒流状态时的图解</h3>
-      <h3>放大时</h3>
-      <h3>恒流时</h3>
-      <h3>1. 镜像电流源</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 6 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <h3>当器件具有不同的宽长比时</h3>
-      <p>动态电阻(交流电阻)</p>
-      <h3>输出特性</h3>
-      <h3>代表符号</h3>
-      <h3>1. 镜像电流源</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 7 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <h3>若用T3代替R，且T1~T3特性相同</h3>
-      <h3>T1~T3便可工作在恒流区</h3>
-      <h3>由于</h3>
-      <h3>所以</h3>
-      <h3>只要满足</h3>
-      <h3>输出电流为</h3>
-      <h3>若T2仅在宽长比上与T1和T3不同，则</h3>
-      <h3>1. 镜像电流源</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 8 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <h3>2. 多路电流源电路</h3>
-      <h3>除宽长比外，T0~T3特性相同， T4、T5特性相同</h3>
-      <h3>需保证所有管子工作在恒流区</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 9 页</div>
-      <h3>7.1.1  MOSFET电流源</h3>
-      <p>是电流源吗？</p>
-      <h3>注意：N沟道耗尽型管的夹断电压V<sub>P<sub>N</sub></sub>&lt; 0</h3>
-      <h3>需保证</h3>
-      <h3>电流源内阻</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 10 页</div>
-      <h3>7.1.1  MOSFET电流源
-7.1.2  BJT电流源</h3>
-      <h3>7.1  模拟集成电路中的直流偏置技术</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 11 页</div>
-      <h3>1. 镜像电流源</h3>
-      <h3>7.1.2  BJT电流源</h3>
-      <p>I<sub>O</sub>在一定范围内与负载无关。</p>
-      <h3>T1、T2的参数全同</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 12 页</div>
-      <h3>1. 镜像电流源</h3>
-      <h3>7.1.2  BJT电流源</h3>
-      <h3>动态电阻</h3>
-      <h3>一般r<sub>o</sub>在几百千欧以上</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 13 页</div>
-      <h3>2. 微电流源</h3>
-      <h3>7.1.2  BJT电流源</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 14 页</div>
-      <h3>3. 多路电流源</h3>
-      <h3>7.1.2  BJT电流源</h3>
-      <h3>T1、R<sub>1</sub> 和T4支路产生基准电流I<sub>R<sub>EF</sub></sub></h3>
-      <h3>T1和T2、T4和T5构成镜像电流源</h3>
-      <h3>T1和T3，T4和T6构成了微电流源</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 15 页</div>
-      <h3>7  模拟集成电路</h3>
-      <p>7.1 模拟集成电路中的直流偏置技术
-7.2 差分式放大电路 
-*7.3 带有源负载的差分式放大电路
-7.4 集成运算放大器电路简介
-7.5 运放主要参数和相关应用问题</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 16 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路
-7.2.2  BJT差分式放大电路
-7.2.3  差分式放大电路的传输特性</h3>
-      <h3>7.2  差分式放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 17 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>回顾</h3>
-      <p>要能够放大直流！</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 18 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>共源放大电路</h3>
-      <h3>差分式放大电路</h3>
-      <h3>方便调整Q点
-有稳定Q点作用</h3>
-      <h3>温度稳定性很好的电流源
-其动态电阻为r<sub>o</sub></h3>
-      <h3>但增益太小</h3>
-      <h3>——直接耦合</h3>
-      <h3>电路组成</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 19 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>电路组成</h3>
-      <h3>两个输入端：vi1和vi2 
-两个输出端：v<sub>O1</sub>和v<sub>O2</sub></h3>
-      <h3>工作方式：双入双出、双入单出、单入双出、单入单出</h3>
-      <h3>源极耦合差分式放大电路</h3>
-      <h3>源极共用电流源支路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 20 页</div>
-      <p>两输入端中的共模信号大小相等，相位相同；
-两输入端中的差模信号大小相等，相位相反。</p>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>电路组成</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 21 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>直流通路</h3>
-      <h3>静态分析</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 22 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>静态分析</h3>
-      <h3>再由</h3>
-      <h3>可求得  V<sub>GSQ</sub></h3>
-      <h3>最后需要校验是否工作在恒流区</h3>
-      <div class="formula">静态时有     vo＝V<sub>D1</sub>Q - V<sub>D2</sub>Q＝0</div>
-      <p>( Rd1=Rd2 =Rd )</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 23 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <h3>交流通路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 24 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <p>vi1和vi2大小相等，相位相反。is1的增加量等于is2的减小量，r<sub>o</sub>中无交流电流流过，vs = 0，意味着源极相当于对地短路。</p>
-      <p>表明在差模信号作用下，源极公共支路相当于短路。</p>
-      <h3>差模信号作用情况</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 25 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <h3>等效的交流通路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 26 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <h3>等效的交流通路</h3>
-      <p>单边就是标准的共源电路，但输入信号是vid 。</p>
-      <p>若● ● 0，</p>
-      <h3>① 单端输出时的差模电压增益</h3>
-      <p>只是相位相反(电路对称)</p>
-      <h3>单端输出差模电压增益（T1漏极输出，Rd1=Rd2=Rd）</h3>
-      <h3>若由T2漏极输出，则</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 27 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <h3>等效的交流通路</h3>
-      <h3>若● ● 0</h3>
-      <h3>① 单端输出时的差模电压增益</h3>
-      <h3>带R<sub>L</sub>时</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 28 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <h3>等效的交流通路</h3>
-      <h3>② 双端输出时的差模电压增益</h3>
-      <h3>因 vi1 = -vi2，故 vo1 = -vo2</h3>
-      <h3>与共源放大电路的电压增益相同</h3>
-      <p>增加的元器件贡献在哪里？</p>
-      <h3>（Rd1=Rd2=Rd）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 29 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入差模信号时</h3>
-      <h3>等效的交流通路</h3>
-      <h3>② 双端输出时的差模电压增益</h3>
-      <h3>带R<sub>L</sub>时</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 30 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>单端输入（不对称输入）时</h3>
-      <h3>等效的输入形式</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 31 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>单端输入（不对称输入）时</h3>
-      <p>结论：单端输入时的差模情况等效于双端输入，差模增益指标的计算与双端输入时相同。</p>
-      <p>单端输入时，必定伴随着共模信号的输入。</p>
-      <h3>等效的输入形式</h3>
-      <p>当仅考虑差模信号输入时，将两个共模信号源置零，即vic = 0，其结果与上述差模信号双端输入时完全相同。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 32 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入共模信号时</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 33 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入共模信号时</h3>
-      <h3>交流通路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 34 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入共模信号时</h3>
-      <h3>共模信号作用情况</h3>
-      <p>vi1和vi2大小相等，相位相同。is1和is2同时等量增加或等量减小，r<sub>o</sub>中流过双倍的单边交流电流，vs ● 0。</p>
-      <p>将r<sub>o</sub>折算到T1和T2各自源极支路上，其阻值相当于原来的两倍。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 35 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入共模信号时</h3>
-      <h3>源极公共支路等效后的交流通路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 36 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入共模信号时</h3>
-      <h3>③ 单端输出时的共模电压增益</h3>
-      <p>电路左右两边完全对称，可看作两个独立的共源放大电路，两边单端输出完全相同。</p>
-      <h3>r<sub>o</sub> 是电流源的动态电阻（内阻）</h3>
-      <p>无论由哪个漏极输出，共模输出电压总是与共模输入电压反相。</p>
-      <h3>远小于差模增益</h3>
-      <p>共模时有单端输入和双端输入之分吗？</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 37 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>仅输入共模信号时</h3>
-      <h3>④ 双端输出时的共模电压增益</h3>
-      <h3>共模信号的输入使两管漏极电压有相同的变化</h3>
-      <h3>理想情况下有</h3>
-      <h3>共模增益</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 38 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <p>温度变化和电源电压波动，都将使两个漏极电流产生变化，且变化大小和趋势相同。</p>
-      <h3>其效果相当于在两个输入端加入了共模信号</h3>
-      <p>当电路的共模增益为0或很小时，便可抑制由此产生的影响。</p>
-      <p>抑制共模信号的意义何在？</p>
-      <p>所谓零点漂移是指当放大电路在输入信号为零时，输出还有缓慢变化的电压产生，即输出电压偏离原来的起始点而上下飘动，简称零漂。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 39 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>⑤共模抑制比</h3>
-      <h3>增大静态偏置电流源的内阻
-提高电路的对称性</h3>
-      <h3>双端输出，理想情况</h3>
-      <h3>单端输出</h3>
-      <p>为有效提高差分式放大电路的共模抑制比，应如何设计电路参数？</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 40 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <h3>⑥输入电阻</h3>
-      <p>由于MOS管的栅极是绝缘的，所以无论是差模信号的放大还是共模信号的放大，它们的输入电阻都约等于无穷大。BJT则不同。</p>
-      <h3>差模输入电阻</h3>
-      <h3>共模输入电阻</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 41 页</div>
-      <h3>输出电阻无差模和共模之分</h3>
-      <h3>⑦输出电阻</h3>
-      <h3>双端输出  Ro = Rd1 + Rd2 = 2Rd</h3>
-      <h3>单端输出  Ro = Rd</h3>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 42 页</div>
-      <h3>⑧频率响应</h3>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <h3>动态小信号分析</h3>
-      <p>由于是直接耦合放大电路，所以低频区增益不会衰减
-差模电压增益的高频响应与共源电路类似
-共模电压增益的高频响应与源极电流源的输出阻抗（内阻）特性有直接关系</p>
-      <h3>共模抑制比的高频响应由差模增益和共模增益的高频响应共同决定</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 43 页</div>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-      <p>为什么对差模信号放大和对共模信号放大不同？</p>
-      <h3>差模</h3>
-      <h3>共模</h3>
-      <h3>双端输出</h3>
-      <h3>单端输出</h3>
-      <p>对两类信号放大产生差异的关键点在哪儿？</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 44 页</div>
-      <h3>差分式放大电路的分析方法</h3>
-      <h3>静态、动态等与之前放大电路分析方法相同
- 动态分析时，利用叠加原理，将差模和共模分开分析是有效手段</h3>
-      <h3>7.2.1  MOSFET差分式放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 45 页</div>
-      <h3>差分式放大电路如图所示。分析下列输入和输出的相位关系：</h3>
-      <h3>反相</h3>
-      <h3>v<sub>O1</sub>与vi1</h3>
-      <h3>同相</h3>
-      <h3>v<sub>O2</sub>与vi1</h3>
-      <h3>同相</h3>
-      <h3>v<sub>O1</sub>与vi2</h3>
-      <h3>反相</h3>
-      <h3>v<sub>O2</sub>与vi2</h3>
-      <h3>反相</h3>
-      <h3>vo与vi1</h3>
-      <h3>同相</h3>
-      <h3>vo与vi2</h3>
-      <p>？</p>
-      <h3>思考题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 46 页</div>
-      <h3>7.2  差分式放大电路</h3>
-      <h3>7.2.1  MOSFET差分式放大电路
-7.2.2  BJT差分式放大电路
-7.2.3  差分式放大电路的传输特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 47 页</div>
-      <h3>7.2.2  BJT差分式放大电路</h3>
-      <h3>电路分析与MOSFET类似</h3>
-      <p>差模电压和共模电压增益可由共射放大电路结论得到，两者的差别仅在分母中是否包含电流源动态电阻。</p>
-      <p>由于基极有电流，所以差模输入电阻和共模输入电阻都不是无穷大。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 48 页</div>
-      <h3>7.2  差分式放大电路</h3>
-      <h3>7.2.1  MOSFET差分式放大电路
-7.2.2  BJT差分式放大电路
-7.2.3  差分式放大电路的传输特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 49 页</div>
-      <h3>7.2.3  MOSFET差分式放大电路的传输特性</h3>
-      <h3>根据</h3>
-      <h3>vid= v<sub>GS1</sub>- v<sub>GS2</sub></h3>
-      <div class="formula">可得传输特性曲线
-       i<sub>D1</sub>，i<sub>D2</sub>＝f（vid）</div>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 50 页</div>
-      <h3>纵轴归一化传输特性</h3>
-      <h3>7.2.3  MOSFET差分式放大电路的传输特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 51 页</div>
-      <h3>7  模拟集成电路</h3>
-      <p>7.1 模拟集成电路中的直流偏置技术
-7.2 差分式放大电路 
-*7.3 带有源负载的差分式放大电路
-7.4 集成运算放大器电路简介
-7.5 运放主要参数和相关应用问题</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 52 页</div>
-      <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>1.  基本电路</h3>
-      <h3>2.  静态分析</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 53 页</div>
-      <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>3.  动态指标</h3>
-      <h3>输入差模电压时的交流通路</h3>
-      <h3>id3 = id1</h3>
-      <h3>id1= g<sub>m</sub>vid /2</h3>
-      <h3>id4= id1= g<sub>m</sub>vid /2</h3>
-      <h3>id2= - g<sub>m</sub>vid /2</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 54 页</div>
-      <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>3.  动态指标</h3>
-      <h3>● ● 0时，可得T2、 T4支路的小信号等效电路</h3>
-      <h3>id3 = id1</h3>
-      <h3>id1= g<sub>m</sub>vid /2</h3>
-      <h3>id4= id1= g<sub>m</sub>vid /2</h3>
-      <h3>id2= - g<sub>m</sub>vid /2</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 55 页</div>
-      <h3>3.  动态指标</h3>
-      <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>● ● 0时，可得T2、 T4支路的小信号等效电路</h3>
-      <h3>节点d2（d4）的KCL方程为</h3>
-      <h3>若接负载 R<sub>L</sub>，则电压增益为</h3>
-      <h3>得差模电压增益</h3>
-      <h3>其中</h3>
-      <p>带有源负载的差分放大电路单端输出的差模电压增益不再是双端输出增益的一半，而是与双端输出电压增益相同，即单端输出等效于双端输出。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 56 页</div>
-      <h3>3.  动态指标</h3>
-      <h3>*7.3.1 带有源负载的MOSFET差分式放大电路</h3>
-      <h3>● ● 0时，可得T2、 T4支路的小信号等效电路</h3>
-      <div class="formula">以上分析结果的前提条件是假设T1 ~T4的互导相同，即
-          K<sub>n</sub>1＝K<sub>n</sub>2＝Kp3＝Kp4＝K
-         g<sub>m</sub>1＝g<sub>m</sub>2＝g<sub>m</sub>3＝g<sub>m</sub>4＝g<sub>m</sub></div>
-      <h3>电路的共模电压增益仍然很小，共模抑制很高</h3>
-      <h3>参数不同时，结果将有所变化</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 57 页</div>
-      <p>7.1 模拟集成电路中的直流偏置技术
-7.2 差分式放大电路 
-*7.3 带有源负载的差分式放大电路
-7.4 集成运算放大器电路简介
-7.5 运放主要参数和相关应用问题</p>
-      <h3>7  模拟集成电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 58 页</div>
-      <p>7.4.1  两级CMOS运算放大器
-7.4.2  全差分运算放大器
-7.4.3  BJT型LM741集成运算放大器
-7.4.4  电流反馈集成运算放大器</p>
-      <h3>7.4  集成运算放大器电路简介</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 59 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>1. 电路结构及工作原理</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 60 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>设 g<sub>m</sub>1 = g<sub>m</sub>2 = g<sub>m</sub></h3>
-      <h3>小信号差模电压增益</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 61 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>共模抑制比</h3>
-      <p>取决于差分式输入级的共模抑制比。通常可以达到80dB以上。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 62 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输入电阻</h3>
-      <h3>差模、共模输入电阻均为无穷大</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 63 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输出电阻</h3>
-      <h3>Ro=r<sub>ds7</sub> // r<sub>ds8</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 64 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输入失调电压</h3>
-      <h3>v<sub>P</sub>=v<sub>N</sub>=0时
-应该有   v<sub>O</sub>=0
-实际常有   v<sub>O</sub>●0</h3>
-      <h3>V<sub>I<sub>O</sub></sub>是导致运放电路零点漂移的重要原因</h3>
-      <h3>在输入端加校正电压V<sub>I<sub>O</sub></sub>，使v<sub>O</sub>=0。
-V<sub>I<sub>O</sub></sub>——失调电压
-温度也会影响V<sub>I<sub>O</sub></sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 65 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输入偏置电流和失调电流</h3>
-      <p>输入端有电流吗？</p>
-      <p>为了防止静电和过压损坏MOS管的绝缘栅极，大多数CMOS运算放大器在输入端都增加了保护二极管。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 66 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输入偏置电流和失调电流</h3>
-      <p>为了防止静电和过压损坏MOS管的绝缘栅极，大多数CMOS运算放大器在输入端都增加了保护二极管。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 67 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输入偏置电流和失调电流</h3>
-      <p>v<sub>P</sub>=v<sub>N</sub>=0时，由于二极管的漏电流不完全相等，从而使两输入端有电流I<sub>BP</sub>和I<sub>BN</sub>。</p>
-      <h3>定义：
-    I<sub>IB</sub>= (I<sub>BP</sub>+I<sub>BN</sub>)/2 ——偏置电流
-    I<sub>IO</sub>= |I<sub>BP</sub>-I<sub>BN</sub>|  ——失调电流</h3>
-      <h3>输入端内是BJT时必有电流</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 68 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输入偏置电流和失调电流</h3>
-      <p>能正常工作吗？</p>
-      <h3>改进</h3>
-      <p>同相输入端的直流通路是断开的，MOS管的栅极没有合适的偏置，电路无法建立合适的Q点。</p>
-      <h3>输入电阻会减小</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 69 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>共模输入电压范围</h3>
-      <h3>共模输入电压</h3>
-      <h3>vic= (v<sub>P</sub> + v<sub>N</sub>)/2 ▲ v<sub>P</sub> ▲ v<sub>N</sub> ▲ vi</h3>
-      <h3>当vic增大，使T1、T2的源极电压</h3>
-      <p>升高(因I<sub>D6</sub>恒定, I<sub>D1</sub>= I<sub>D2</sub>, 故V<sub>GS</sub>基本不变)，|v<sub>DS6</sub>|减小，导致T6工作点进入夹断点轨迹时（|v<sub>DS6</sub>|min=|V<sub>GS6</sub>Q-V<sub>TP6</sub>|），vic达到最大值：</p>
-      <h3>Vicmax = V<sub>DD</sub> -|v<sub>DS6</sub>|min-|V<sub>GS1</sub>Q|= V<sub>DD</sub> -|V<sub>GS6</sub>Q- V<sub>TP6</sub>|-|V<sub>GS1</sub>Q|</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 70 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>共模输入电压范围</h3>
-      <p>当vic减小，使T1、T2的源极电压降低，|v<sub>DS1</sub>|和|v<sub>DS2</sub>|减小，导致T1和T2工作点进入夹断点轨迹时，vic达到最小值。计算单边即可。
-此时的T1有
-      V<sub>DS1</sub>pop =V<sub>GS1</sub>Q-V<sub>TP1</sub></p>
-      <h3>则  V<sub>GD1</sub>min=V<sub>GS1</sub>Q-V<sub>DS1</sub>pop=V<sub>TP1</sub></h3>
-      <h3>由于i<sub>D3</sub>=I<sub>D3</sub>Q不变，所以v<sub>DS3</sub> =V<sub>DS3</sub>Q =V<sub>GS3</sub>Q也不变，则</h3>
-      <h3>Vicmin = -V<sub>SS</sub> +V<sub>DS3</sub>Q+V<sub>GD1</sub>min= -V<sub>SS</sub> +V<sub>GS3</sub>Q+V<sub>TP1</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 71 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>输出电压摆幅</h3>
-      <h3>Vomax = V<sub>DD</sub> -|V<sub>DS8</sub>pop| 
-         ▲ V<sub>DD</sub> -|V<sub>GS8</sub>Q -V<sub>TP8</sub>|</h3>
-      <h3>Vomin = -V<sub>SS</sub> +V<sub>DS7</sub>pop 
-             ▲ -V<sub>SS</sub> + V<sub>GS7</sub>Q -V<sub>TN7</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 72 页</div>
-      <h3>7.4.1  两级CMOS运算放大器</h3>
-      <h3>2. 电路性能指标</h3>
-      <h3>频率响应</h3>
-      <p>Cc会有较大的密勒等效电容，减小了带宽。
-直接耦合电路低频区的增益不会衰减，可以放大直流信号。</p>
-      <h3>早期产品MC14573</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 73 页</div>
-      <p>7.4.1  两级CMOS运算放大器
-7.4.2  全差分运算放大器
-7.4.3  BJT型LM741集成运算放大器
-7.4.4  电流反馈集成运算放大器</p>
-      <h3>7.4  集成运算放大器电路简介</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 74 页</div>
-      <h3>7.4.2  全差分型运算放大器</h3>
-      <h3>与标准运放的差别</h3>
-      <h3>有2个互逆的输出端
-有1个输出共模电压控制端V<sub>OC</sub>(set)
-应用时需要两条完全对称的反馈通路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 75 页</div>
-      <p>7.4.1  两级CMOS运算放大器
-7.4.2  全差分运算放大器
-7.4.3  BJT型LM741集成运算放大器
-7.4.4  电流反馈集成运算放大器</p>
-      <h3>7.4  集成运算放大器电路简介</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 76 页</div>
-      <h3>7.4.3  BJT型LM741集成运算放大器</h3>
-      <h3>外接调零电阻</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 77 页</div>
-      <h3>7.4.3  BJT型LM741集成运算放大器</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 78 页</div>
-      <h3>简化电路</h3>
-      <h3>7.4.3  BJT型LM741集成运算放大器</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 79 页</div>
-      <p>7.4.1  两级CMOS运算放大器
-7.4.2  全差分运算放大器
-7.4.3  BJT型LM741集成运算放大器
-7.4.4  电流反馈集成运算放大器</p>
-      <h3>7.4  集成运算放大器电路简介</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 80 页</div>
-      <h3>7.4.4  电流反馈集成运算放大器</h3>
-      <h3>简化电路</h3>
-      <p>发射极作为反相输入端，输入电阻较小，不再具有虚断特征。</p>
-      <h3>对地的等效电阻为r<sub>eq</sub></h3>
-      <h3>v<sub>O</sub>=iqr<sub>eq</sub></h3>
-      <h3>互阻增益</h3>
-      <h3>v<sub>P</sub>=v<sub>N</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 81 页</div>
-      <h3>7.4.4  电流反馈集成运算放大器</h3>
-      <h3>简化电路</h3>
-      <h3>v<sub>O</sub>=iqr<sub>eq</sub></h3>
-      <h3>互阻增益</h3>
-      <h3>v<sub>P</sub>=v<sub>N</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 82 页</div>
-      <h3>7.4.4  电流反馈集成运算放大器</h3>
-      <h3>应用</h3>
-      <p>相比标准运放，电流反馈运放不遵循增益带宽积为常数的规律。它特别适合高频、宽带信号的放大。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 83 页</div>
-      <p>7.1 模拟集成电路中的直流偏置技术
-7.2 差分式放大电路 
-*7.3 带有源负载的差分式放大电路
-7.4 集成运算放大器电路简介
-7.5 运放主要参数和相关应用问题</p>
-      <h3>7  模拟集成电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 84 页</div>
-      <p>7.5.1 输入直流误差特性（输入失调特性）
-7.5.2 差模特性
-7.5.3 共模特性
-7.5.4 大信号动态特性
-7.5.5 电源特性
-7.5.6 运放在单电源下工作</p>
-      <h3>7.5  运放主要参数和相关应用问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 85 页</div>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 86 页</div>
-      <h3>输入信号为零时</h3>
-      <h3>应有</h3>
-      <p>但由于失调电压、失调电流、偏置电流的存在使输出电压不为0。</p>
-      <p>为什么需要这个电阻？</p>
-      <p>为什么需要这个电阻？</p>
-      <h3>失调电压V<sub>I<sub>O</sub></sub>、失调电流I<sub>IO</sub>和偏置电流I<sub>IB</sub>带来的误差</h3>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-    </div>
 
-    <div class="section">
-      <div class="section-num">第 87 页</div>
-      <h3>失调电压V<sub>I<sub>O</sub></sub>、失调电流I<sub>IO</sub>和偏置电流I<sub>IB</sub>带来的误差</h3>
-      <h3>输入为零时的等效电路</h3>
-      <h3>解得误差电压</h3>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 88 页</div>
-      <h3>失调电压V<sub>I<sub>O</sub></sub>、失调电流I<sub>IO</sub>和偏置电流I<sub>IB</sub>带来的误差</h3>
-      <h3>当 R<sub>2</sub> = R<sub>1</sub>//Rf 时，可以消除偏置电流I<sub>IB</sub>引起的误差，此时</h3>
-      <h3>R<sub>2</sub>=R<sub>1</sub>//Rf常称为输入端电阻平衡条件</h3>
-      <p>（1＋Rf /R<sub>1</sub>）和Rf 越大，V<sub>I<sub>O</sub></sub>和I<sub>IO</sub>引起的输出误差电压也越大。</p>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 89 页</div>
-      <h3>关于调零</h3>
-      <h3>调零补偿</h3>
-      <h3>调零电路</h3>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 90 页</div>
-      <h3>741中的调零电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 91 页</div>
-      <h3>调零补偿</h3>
-      <p>由于目前高精度运放的V<sub>I<sub>O</sub></sub>、 I<sub>IO</sub> 、 I<sub>IB</sub>都非常小，所以大都不再提供调零端了。</p>
-      <h3>反相端加入补偿电路</h3>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-      <p>上述的调零方法都无法消除因温度变化由ΔV<sub>I<sub>O</sub></sub>/ΔT和ΔI<sub>IO</sub>/ΔT引起的输出误差。</p>
-      <h3>关于调零</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 92 页</div>
-      <p>R<sub>2</sub>如何取值？</p>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-      <p>如果I<sub>IB</sub>(R<sub>1</sub>//Rf)在输出误差中所占比例无足轻重，就无需添加R<sub>2</sub>，否则反而会引入更多的噪声。</p>
-      <h3>关于输入端的平衡电阻</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 93 页</div>
-      <h3>V<sub>I<sub>O</sub></sub>、I<sub>IO</sub>和I<sub>IB</sub>对积分电路的影响</h3>
-      <h3>实际常用的积分电路</h3>
-      <p>时间越长，误差越大，且易使输出进入饱和状态。</p>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 94 页</div>
-      <h3>有Rf 时</h3>
-      <h3>无Rf 时</h3>
-      <h3>7.5.1  输入直流误差特性（输入失调特性）</h3>
-      <h3>V<sub>I<sub>O</sub></sub>、I<sub>IO</sub>和I<sub>IB</sub>对积分电路的影响</h3>
-      <h3>当然，接入Rf会带来运算误差</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 95 页</div>
-      <p>7.5.1 输入直流误差特性（输入失调特性）
-7.5.2 差模特性
-7.5.3 共模特性
-7.5.4 大信号动态特性
-7.5.5 电源特性
-7.5.6 运放在单电源下工作</p>
-      <h3>7.5  运放主要参数和相关应用问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 96 页</div>
-      <h3>7.5.2  差模特性</h3>
-      <h3>1. 开环差模电压增益A<sub>vo</sub>和带宽BW</h3>
-      <h3>开环差模电压增益A<sub>vo</sub></h3>
-      <p>开环带宽BW (fH)</p>
-      <p>单位增益带宽 B<sub>WG</sub> (fT)</p>
-      <div class="formula">目前高速运放要求fT &gt; 50MHz，如AD801的fT＝800 MHz。宽带运放如OP<sub>A</sub>657C（FET输入级）A<sub>vo</sub>·fH＝1600 MHz。</div>
-      <h3>0dB以上斜线部分有增益带宽积为常数，即
-             AP✗fP = fT</h3>
-      <h3>增益为AP</h3>
-      <h3>频率为 fP</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 97 页</div>
-      <h3>7.5.2  差模特性</h3>
-      <h3>2. 差模输入电阻r<sub>id</sub>和输出电阻r<sub>o</sub></h3>
-      <div class="formula">BJT输入级的运放r<sub>id</sub>一般在几百千欧到数兆欧
-MOSFET为输入级的运放r<sub>id</sub>＞1011Ω
-超高输入电阻运放r<sub>id</sub>＞1013Ω、I<sub>IB</sub>≤0.040pA
-一般运放的r<sub>o</sub>＜200Ω，而超高速AD9610的r<sub>o</sub>＝0.05Ω。</div>
-      <h3>3. 最大差模输入电压Vidmax</h3>
-      <p>指集成运放的反相和同相输入端之间所能承受的最大电压值。</p>
-      <h3>最大差模输入电压超出电源电压零点几伏</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 98 页</div>
-      <h3>7.5.2  差模特性</h3>
-      <h3>4. 最大输出电压Vomax（输出摆幅）</h3>
-      <p>目前很多运放的最大输出电压可接近电源电压，即R<sub>RO</sub>（Rail-to-Rail Output）输出特性，可大幅提高电源效率，有利于低压电源或电池供电的应用。
-   具有R<sub>RO</sub>特性的运放一般只适合于较大负载电阻的微功率电路。</p>
-      <h3>5. 最大输出电流Iomax</h3>
-      <p>指在保证一定输出电压下的输出端最大电流，包括拉电流和灌电流，常用正负号区别。
-    因为Iomax与输出电压有关，所以很多数据手册中用输出短路电流Isc代替。
-        一般运放的Isc在几十至上百mA。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 99 页</div>
-      <p>7.5.1 输入直流误差特性（输入失调特性）
-7.5.2 差模特性
-7.5.3 共模特性
-7.5.4 大信号动态特性
-7.5.5 电源特性
-7.5.6 运放在单电源下工作</p>
-      <h3>7.5  运放主要参数和相关应用问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 100 页</div>
-      <h3>1. 共模抑制比K<sub>CMR</sub>和共模输入电阻r<sub>ic</sub></h3>
-      <h3>7.5.3  共模特性</h3>
-      <div class="formula">一般通用型运放K<sub>CMR</sub>为80～120 dB，高精度运放可达140dB，r<sub>ic</sub>≥100MΩ。</div>
-      <h3>2. 最大共模输入电压Vicmax</h3>
-      <p>运放作为电压跟随器时，使输出电压产生1%跟随误差的共模输入电压幅值。有些运放可达到正、负电源电压值，称为R<sub>RI</sub>（Rail -to-Rail Input）输入特性，即
-                 Vicmax▲V+，    -Vicmax ▲ V－。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 101 页</div>
-      <h3>具有R<sub>RO</sub>和R<sub>RI</sub>特性运放的优势</h3>
-      <h3>低电源电压下两种运放的电压摆幅</h3>
-      <h3>7.5.3  共模特性</h3>
-      <h3>v<sub>O</sub></h3>
-      <h3>v<sub>O</sub></h3>
-    </div>
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>掌握MOSFET和BJT镜像电流源、微电流源、多路电流源的原理</li>
+      <li>掌握差分式放大电路的结构、工作原理和动态分析（差模/共模）</li>
+      <li>理解共模抑制比K<sub>CMR</sub>的意义</li>
+      <li>了解集成运算放大器的内部电路结构</li>
+      <li>掌握运放的主要参数（输入失调电压/电流、共模抑制比、转换速率等）</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>7.1 模拟集成电路中的直流偏置技术</h2>
+    <p>在模拟集成电路中，广泛使用<strong>电流源</strong>作为偏置电路和有源负载，以替代分立元件电路中的大电阻。</p>
+
+    <h3>7.1.1 MOSFET电流源</h3>
+    <h4>1. 镜像电流源</h4>
+    <p>T1、T2的参数全同。只要满足 V<sub>GS</sub> > V<sub>TN</sub>，必有 V<sub>DS1</sub> > V<sub>GS</sub> − V<sub>TN</sub>，T1一定工作在恒流区。T2漏极接负载构成回路后，只要满足 V<sub>DS2</sub> > V<sub>GS</sub> − V<sub>TN</sub>，就一定工作在恒流区：</p>
+    <div class="formula">I<sub>O</sub> = I<sub>REF</sub> · (W/L)<sub>2</sub> / (W/L)<sub>1</sub></div>
+    <p>I<sub>O</sub>的电流值与负载无关。负载在一定范围内变化时（保证 V<sub>DS2</sub> > V<sub>GS</sub> − V<sub>TN</sub>），I<sub>O</sub>的电流值将保持不变，反映出I<sub>O</sub>的<strong>恒流特性</strong>。动态电阻（交流电阻）很大。</p>
+
+    <h4>2. 多路电流源电路</h4>
+    <p>除宽长比外，各管特性相同。通过设置不同的宽长比，可以从同一参考电流产生多个不同大小的输出电流。需保证所有管子工作在恒流区。</p>
+
+    <h4>耗尽型MOSFET电流源</h4>
+    <p>N沟道耗尽型管的夹断电压 V<sub>PN</sub> < 0。只需满足 V<sub>DS</sub> > −V<sub>PN</sub> 即可工作在恒流区。</p>
+
+    <h3>7.1.2 BJT电流源</h3>
+    <h4>1. 镜像电流源</h4>
+    <p>T1、T2的参数全同：</p>
+    <div class="formula">I<sub>O</sub> = I<sub>REF</sub> · (1 − 2/β)</div>
+    <p>当 β 很大时，I<sub>O</sub> ≈ I<sub>REF</sub>。动态电阻 r<sub>o</sub> 一般在几百千欧以上。</p>
+
+    <h4>2. 微电流源</h4>
+    <p>通过在T2发射极串联电阻 R<sub>e</sub>，可使 I<sub>O</sub> 远小于 I<sub>REF</sub>，产生微安级电流。</p>
+
+    <h4>3. 多路电流源</h4>
+    <p>T1、R1和T4支路产生基准电流 I<sub>REF</sub>；T1和T2、T4和T5构成镜像电流源；T1和T3、T4和T6构成微电流源。</p>
+  </div>
+
+  <div class="section">
+    <h2>7.2 差分式放大电路</h2>
+
+    <h3>7.2.1 MOSFET差分式放大电路</h3>
+
+    <h4>电路结构与基本概念</h4>
+    <p>两个输入端：v<sub>i1</sub>、v<sub>i2</sub>；两个输出端：v<sub>O1</sub>、v<sub>O2</sub>。要能够放大直流——采用直接耦合。</p>
+    <p>与单端（共源）放大电路相比，差分放大电路的最大特点是<strong>能有效抑制共模信号和零点漂移</strong>。</p>
+
+    <div class="def-box">
+      <strong>差模信号 v<sub>id</sub>：</strong>两个输入端信号之差，v<sub>id</sub> = v<sub>i1</sub> − v<sub>i2</sub>。差模信号大小相等、相位相反。<br>
+      <strong>共模信号 v<sub>ic</sub>：</strong>两个输入端信号的平均值，v<sub>ic</sub> = (v<sub>i1</sub> + v<sub>i2</sub>) / 2。共模信号大小相等、相位相同。
+    </div>
+
+    <h4>差模分析</h4>
+    <p>根据对称性，差模输入时源极公共端为<strong>虚地</strong>（交流电位为零）：</p>
+    <div class="formula">双端输出差模电压增益：A<sub>vd</sub> = v<sub>od</sub>/v<sub>id</sub> = −g<sub>m</sub>R<sub>d</sub></div>
+    <div class="formula">差模输入电阻：R<sub>id</sub> = 2R<sub>i</sub>（单端看入）</div>
+    <div class="formula">双端输出电阻：R<sub>o</sub> = R<sub>d1</sub> + R<sub>d2</sub> = 2R<sub>d</sub></div>
+
+    <h4>共模分析</h4>
+    <p>共模输入时，两管电流同时增大或减小，源极公共端电位随之变化，相当于每个管子的等效源极电阻为 2R<sub>SS</sub>（R<sub>SS</sub> 为尾电流源内阻）：</p>
+    <div class="formula">双端输出共模电压增益：A<sub>vc</sub> = v<sub>oc</sub>/v<sub>ic</sub> ≈ 0（理想对称时）</div>
+    <div class="formula">单端输出共模电压增益：A<sub>vc1</sub> ≈ −R<sub>d</sub> / (2R<sub>SS</sub>)</div>
+
+    <h4>共模抑制比</h4>
+    <div class="formula">K<sub>CMR</sub> = |A<sub>vd</sub> / A<sub>vc</sub>|</div>
+    <p>或用分贝表示：K<sub>CMR</sub>(dB) = 20lg|A<sub>vd</sub>/A<sub>vc</sub>|。K<sub>CMR</sub> 越大，抑制共模信号的能力越强。温度变化和电源电压波动等效于共模信号，差分放大电路通过高K<sub>CMR</sub>可有效抑制这些干扰。</p>
+
+    <div class="highlight"><strong>差分放大电路的分析方法：</strong>静态工作点分析与之前放大电路相同；动态分析时，利用叠加原理将差模和共模分开处理——这是差分放大电路分析的核心手段。</div>
+
+    <h4>传输特性</h4>
+    <p>差分放大电路的差模传输特性描述了输出电流（或电压）与差模输入电压的关系。小信号范围内近似线性，大信号时呈现非线性限幅特性。线性输入范围约为：|v<sub>id</sub>| ≤ 2V<sub>ov</sub>（V<sub>ov</sub> = V<sub>GS</sub>−V<sub>TN</sub> 为过驱动电压）。</p>
+
+    <h3>7.2.2 BJT差分式放大电路</h3>
+    <p>电路结构与MOSFET差分放大类似，分析方法相同。差模电压增益（双端输出）：</p>
+    <div class="formula">A<sub>vd</sub> = −β R<sub>c</sub> / r<sub>be</sub></div>
+    <p>共模电压增益和共模抑制比的公式与MOSFET差分放大电路类似，关键参数是尾电流源的动态内阻。</p>
+
+    <h3>7.2.3 差分式放大电路的传输特性</h3>
+    <p>差模传输特性为双曲正切函数：Δi<sub>C</sub> = I<sub>EE</sub> · tanh(v<sub>id</sub>/2V<sub>T</sub>)。小信号时（|v<sub>id</sub>| ≪ 2V<sub>T</sub> ≈ 52mV），特性近似线性。</p>
+  </div>
+
+  <div class="section">
+    <h2>7.4 集成运算放大器电路简介</h2>
+    <p>典型CMOS集成运放的内部结构：</p>
+    <ol>
+      <li><strong>输入级：</strong>差分放大电路（通常为PMOS或NMOS差分对），提供高输入阻抗和高共模抑制比</li>
+      <li><strong>中间级：</strong>共源放大电路，提供主要电压增益</li>
+      <li><strong>输出级：</strong>一般为AB类互补输出级（源极跟随器/共漏放大），提供低输出阻抗和较大的输出电流驱动能力</li>
+      <li><strong>偏置电路：</strong>电流源提供各级的直流偏置</li>
+    </ol>
+    <p>通过<strong>相位补偿电容</strong>（密勒电容）保证运放的稳定性。</p>
+  </div>
+
+  <div class="section">
+    <h2>7.5 运放主要参数和相关应用问题</h2>
+    <table>
+      <tr><th>参数</th><th>含义</th><th>理想值</th></tr>
+      <tr><td>输入失调电压 V<sub>IO</sub></td><td>使输出电压为零时所需加在输入端的补偿电压</td><td>0</td></tr>
+      <tr><td>输入失调电流 I<sub>IO</sub></td><td>两个输入端偏置电流之差</td><td>0</td></tr>
+      <tr><td>输入偏置电流 I<sub>IB</sub></td><td>两个输入端偏置电流的平均值</td><td>0</td></tr>
+      <tr><td>开环电压增益 A<sub>vo</sub></td><td>无反馈时的差模电压增益</td><td>∞</td></tr>
+      <tr><td>共模抑制比 K<sub>CMR</sub></td><td>差模增益与共模增益之比</td><td>∞</td></tr>
+      <tr><td>转换速率 SR</td><td>输出电压对大信号阶跃输入的最大变化速率</td><td>∞</td></tr>
+      <tr><td>单位增益带宽 f<sub>t</sub></td><td>A<sub>vo</sub> = 1 时的频率</td><td>∞</td></tr>
+    </table>
+    <p><strong>单电源工作：</strong>运放可以在单电源下工作，但需要提供合适的直流偏置以保证输入信号在共模输入范围内。</p>
+  </div>
 
-    <div class="section">
-      <div class="section-num">第 102 页</div>
-      <p>7.5.1 输入直流误差特性（输入失调特性）
-7.5.2 差模特性
-7.5.3 共模特性
-7.5.4 大信号动态特性
-7.5.5 电源特性
-7.5.6 运放在单电源下工作</p>
-      <h3>7.5  运放主要参数和相关应用问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 103 页</div>
-      <h3>7.5.4  大信号动态特性</h3>
-      <h3>1. 转换速率SR（Slew Rate）</h3>
-      <h3>即</h3>
-      <p>也称为“压摆率”，放大电路在闭环状态下，输入为大信号（例如阶跃信号）时，输出电压对时间的最大变化速率。</p>
-      <div class="formula">若信号为 vi＝Vimsin2□ft 
-则运放的SR必须满足 SR ≥ 2πfmaxVom</div>
-      <h3>SR通常取绝对值</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 104 页</div>
-      <h3>7.5.4  大信号动态特性</h3>
-      <h3>2. 全功率带宽BWP</h3>
-      <h3>运放输出最大峰值电压时允许的最高频率，即</h3>
-      <p>SR和BWP是大信号和高频信号工作时的重要指标
-一般通用型运放SR在1V/★s以下，741的SR= 0.5V/★s
-高速运放要求SR&gt;30V/★s以上。
-目前超高速的运放如AD9610的SR &gt; 3500V/★s。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 105 页</div>
-      <p>7.5.1 输入直流误差特性（输入失调特性）
-7.5.2 差模特性
-7.5.3 共模特性
-7.5.4 大信号动态特性
-7.5.5 电源特性
-7.5.6 运放在单电源下工作</p>
-      <h3>7.5  运放主要参数和相关应用问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 106 页</div>
-      <h3>7.5.5  电源特性</h3>
-      <h3>1. 电源电压抑制比KSV<sub>R</sub></h3>
-      <h3>衡量电源电压波动对输出电压的影响</h3>
-      <h3>2. 静态功耗P<sub>V</sub></h3>
-      <h3>当输入信号为零时，运放消耗的总功率</h3>
-      <div class="formula">P<sub>V</sub>＝V<sub>CCI<sub>CO</sub></sub>＋V<sub>EEI<sub>EO</sub></sub></div>
-      <h3>电源电压范围、最大耗散功耗P<sub>CO</sub>等</h3>
-      <h3>极限参数：</h3>
-      <h3>另外还有噪声特性等</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 107 页</div>
-      <p>7.5.1 输入直流误差特性（输入失调特性）
-7.5.2 差模特性
-7.5.3 共模特性
-7.5.4 大信号动态特性
-7.5.5 电源特性
-7.5.6 运放在单电源下工作</p>
-      <h3>7.5  运放主要参数和相关应用问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 108 页</div>
-      <h3>关键是将输出端的静态电压设置为电源电压的一半</h3>
-      <h3>对称的双电源工作</h3>
-      <h3>单电源工作</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 109 页</div>
-      <p>能否将输出端的静态电压设置在V<sub>CC</sub>/2处？</p>
-      <h3>741简化电路</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 110 页</div>
-      <h3>接入C1和C2避免信号源和负载影响静态工作点</h3>
-      <h3>设置输出静态电压</h3>
-      <h3>阻容耦合反相放大电路</h3>
-      <h3>vi 是正负对称的信号</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 111 页</div>
-      <h3>直流通路</h3>
-      <h3>交流通路</h3>
-      <h3>对 v<sub>P</sub>是电压跟随</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-      <h3>阻容耦合反相放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 112 页</div>
-      <h3>交流同相放大电路</h3>
-      <h3>直流通路</h3>
-      <h3>交流通路</h3>
-      <h3>输入电阻有限</h3>
-      <h3>vi 是正负对称的信号</h3>
-      <h3>交流电压增益为</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 113 页</div>
-      <h3>高输入阻抗交流同相放大电路</h3>
-      <h3>直流通路</h3>
-      <h3>交流通路</h3>
-      <h3>vn ▲ vp，输入端电流极小</h3>
-      <h3>交流电压增益为</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-      <h3>输入电阻大大提高</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 114 页</div>
-      <h3>直接耦合反相放大电路</h3>
-      <h3>电阻应满足关系：</h3>
-      <h3>此时输出电压</h3>
-      <h3>v<sub>O</sub>与v<sub>I</sub>的变化关系</h3>
-      <h3>直流偏移</h3>
-      <h3>反相放大</h3>
-      <h3>vi 是正负对称的信号</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 115 页</div>
-      <h3>须选用具有R<sub>RI</sub><sub>O</sub>特性的运放</h3>
-      <h3>7.5.6  运放在单电源下工作</h3>
-      <h3>v<sub>I</sub>为单极性电压信号时</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 116 页</div>
-      <h3>7.5.6  运放在单电源下工作</h3>
-      <h3>“浮地”工作方式</h3>
-      <h3>i<sub>Z</sub>min  ◀  i<sub>R</sub>+i<sub>L</sub>+i<sub>F</sub>  ◀ i<sub>Z</sub>max</h3>
-      <p>要求“浮地”与电源地之间对信号来说必须具有低阻特性，理想情况其阻抗为零。</p>
-      <h3>交流通路</h3>
-      <h3>end</h3>
-    </div>
   <div class="nav-links">
-    <a href="index.html">&larr; 返回首页</a>
-    <a href="ch05.html">&larr; 第5章 双极结型三极管(BJT)及其放大电路</a>
-    <a href="ch08.html">第8章 反馈放大电路 &rarr;</a>
+    <a href="ch05.html">← 第5章 双极结型三极管</a>
+    <a href="index.html">返回首页</a>
+    <a href="ch08.html">第8章 反馈放大电路 →</a>
   </div>
 </div>
-<div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT &middot; 第7章 模拟集成电路</p>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>华中科技大学《模拟电子技术基础》</p></div>
 </div>
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-header"><div class="nav-title">📂 章节导航</div><div class="nav-sub">模拟电子技术基础</div></div>
+  <div class="nav-section">基础理论</div><a href="ch01.html"><span class="num">1</span> 绪论</a><a href="ch02.html"><span class="num">2</span> 运算放大器</a><a href="ch03.html"><span class="num">3</span> 二极管及其电路</a>
+  <div class="nav-section">放大器件</div><a href="ch04.html"><span class="num">4</span> MOS场效应管</a><a href="ch05.html"><span class="num">5</span> 双极结型三极管</a>
+  <div class="nav-section">集成电路与系统</div><a href="ch07.html"><span class="num">7</span> 模拟集成电路</a><a href="ch08.html"><span class="num">8</span> 反馈放大电路</a>
+  <div class="nav-section">功率与输出</div><a href="ch09.html"><span class="num">9</span> 功率放大电路</a>
+  <a href="index.html"><span class="num">🏠</span> 返回首页</a>
+</div>
+<script>function toggleChapterNav(){document.getElementById('chapterNav').classList.toggle('open');}</script>
 </body>
 </html>

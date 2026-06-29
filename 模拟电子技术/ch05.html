@@ -3,789 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第5章 双极结型三极管(BJT)及其放大电路 - 模拟电子技术</title>
+<title>第5章 双极结型三极管 - 模拟电子技术</title>
 <style>
-  :root {
-    --primary: #1a3a5c;
-    --accent: #c0392b;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
-    --code-bg: #f0f4f8;
-  }
+  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #d35400; --accent-hover: #e67e22; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e; --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af; --tag-must-bg: #fee2e2; --tag-must-color: #991b1b; --tag-key-bg: #fef3c7; --tag-freq-bg: #dbeafe; --tag-info-bg: #f0fdf4; --tag-info-color: #166534; --chip-tag-orange-bg: #fdf2e9; --chip-tag-orange-color: #e67e22; --chip-tag-blue-bg: #e8f4fd; --chip-tag-green-bg: #f0f8f0; --chip-tag-green-color: #27ae60; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
+  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #f0a060; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830; --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0; --tag-must-bg: #3d1a1a; --tag-must-color: #e88080; --tag-key-bg: #3d3a1a; --tag-freq-bg: #1a2a3d; --tag-info-bg: #1a3d2a; --tag-info-color: #80c090; --chip-tag-orange-bg: #3d2a1a; --chip-tag-orange-color: #f0a060; --chip-tag-blue-bg: #1a2a3d; --chip-tag-green-bg: #1a3d1a; --chip-tag-green-color: #60d080; --heading-color: var(--ink); background-color: var(--paper); }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-  }
-  .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .topbar-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
-  .topbar a:hover { color: #fff; }
-  .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
-  .section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .section-num {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section h3 {
-    font-size: 1.1em;
-    color: var(--accent);
-    margin: 18px 0 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px dashed var(--border);
-  }
-  .section h3:first-of-type { margin-top: 0; }
-  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section p:last-child { margin-bottom: 0; }
-  .highlight {
-    background: #fffbe6;
-    border-left: 3px solid #f0c040;
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-size: 0.95em;
-  }
-  .def-box {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 10px 0;
-    font-size: 0.95em;
-  }
-  .def-box strong { color: var(--accent); }
-  .formula {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin: 10px 0;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 0.95em;
-  }
-  th, td {
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    text-align: center;
-  }
-  th {
-    background: var(--code-bg);
-    font-weight: 600;
-    color: var(--primary);
-  }
-  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .nav-links a {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--accent);
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-    font-size: 0.95em;
-  }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .nav-links span { flex: 1; }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
-  @media (max-width: 640px) {
-    .section { padding: 16px; }
-    .topbar h2 { font-size: 1em; }
-    table { font-size: 0.85em; }
-    th, td { padding: 6px 8px; }
-  }
+  body { font-family: var(--font); font-size: 12pt; line-height: 1.75; color: var(--ink); background: var(--paper); display: flex; min-height: 100vh; }
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)} .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)} .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px} .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)} .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0} .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
+  .topbar { background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15); } .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; } .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; } .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); } .section h2 { font-size: 1.3em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px; } .section h3 { font-size: 1.08em; color: var(--accent); margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--divider); } .section h3:first-of-type { margin-top: 0; } .section h4 { font-size: 1em; color: var(--ink); margin: 14px 0 6px; font-weight: 600; } .section p { margin-bottom: 8px; font-size: 0.95em; } .section ul, .section ol { margin: 8px 0 14px 22px; font-size: 0.95em; } .section li { margin-bottom: 6px; }
+  .highlight { background: var(--highlight-bg); border-left: 3px solid var(--highlight-border); padding: 12px 16px; margin: 14px 0; border-radius: 4px; font-size: 0.95em; } .highlight strong { color: var(--highlight-strong); } .def-box { background: var(--code-bg); border-radius: 6px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em; border: 1px solid var(--card-border); } .def-box strong { color: var(--accent); } .formula { text-align: center; font-size: 1.05em; padding: 12px 16px; background: var(--code-bg); border-radius: 6px; margin: 10px 0; font-weight: 500; letter-spacing: 0.5px; border: 1px solid var(--card-border); font-family: "Times New Roman", "Cascadia Code", monospace; } .checkpoint { background: var(--checkpoint-bg); border: 1px solid var(--checkpoint-border); border-radius: var(--radius); padding: 12px 16px; margin: 18px 0; font-size: 0.93em; } .checkpoint::before { content: '🧠 自查：'; font-weight: 700; color: var(--checkpoint-color); } .dark-mode .checkpoint { background: #1e2a3a; border-color: #2d4a5a; } .dark-mode .checkpoint::before { color: #6a82f0; }
+  .tag-must { background: var(--tag-must-bg); color: var(--tag-must-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-key { background: var(--tag-key-bg); color: #92400e; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-freq { background: var(--tag-freq-bg); color: #1e40af; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-info { background: var(--tag-info-bg); color: var(--tag-info-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .kp { font-weight: 700; color: var(--ink); } .exp { font-weight: 400; color: var(--ink-light); }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; } th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; } th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; } .dark-mode th { color: var(--ink); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; } .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; box-shadow: 0 2px 10px rgba(0,0,0,0.18); } .back2top:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  .theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; } .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
+  .chapter-nav-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px 0 0 8px; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97; opacity: 0.8; transition: all 0.2s; box-shadow: -2px 0 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; } .chapter-nav-toggle:hover { opacity: 1; }
+  .chapter-nav-panel { position: fixed; right: -260px; top: 50%; transform: translateY(-50%); width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px; box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96; transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1); padding: 16px 0 12px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--card-border); } .chapter-nav-panel.open { right: 0; } .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; } .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: #1a3a5c; } .chapter-nav-panel .nav-header .nav-sub { font-size: 0.72em; color: var(--ink-light); margin-top: 2px; } .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; } .chapter-nav-panel a { display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em; color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0; } .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); } .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; } .chapter-nav-panel a .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark); font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0; } .chapter-nav-panel a:hover .num { background: var(--accent); color: #fff; } .chapter-nav-panel a.current .num { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } body { font-size: 11pt; } } @media (max-width: 640px) { .section { padding: 18px 16px; } .topbar h2 { font-size: 1em; } .chapter-nav-panel { width: 200px; } table { font-size: 0.85em; } th, td { padding: 5px 8px; } .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; } }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-inner">
-    <a href="index.html">&larr; 返回首页</a>
-    <h2>第5章 双极结型三极管(BJT)及其放大电路</h2>
-    <a href="ch07.html">第7章 模拟集成电路 &rarr;</a>
+<nav class="sidebar">
+  <div class="sidebar-header"><div class="site-name">模拟电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div><a href="ch01.html"><span class="tag">1</span>绪论</a><a href="ch02.html"><span class="tag">2</span>运算放大器</a><a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div><a href="ch04.html"><span class="tag">4</span>MOS场效应管</a><a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div><a href="ch07.html"><span class="tag">7</span>模拟集成电路</a><a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与输出</div><a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
   </div>
-</div>
+</nav>
+<script>(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
+<div class="main-wrap">
+<div class="topbar"><div class="topbar-inner"><a href="ch04.html">← 第4章</a><h2>第5章 双极结型三极管及其放大电路</h2><a href="ch07.html">第7章 →</a></div></div>
 <div class="container">
-    <div class="section">
-      <div class="section-num">第 1 页</div>
-      <h3>5  双极结型三极管及其放大电路</h3>
-      <p>5.1 双极结型三极管（BJT）
-5.2 BJT放大电路 
-5.3  FET和BJT及其基本放大电路性能的比较
-*5.4  多级放大电路</p>
-    </div>
 
-    <div class="section">
-      <div class="section-num">第 2 页</div>
-      <p>5.1.1 BJT的结构简介
-5.1.2 BJT的工作原理
-5.1.3 BJT的I−V特性曲线 
-5.1.4 BJT的主要参数</p>
-      <h3>5.1  双极结型三极管（BJT）</h3>
-    </div>
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>掌握BJT的结构特点（NPN/PNP）、工作原理和放大条件</li>
+      <li>掌握BJT的I-V特性曲线（输入/输出特性）及三个工作区</li>
+      <li>掌握BJT的H参数小信号模型及其简化</li>
+      <li>掌握共射极放大电路的静态分析和动态分析</li>
+      <li>掌握共集电极（射极跟随器）和共基极放大电路的特点</li>
+      <li>理解FET与BJT及其基本放大电路性能的比较</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>5.1 双极结型三极管（BJT）</h2>
+
+    <h3>5.1.1 BJT的结构简介</h3>
+    <p>半导体三极管有两种类型：<strong>NPN型</strong>和<strong>PNP型</strong>。三个电极：集电极（Collector）、基极（Base）、发射极（Emitter）。</p>
+    <p><strong>结构特点：</strong></p>
+    <ul>
+      <li>发射区的掺杂浓度<strong>最高</strong></li>
+      <li>集电区掺杂浓度<strong>最低</strong>，且面积大</li>
+      <li>基区<strong>很薄</strong>，一般在几个微米至几十个微米，且掺杂浓度低于发射区</li>
+    </ul>
+
+    <h3>5.1.2 BJT的工作原理</h3>
+    <p>三极管的放大作用是在一定的外部条件控制下，通过载流子传输体现出来的。</p>
+    <ul>
+      <li>发射区：<strong>发射</strong>载流子</li>
+      <li>基区：<strong>传送和控制</strong>载流子</li>
+      <li>集电区：<strong>收集</strong>载流子</li>
+    </ul>
+
+    <div class="highlight"><strong>放大条件：</strong><br>
+    (1) <strong>内部条件：</strong>发射区杂质浓度远大于基区杂质浓度，且基区很薄。<br>
+    (2) <strong>外部条件：</strong>发射结正向偏置，集电结反向偏置。</div>
+
+    <h4>载流子传输过程（以NPN为例）</h4>
+    <p>发射结正偏 → 发射区向基区注入电子 → 基区中电子扩散到集电结边界 → 集电结反偏，内电场收集电子 → 形成较大的集电极电流。改变发射结正偏电压，则有不同的 i<sub>B</sub> 和 i<sub>E</sub>，从而导致不同的 i<sub>C</sub>。</p>
+
+    <h4>控制关系</h4>
+    <div class="formula">I<sub>C</sub> = α I<sub>E</sub> + I<sub>CBO</sub></div>
+    <div class="formula">I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub></div>
+    <p>通常 I<sub>C</sub> ≫ I<sub>CBO</sub>，α 为<strong>共基极电流放大系数</strong>，一般 α = 0.9~0.99。</p>
+    <div class="formula">I<sub>C</sub> = β I<sub>B</sub> + I<sub>CEO</sub>，&emsp;β = α/(1−α)</div>
+    <p>β 为<strong>共射极电流放大系数</strong>，一般 β 为几十到几百。</p>
+
+    <p>由于三极管内有两种载流子（自由电子和空穴）参与导电，故称为<strong>双极型三极管</strong>或BJT（Bipolar Junction Transistor）。</p>
+
+    <h4>三极管的三种组态</h4>
+    <table>
+      <tr><th>组态</th><th>公共端</th><th>输入</th><th>输出</th><th>电流关系</th></tr>
+      <tr><td>共基极(CB)</td><td>基极</td><td>发射极</td><td>集电极</td><td>i<sub>C</sub> = α i<sub>E</sub></td></tr>
+      <tr><td>共发射极(CE)</td><td>发射极</td><td>基极</td><td>集电极</td><td>i<sub>C</sub> = β i<sub>B</sub></td></tr>
+      <tr><td>共集电极(CC)</td><td>集电极</td><td>基极</td><td>发射极</td><td>i<sub>E</sub> = (1+β) i<sub>B</sub></td></tr>
+    </table>
+
+    <h3>5.1.3 BJT的I-V特性曲线</h3>
+    <h4>共射极输出特性曲线的三个区域</h4>
+    <table>
+      <tr><th>区域</th><th>条件</th><th>特点</th></tr>
+      <tr><td>截止区</td><td>v<sub>BE</sub> < 死区电压</td><td>i<sub>C</sub> ≈ 0（i<sub>B</sub> = 0曲线下方）</td></tr>
+      <tr><td>放大区</td><td>发射结正偏，集电结反偏</td><td>i<sub>C</sub> = β i<sub>B</sub>，曲线平行等距，v<sub>BE</sub>≈0.7V(Si)/0.2V(Ge)</td></tr>
+      <tr><td>饱和区</td><td>发射结正偏，集电结正偏或反偏电压很小</td><td>i<sub>C</sub>明显受v<sub>CE</sub>控制，v<sub>CE</sub>＜0.7V(Si)</td></tr>
+    </table>
+
+    <h3>5.1.4 BJT的主要参数</h3>
+    <ul>
+      <li><strong>电流放大系数：</strong>共射直流电流增益 β，交流电流增益 β<sub>ac</sub>（≈ β）</li>
+      <li><strong>极间反向电流：</strong>I<sub>CBO</sub>（集电结反向饱和电流）、I<sub>CEO</sub> = (1+β)I<sub>CBO</sub>（穿透电流）</li>
+      <li><strong>极限参数：</strong>I<sub>CM</sub>（最大集电极电流）、P<sub>CM</sub>（最大耗散功率）、V<sub>(BR)CEO</sub>（集射击穿电压）</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>5.2 BJT放大电路</h2>
+
+    <h3>5.2.1 基本共射极放大电路</h3>
+    <p><strong>静态工作点（Q点）估算：</strong>一般硅管 V<sub>BEQ</sub> = 0.7V，锗管 V<sub>BEQ</sub> = 0.2V，β 已知。</p>
+    <div class="formula">I<sub>BQ</sub> = (V<sub>CC</sub> − V<sub>BEQ</sub>) / R<sub>b</sub></div>
+    <div class="formula">I<sub>CQ</sub> = β I<sub>BQ</sub></div>
+    <div class="formula">V<sub>CEQ</sub> = V<sub>CC</sub> − I<sub>CQ</sub> R<sub>c</sub></div>
+
+    <h3>5.2.2 BJT放大电路的图解分析</h3>
+    <p>直流负载线：v<sub>CE</sub> = V<sub>CC</sub> − i<sub>C</sub> R<sub>c</sub>，与 i<sub>B</sub> = I<sub>BQ</sub> 的输出特性曲线交点即为Q点。</p>
+
+    <h3>5.2.3 BJT的小信号模型（H参数模型）</h3>
+    <p>H参数方程：</p>
+    <div class="formula">v<sub>be</sub> = h<sub>ie</sub> i<sub>b</sub> + h<sub>re</sub> v<sub>ce</sub></div>
+    <div class="formula">i<sub>c</sub> = h<sub>fe</sub> i<sub>b</sub> + h<sub>oe</sub> v<sub>ce</sub></div>
+
+    <p>四个H参数的物理意义：</p>
+    <ul>
+      <li><strong>h<sub>ie</sub>（r<sub>be</sub>）：</strong>输出端交流短路时的输入电阻</li>
+      <li><strong>h<sub>fe</sub>（β）：</strong>输出端交流短路时的正向电流传输比（电流放大系数）</li>
+      <li><strong>h<sub>re</sub>（μ<sub>T</sub>）：</strong>输入端交流开路时的反向电压传输比（很小，10⁻³~10⁻⁴）</li>
+      <li><strong>h<sub>oe</sub>（1/r<sub>ce</sub>）：</strong>输入端交流开路时的输出电导（r<sub>ce</sub> 很大，约100kΩ）</li>
+    </ul>
+
+    <h4>简化H参数模型</h4>
+    <p>忽略 μ<sub>T</sub>（很小）和 r<sub>ce</sub>（很大），得到简化模型：</p>
+    <ul>
+      <li><strong>β i<sub>b</sub></strong> 是受控源，且为<strong>电流控制电流源（CCCS）</strong></li>
+      <li>电流方向与 i<sub>b</sub> 的方向是关联的</li>
+    </ul>
+    <p>r<sub>be</sub> 的估算公式：</p>
+    <div class="formula">r<sub>be</sub> = r<sub>bb'</sub> + (1+β) · V<sub>T</sub>/I<sub>EQ</sub> ≈ 200Ω + (1+β) · 26mV/I<sub>EQ</sub></div>
+    <p>其中对于低频小功率管 r<sub>bb'</sub> ≈ 200Ω。</p>
+
+    <div class="highlight"><strong>注意：</strong>H参数都是小信号参数（微变参数/交流参数），与工作点有关，只适合对交流信号的分析。不能用万用表"欧姆"档测量b、e两极之间的电阻来获得r<sub>be</sub>。</div>
+
+    <h3>5.2.4 共射极放大电路动态分析</h3>
+    <div class="formula">电压增益：A<sub>v</sub> = v<sub>o</sub>/v<sub>i</sub> = −β(R<sub>c</sub> ∥ R<sub>L</sub>) / r<sub>be</sub></div>
+    <div class="formula">输入电阻：R<sub>i</sub> = R<sub>b</sub> ∥ r<sub>be</sub></div>
+    <div class="formula">输出电阻：R<sub>o</sub> = R<sub>c</sub></div>
+
+    <h3>5.2.5 共集电极和共基极放大电路</h3>
+    <table>
+      <tr><th>特性</th><th>共射(CE)</th><th>共集(CC)射极跟随器</th><th>共基(CB)</th></tr>
+      <tr><td>电压增益</td><td>−βR<sub>L</sub>'/r<sub>be</sub> 高</td><td>≈1 低</td><td>βR<sub>L</sub>'/r<sub>be</sub> 中等</td></tr>
+      <tr><td>输入电阻</td><td>R<sub>b</sub>∥r<sub>be</sub> 中等</td><td>很高</td><td>低（≈r<sub>be</sub>/(1+β)）</td></tr>
+      <tr><td>输出电阻</td><td>R<sub>c</sub> 中等</td><td>很低</td><td>R<sub>c</sub> 中等</td></tr>
+      <tr><td>输入输出相位</td><td>反相</td><td>同相</td><td>同相</td></tr>
+      <tr><td>典型应用</td><td>电压放大</td><td>缓冲/阻抗变换</td><td>高频/宽带放大</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>5.3 FET和BJT及其基本放大电路性能的比较</h2>
+    <table>
+      <tr><th>比较项目</th><th>FET (MOSFET)</th><th>BJT</th></tr>
+      <tr><td>控制方式</td><td>电压控制（VCCS），g<sub>m</sub>v<sub>gs</sub></td><td>电流控制（CCCS），βi<sub>b</sub></td></tr>
+      <tr><td>输入电阻</td><td>极高（>10⁹Ω）</td><td>中等（r<sub>be</sub>约1kΩ）</td></tr>
+      <tr><td>噪声</td><td>较低</td><td>较高</td></tr>
+      <tr><td>温度稳定性</td><td>较好（存在零温度系数点）</td><td>较差（I<sub>CBO</sub>受温度影响大）</td></tr>
+      <tr><td>跨导/增益</td><td>g<sub>m</sub>较小</td><td>β较大，增益更高</td></tr>
+      <tr><td>速度/频率</td><td>受寄生电容限制</td><td>受少子存储效应限制</td></tr>
+      <tr><td>集成度</td><td>高（CMOS工艺）</td><td>较低</td></tr>
+    </table>
+  </div>
 
-    <div class="section">
-      <div class="section-num">第 3 页</div>
-      <h3>5.1.1  BJT的结构简介</h3>
-      <h3>外形</h3>
-      <h3>(a) 小功率管                    (b) 大功率管             (c) 中功率管</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 4 页</div>
-      <h3>结构示意图</h3>
-      <h3>NP<sub>N</sub>型管结构示意图</h3>
-      <h3>5.1.1  BJT的结构简介</h3>
-      <h3>P<sub>NP</sub>型管电路符号</h3>
-      <h3>P<sub>NP</sub>型管结构示意图</h3>
-      <h3>NP<sub>N</sub>型管电路符号</h3>
-      <p>半导体三极管的结构示意图如下图所示。它有两种类型：NP<sub>N</sub>型和P<sub>NP</sub>型。</p>
-      <h3>Collector</h3>
-      <h3>Base</h3>
-      <h3>Emitter</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 5 页</div>
-      <h3>结构示意图</h3>
-      <h3>5.1.1  BJT的结构简介</h3>
-      <h3>集成电路中典型NP<sub>N</sub>型BJT的截面图</h3>
-      <h3>结构特点：</h3>
-      <p>· 发射区的掺杂浓度最高；</p>
-      <p>· 集电区掺杂浓度最低，且面积大；</p>
-      <p>· 基区很薄，一般在几个微米至几十个微米，且掺杂浓度低于发射区。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 6 页</div>
-      <p>5.1.1 BJT的结构简介
-5.1.2 BJT的工作原理
-5.1.3 BJT的I-V特性曲线 
-5.1.4 BJT的主要参数</p>
-      <h3>5.1  双极结型三极管（BJT）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 7 页</div>
-      <p>三极管的放大作用是在一定的外部条件控制下，通过载流子传输体现出来的。</p>
-      <h3>各区域作用</h3>
-      <h3>发射区：发射载流子
-集电区：收集载流子
-基区：传送和控制载流子</h3>
-      <h3>外部条件：发射结正偏，集电结反偏</h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 8 页</div>
-      <h3>1. 内部载流子的传输过程</h3>
-      <h3>（以NP<sub>N</sub>为例）</h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-      <h3>v<sub>CB</sub>= -v<sub>D</sub></h3>
-      <h3>i<sub>C</sub>= -i<sub>D</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 9 页</div>
-      <h3>1. 内部载流子的传输过程</h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-      <p>发射结正偏，发射区向基区注入载流子，基区有了大量与原基区少数载流子相同极性的载流子。</p>
-      <p>从而集电区收集到大量载流子，形成较大的集电极电流。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 10 页</div>
-      <h3>1. 内部载流子的传输过程</h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-      <p>改变发射结正偏电压，则有不同的i<sub>B</sub>和i<sub>E</sub>,从而导致不同的i<sub>C</sub>。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 11 页</div>
-      <h3>1. 内部载流子的传输过程</h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-      <p>发射结正偏电压与发射极电流的关系就是P<sub>N</sub>结正向特性。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 12 页</div>
-      <h3>I<sub>C</sub>= I<sub>CN</sub>+ I<sub>CBO</sub></h3>
-      <h3>I<sub>E</sub>=I<sub>B</sub>+ I<sub>C</sub></h3>
-      <h3>2. 控制关系的实现</h3>
-      <h3>通常   I<sub>C</sub> &gt;&gt; I<sub>CBO</sub></h3>
-      <p>▶ 为电流放大系数。它只与管子的结构尺寸和掺杂浓度有关，与外加电压无关。一般▶ =0.9▪0.99。</p>
-      <p>由于三极管内有两种载流子(自由电子和空穴)参与导电，故称为双极型三极管或BJT (Bipolar Junction Tr<sub>ansistor</sub>)。</p>
-      <h3>5.1.2  BJT的工作原理</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 13 页</div>
-      <h3>根据</h3>
-      <h3>I<sub>E</sub>=I<sub>B</sub>+ I<sub>C</sub></h3>
-      <h3>I<sub>C</sub>= I<sub>CN</sub>+ I<sub>CBO</sub></h3>
-      <h3>且令</h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-      <h3>2. 控制关系的实现</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 14 页</div>
-      <h3>5.1.2  BJT的工作原理</h3>
-      <p>综上所述，三极管的放大作用，主要是依靠它的发射极电流能够通过基区传输，然后到达集电极而实现的。
-实现这一传输过程的两个条件是：
-（1）内部条件：发射区杂质浓度远大于基区杂质浓度，且基区很薄。
-（2）外部条件：发射结正向偏置，集电结反向偏置。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 15 页</div>
-      <h3>3. 三极管的三种组态</h3>
-      <h3>（a）共基极         （b）共发射极          （c）共集电极</h3>
-      <h3>i<sub>C</sub> =▶ i<sub>E</sub>               i<sub>C</sub> =▼ i<sub>B</sub>                i<sub>E</sub> =(1+▼ )i<sub>B</sub></h3>
-      <h3>5.1.2  BJT的工作原理</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 16 页</div>
-      <p>5.1.1 BJT的结构简介
-5.1.2 BJT的工作原理
-5.1.3 BJT的I−V特性曲线 
-5.1.4 BJT的主要参数</p>
-      <h3>5.1  双极结型三极管（BJT）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 17 页</div>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-      <h3>1. 共基极连接时的I-V特性曲线</h3>
-      <h3>输入特性曲线</h3>
-      <h3>基本关系</h3>
-      <p>随着v<sub>CB</sub>的增加，外加电压增强了集电结内电场，集电结收集载流子能力增强，使得在同样的v<sub>BE</sub>下，i<sub>E</sub>略有增加，特性曲线左移。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 18 页</div>
-      <h3>1. 共基极连接时的I-V特性曲线</h3>
-      <h3>输出特性曲线</h3>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 19 页</div>
-      <h3>1. 共基极连接时的I-V特性曲线</h3>
-      <h3>输出特性曲线</h3>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 20 页</div>
-      <h3>2. 共射极连接时的I-V特性曲线</h3>
-      <h3>输入特性曲线</h3>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 21 页</div>
-      <h3>2. 共射极连接时的I-V特性曲线</h3>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-      <h3>输出特性曲线</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 22 页</div>
-      <h3>v<sub>CE</sub>= v<sub>CB</sub> + v<sub>BE</sub></h3>
-      <h3>v<sub>CE</sub>= 0V时，集电结正偏，无收集载流子能力</h3>
-      <h3>2. 共射极连接时的I-V特性曲线</h3>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-      <h3>输出特性曲线</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 23 页</div>
-      <h3>2. 共射极连接时的I-V特性曲线</h3>
-      <h3>5.1.3  BJT的I-V特性曲线</h3>
-      <h3>输出特性曲线</h3>
-      <p>饱和区：i<sub>C</sub>明显受v<sub>CE</sub>控制的区域，该区域内，一般v<sub>CE</sub>＜0.7V (硅管)。此时，发射结正偏，集电结正偏或反偏电压很小。</p>
-      <h3>输出特性曲线的三个区域:</h3>
-      <p>截止区：i<sub>C</sub>接近零的区域，相当i<sub>B</sub>=0的曲线的下方。此时， v<sub>BE</sub>小于死区电压。</p>
-      <p>放大区：i<sub>C</sub>平行于v<sub>CE</sub>轴的区域，曲线基本平行等距。此时，发射结正偏，集电结反偏。</p>
-      <h3>v<sub>BE</sub>▲0.7V或0.2V，i<sub>C</sub>=▼ i<sub>B</sub></h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 24 页</div>
-      <p>5.1.1 BJT的结构简介
-5.1.2 BJT的工作原理
-5.1.3 BJT的I−V特性曲线 
-5.1.4 BJT的主要参数</p>
-      <h3>5.1  双极结型三极管（BJT）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 25 页</div>
-      <h3>自学</h3>
-      <h3>5.1.4  BJT的主要参数</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 26 页</div>
-      <h3>5  双极结型三极管及其放大电路</h3>
-      <p>5.1 双极结型三极管（BJT）
-5.2 BJT放大电路 
-5.3  FET和BJT及其基本放大电路性能的比较
-*5.4  多级放大电路</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 27 页</div>
-      <p>5.2.1  基本共射极放大电路
-5.2.2  BJT放大电路的图解分析
-5.2.3  BJT的小信号模型
-5.2.4  共射极放大电路
-5.2.5  共集电极和共基极放大电路</p>
-      <h3>5.2  BJT放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 28 页</div>
-      <h3>5.2.1  基本共射极放大电路</h3>
-      <h3>1.  发射结正偏、集电结反偏条件的建立</h3>
-      <h3>直流通路</h3>
-      <h3>静态工作点（Q点）:</h3>
-      <p>一般硅管V<sub>BEQ</sub>=0.7V，锗管V<sub>BEQ</sub>=0.2V，▼ 已知。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 29 页</div>
-      <h3>5.2.1  基本共射极放大电路</h3>
-      <h3>2.  动态工作过程</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 30 页</div>
-      <p>5.2.1  基本共射极放大电路
-5.2.2  BJT放大电路的图解分析
-5.2.3  BJT的小信号模型
-5.2.4  共射极放大电路
-5.2.5  共集电极和共基极放大电路</p>
-      <h3>5.2  BJT放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 31 页</div>
-      <h3>5.2.2  BJT放大电路的图解分析</h3>
-      <h3>1.  静态工作点</h3>
-      <div class="formula">v<sub>CE</sub>＝V<sub>CC</sub>－i<sub>CR</sub>c</div>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 32 页</div>
-      <h3>5.2.2  BJT放大电路的图解分析</h3>
-      <h3>2.  动态工作情况</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 33 页</div>
-      <h3>5.2.2  BJT放大电路的图解分析</h3>
-      <h3>2.  动态工作情况</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 34 页</div>
-      <p>5.2.1  基本共射极放大电路
-5.2.2  BJT放大电路的图解分析
-5.2.3  BJT的小信号模型
-5.2.4  共射极放大电路
-5.2.5  共集电极和共基极放大电路</p>
-      <h3>5.2  BJT放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 35 页</div>
-      <h3>1.  H参数的引出</h3>
-      <h3>在小信号情况下，对上两式取全微分得</h3>
-      <h3>用小信号交流分量表示</h3>
-      <h3>vbe= hieib+ hr<sub>evce</sub></h3>
-      <h3>ic= hfeib+ hoevce</h3>
-      <h3>对于BJT双口网络，已知输入输出特性曲线如下：</h3>
-      <h3>i<sub>B</sub>=f(v<sub>BE</sub>)▼v<sub>CE</sub>=const</h3>
-      <h3>i<sub>C</sub>=f(v<sub>CE</sub>)▼i<sub>B</sub>=const</h3>
-      <h3>可以写成：</h3>
-      <h3>BJT双口网络</h3>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 36 页</div>
-      <h3>1.  H参数的引出</h3>
-      <p>输出端交流短路时的输入电阻；</p>
-      <p>输出端交流短路时的正向电流传输比或电流放大系数；</p>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 37 页</div>
-      <h3>1.  H参数的引出</h3>
-      <p>输入端交流开路时的反向电压传输比；</p>
-      <p>输入端交流开路时的输出电导。</p>
-      <p>四个参数量纲各不相同，故称为混合参数（H参数）。</p>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 38 页</div>
-      <h3>2.  BJT的H参数小信号模型</h3>
-      <h3>根据</h3>
-      <h3>可得小信号模型</h3>
-      <h3>BJT双口网络</h3>
-      <p>◆  H参数都是小信号参数，即微变参数或交流参数。
-◆  H参数与工作点有关。
-◆  H参数都是微变参数，所以只适合对交流信号的分析。</p>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 39 页</div>
-      <h3>3.  小信号模型的简化</h3>
-      <h3>即 r<sub>be</sub>= hie   ▼ = hfe
-   μT = hr<sub>e</sub>   r<sub>ce</sub>= 1/hoe</h3>
-      <h3>一般采用习惯符号</h3>
-      <h3>则BJT的H参数模型为</h3>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 40 页</div>
-      <p>μT很小，一般为10-3▪10-4 ，
- r<sub>ce</sub>很大，约为100k✓ ，
-一般可忽略它们的影响，得到简化电路。</p>
-      <p>◆ ▼ ib 是受控源 ，且为电流控制电流源(CCCS)；
-◆ 电流方向与ib的方向是关联的。</p>
-      <h3>3.  小信号模型的简化</h3>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 41 页</div>
-      <h3>4.  H参数值的确定</h3>
-      <p>▼ 一般用测试仪测出；</p>
-      <p>r<sub>be</sub> 与Q点有关，可用图示仪测出。</p>
-      <h3>一般也用公式估算 r<sub>be</sub> ，即</h3>
-      <h3>▲ r<sub>bb</sub>▶ + (1+ ▼ ) r<sub>e</sub></h3>
-      <div class="formula">其中对于低频小功率管    r<sub>bb</sub>▶≈200✓</div>
-      <h3># 若用万用表的“欧姆”档测量b、e两极之间的电阻，是否为r<sub>be</sub>?</h3>
-      <h3>5.2.3  BJT的小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 42 页</div>
-      <p>5.2.1  基本共射极放大电路
-5.2.2  BJT放大电路的图解分析
-5.2.3  BJT的小信号模型
-5.2.4  共射极放大电路
-5.2.5  共集电极和共基极放大电路</p>
-      <h3>5.2  BJT放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 43 页</div>
-      <h3>5.2.4  共射极放大电路</h3>
-      <p>例5.4.1  已知图示基极分压式射极偏置共射极放大电路中， V<sub>CC</sub>=16V，Rb1 =56k✓，Rb2=20k✓，Re=2k✓ ，Rc=3.3k✓， R<sub>L</sub>=6.2k✓，Rsi=500✓，BJT的▼ =80，r<sub>ce</sub>=100k✓ ， V<sub>BEQ</sub>=0.7V。设电容Cb1、Cb2对交流信号可视为短路。试计算A<sub>v</sub>、Ri、 A<sub>v</sub>s= vo/vs、Ro 。</p>
-      <h3>解：</h3>
-      <h3>①由直流通路求静态工作点</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 44 页</div>
-      <p>例5.4.1  已知图示基极分压式射极偏置共射极放大电路中， V<sub>CC</sub>=16V，Rb1 =56k✓，Rb2=20k✓，Re=2k✓ ，Rc=3.3k✓， R<sub>L</sub>=6.2k✓，Rsi=500✓，BJT的▼ =80，r<sub>ce</sub>=100k✓ ， V<sub>BEQ</sub>=0.7V。设电容Cb1、Cb2对交流信号可视为短路。试计算A<sub>v</sub>、Ri、 A<sub>v</sub>s= vo/vs、Ro 。</p>
-      <h3>解：</h3>
-      <h3>①由直流通路求静态工作点</h3>
-      <h3>求得 I<sub>EQ</sub> ▲ 1.76 mA</h3>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>与用戴维宁等效电路方法求得结果存在误差</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 45 页</div>
-      <h3>②动态指标分析</h3>
-      <h3>画小信号等效电路</h3>
-      <h3>解：</h3>
-      <h3>H参数 r<sub>be</sub></h3>
-      <h3>5.2.4  共射极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 46 页</div>
-      <h3>电压增益A<sub>v</sub></h3>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>②动态指标分析</h3>
-      <h3>解：</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 47 页</div>
-      <h3>输入电阻Ri</h3>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>②动态指标分析</h3>
-      <h3>解：</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 48 页</div>
-      <h3>输入电阻Ri</h3>
-      <p>式中(1+▼)Re是发射极支路电阻Re折算到基极支路时的等效电阻。</p>
-      <p>发射极支路电阻折算到基极支路需要将电阻扩大(1+▼)倍；反之，基极支路电阻折算到发射极支路需要将电阻缩小(1+▼)倍。</p>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>②动态指标分析</h3>
-      <h3>解：</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 49 页</div>
-      <h3>源电压增益A<sub>v</sub>s</h3>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>②动态指标分析</h3>
-      <h3>解：</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 50 页</div>
-      <h3>输出电阻Ro</h3>
-      <h3>基极回路根据KV<sub>L</sub>得：</h3>
-      <h3>集电极回路根据KV<sub>L</sub>得：</h3>
-      <h3>其中</h3>
-      <h3>得</h3>
-      <h3>所以</h3>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>②动态指标分析</h3>
-      <h3>解：</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 51 页</div>
-      <h3>输出电阻Ro</h3>
-      <h3>通常</h3>
-      <h3>所以</h3>
-      <h3>= 3.3 k✓</h3>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>②动态指标分析</h3>
-      <h3>解：</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 52 页</div>
-      <h3>③讨论</h3>
-      <h3>解：</h3>
-      <p>放大电路的电压增益A<sub>v</sub>很小，只有1.05倍，其原因是发射极接入了电阻Re。在两端并联一个大电容可以消除Re的影响。</p>
-      <h3>5.2.4  共射极放大电路</h3>
-      <h3>稳定静态工作点</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 53 页</div>
-      <h3>③讨论</h3>
-      <h3>解：</h3>
-      <h3>此时小信号等效电路</h3>
-      <h3>电压增益变为</h3>
-      <h3>输入电阻变为</h3>
-      <h3>5.2.4  共射极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 54 页</div>
-      <p>5.2.1  基本共射极放大电路
-5.2.2  BJT放大电路的图解分析
-5.2.3  BJT的小信号模型
-5.2.4  共射极放大电路
-5.2.5  共集电极和共基极放大电路</p>
-      <h3>5.2  BJT放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 55 页</div>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>1.  共集电极放大电路</h3>
-      <h3>由直流通路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 56 页</div>
-      <h3>交流通路</h3>
-      <h3>小信号等效电路</h3>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>1.  共集电极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 57 页</div>
-      <h3>由</h3>
-      <h3>得电压增益</h3>
-      <h3>其中</h3>
-      <h3>通常有</h3>
-      <h3>所以</h3>
-      <h3>电压跟随器</h3>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>1.  共集电极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 58 页</div>
-      <h3>输入电阻</h3>
-      <h3>输入电阻大</h3>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>1.  共集电极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 59 页</div>
-      <h3>输出电阻</h3>
-      <h3>其中</h3>
-      <h3>得</h3>
-      <h3>输出电阻小</h3>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>1.  共集电极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 60 页</div>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>1.  共集电极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 61 页</div>
-      <h3>5.2.5  共集电极和共基极放大电路</h3>
-      <h3>2.  共基极放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 62 页</div>
-      <h3>电压增益：</h3>
-      <h3>输入电阻：</h3>
-      <h3>输出电阻：</h3>
-      <h3>共射极电路</h3>
-      <h3>共集电极电路</h3>
-      <h3>共基极电路</h3>
-      <h3>相位关系：</h3>
-      <h3>反相</h3>
-      <h3>同相</h3>
-      <h3>同相</h3>
-      <h3>用途：</h3>
-      <h3>多级放大电路的中间级</h3>
-      <h3>输入级、中间级、输出级</h3>
-      <h3>高频或宽频带电路</h3>
-      <h3>3.  BJT放大电路三种组态的比较</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 63 页</div>
-      <h3>5  双极结型三极管及其放大电路</h3>
-      <p>5.1 双极结型三极管（BJT）
-5.2 BJT放大电路 
-5.3  FET和BJT及其基本放大电路性能的比较
-*5.4  多级放大电路</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 64 页</div>
-      <p>FET和BJT内部都含有两个P<sub>N</sub>结，外部都有3个电极。它们有如下的对应关系：
-                             FET             BJT
-                           栅极g    ↑   基极b
-                           源极s    ↑    发射极e
-                           漏极d    ↑   集电极c</p>
-      <h3>5.3  FET和BJT及其基本放大电路性能的比较</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 66 页</div>
-      <h3>v<sub>BC</sub> ◀ 0</h3>
-      <h3>硅管）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 67 页</div>
-      <h3>5  双极结型三极管及其放大电路</h3>
-      <p>5.1 双极结型三极管（BJT）
-5.2 BJT放大电路 
-5.3  FET和BJT及其基本放大电路性能的比较
-*5.4  多级放大电路</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 68 页</div>
-      <h3>1. 复合管的主要特性</h3>
-      <h3>5.4.2  共集−共集放大电路</h3>
-      <h3>复合管</h3>
-      <div class="formula">r<sub>be</sub>＝r<sub>be1</sub>＋(1＋▼1)r<sub>be2</sub></div>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 69 页</div>
-      <h3>1. 复合管的主要特性</h3>
-      <h3>5.4.2  共集−共集放大电路</h3>
-      <div class="formula">r<sub>be</sub>＝r<sub>be1</sub>＋(1＋▼1)r<sub>be2</sub></div>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 70 页</div>
-      <h3>1. 复合管的主要特性</h3>
-      <h3>5.4.2  共集−共集放大电路</h3>
-      <div class="formula">r<sub>be</sub>＝r<sub>be1</sub></div>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 71 页</div>
-      <h3>1. 复合管的主要特性</h3>
-      <h3>5.4.2  共集−共集放大电路</h3>
-      <h3>MOS管与BJT组成的复合管</h3>
-      <h3>end</h3>
-    </div>
   <div class="nav-links">
-    <a href="index.html">&larr; 返回首页</a>
-    <a href="ch04.html">&larr; 第4章 MOS场效应管及其放大电路</a>
-    <a href="ch07.html">第7章 模拟集成电路 &rarr;</a>
+    <a href="ch04.html">← 第4章 MOS场效应管</a>
+    <a href="index.html">返回首页</a>
+    <a href="ch07.html">第7章 模拟集成电路 →</a>
   </div>
 </div>
-<div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT &middot; 第5章 双极结型三极管(BJT)及其放大电路</p>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>华中科技大学《模拟电子技术基础》</p></div>
 </div>
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-header"><div class="nav-title">📂 章节导航</div><div class="nav-sub">模拟电子技术基础</div></div>
+  <div class="nav-section">基础理论</div>
+  <a href="ch01.html"><span class="num">1</span> 绪论</a><a href="ch02.html"><span class="num">2</span> 运算放大器</a><a href="ch03.html"><span class="num">3</span> 二极管及其电路</a>
+  <div class="nav-section">放大器件</div>
+  <a href="ch04.html"><span class="num">4</span> MOS场效应管</a><a href="ch05.html"><span class="num">5</span> 双极结型三极管</a>
+  <div class="nav-section">集成电路与系统</div>
+  <a href="ch07.html"><span class="num">7</span> 模拟集成电路</a><a href="ch08.html"><span class="num">8</span> 反馈放大电路</a>
+  <div class="nav-section">功率与输出</div>
+  <a href="ch09.html"><span class="num">9</span> 功率放大电路</a>
+  <a href="index.html"><span class="num">🏠</span> 返回首页</a>
+</div>
+<script>function toggleChapterNav(){document.getElementById('chapterNav').classList.toggle('open');}</script>
 </body>
 </html>

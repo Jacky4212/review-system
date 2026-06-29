@@ -6,104 +6,120 @@
 <title>模拟电子技术 - 复习系统</title>
 <style>
   :root {
-    --primary: #1a3a5c;
-    --accent: #2d7fc1;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
+    --paper: #fdf6e3; --paper-dark: #f5ecd7;
+    --ink: #2c2c2c; --ink-light: #555;
+    --accent: #d35400; --accent-hover: #e67e22;
+    --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
+    --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
+    --code-bg: #eee8d8;
+    --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e;
+    --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af;
+    --tag-must-bg: #fee2e2; --tag-must-color: #991b1b;
+    --tag-key-bg: #fef3c7; --tag-freq-bg: #dbeafe; --tag-info-bg: #f0fdf4; --tag-info-color: #166534;
+    --chip-tag-orange-bg: #fdf2e9; --chip-tag-orange-color: #e67e22;
+    --chip-tag-blue-bg: #e8f4fd; --chip-tag-green-bg: #f0f8f0; --chip-tag-green-color: #27ae60;
+    --tag-red-color: #c0392b; --tag-teal-color: #16a085; --tag-purple-color: #8e44ad;
+    --tag-blue-color: #2980b9; --tag-orange-color: #d35400; --tag-pink-color: #e91e63; --tag-cyan-color: #1abc9c;
+    --heading-color: #1a3a5c;
+    --ram-bg: #e8f4fd; --rom-bg: #fdf2e9; --rom-color: #e67e22; --card-bg2: #f0f4f8; --code-text: #8a4b1e;
+    --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+  }
+  .dark-mode {
+    --paper: #1a1a2e; --paper-dark: #22223a;
+    --ink: #e0e0ec; --ink-light: #8888aa;
+    --accent: #f0a060; --accent-hover: #e88060;
+    --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
+    --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
+    --code-bg: #2a2a3e;
+    --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830;
+    --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0;
+    --tag-must-bg: #3d1a1a; --tag-must-color: #e88080;
+    --tag-key-bg: #3d3a1a; --tag-freq-bg: #1a2a3d; --tag-info-bg: #1a3d2a; --tag-info-color: #80c090;
+    --chip-tag-orange-bg: #3d2a1a; --chip-tag-orange-color: #f0a060;
+    --chip-tag-blue-bg: #1a2a3d; --chip-tag-green-bg: #1a3d1a; --chip-tag-green-color: #60d080;
+    --tag-red-color: #e88080; --tag-teal-color: #60d0b0; --tag-purple-color: #b080d0;
+    --tag-blue-color: #80b8e0; --tag-orange-color: #e88060; --tag-pink-color: #e880a0; --tag-cyan-color: #60d0b8;
+    --heading-color: var(--ink);
+    --ram-bg: #1a2a3d; --rom-bg: #3d2a1a; --rom-color: #f0a060; --card-bg2: var(--code-bg); --code-text: #c0a060;
+    background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+    font-family: var(--font); font-size: 12pt; line-height: 1.75;
+    color: var(--ink); background: var(--paper);
   }
-  .header {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 40px 20px;
-    text-align: center;
-  }
-  .header h1 { font-size: 2.2em; margin-bottom: 8px; }
-  .header p { opacity: 0.9; font-size: 1.1em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
-  .info-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .info-card h2 {
-    font-size: 1.4em;
-    color: var(--primary);
-    border-left: 4px solid var(--accent);
-    padding-left: 14px;
-    margin-bottom: 16px;
-  }
-  .info-card p { color: var(--text-light); margin-bottom: 8px; }
-  .chapter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
-  }
-  .chapter-card {
-    background: var(--card-bg);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    border-left: 4px solid var(--accent);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    display: block;
-    color: var(--text);
-  }
-  .chapter-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  }
-  .chapter-card .num {
-    font-size: 0.85em;
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .chapter-card h3 { font-size: 1.15em; margin: 4px 0 8px; }
-  .chapter-card .desc {
-    font-size: 0.9em;
-    color: var(--text-light);
-    line-height: 1.5;
-  }
-  .chapter-card .tag {
-    display: inline-block;
-    font-size: 0.78em;
-    padding: 2px 10px;
-    border-radius: 12px;
-    margin-right: 4px;
-  }
-  .footer {
-    text-align: center;
-    padding: 30px;
-    color: var(--text-light);
-    font-size: 0.85em;
-    border-top: 1px solid var(--border);
-    margin-top: 20px;
-  }
-  .footer a { color: var(--accent); text-decoration: none; }
-  @media (max-width: 640px) {
-    .header h1 { font-size: 1.6em; }
-    .chapter-grid { grid-template-columns: 1fr; }
-  }
+  /* === Sidebar === */
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)}
+  .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px}
+  .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap {flex:1;min-width:0;margin-left:210px;display:flex;flex-direction:column}
+  .header{background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;padding:40px 20px;text-align:center}
+  .header h1{font-size:2.2em;margin-bottom:8px}
+  .header p{opacity:.9;font-size:1.1em}
+  .container {max-width:1100px;margin:0 auto;padding:30px 20px}
+  .info-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px;margin-bottom:30px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .info-card h2{font-size:1.3em;color:#1a3a5c;border-bottom:2px solid var(--divider);padding-bottom:8px;margin-bottom:16px}
+  .info-card p{color:var(--ink-light);margin-bottom:8px}
+  .category-title{font-size:.9em;font-weight:600;color:var(--ink-light);margin:24px 0 10px;padding:6px 14px;background:var(--paper-dark);border-radius:6px}
+  .chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px}
+  .chapter-card{background:var(--card-bg);border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.04);border-left:4px solid var(--accent);transition:transform .2s,box-shadow .2s;cursor:pointer;text-decoration:none;display:block;color:var(--ink);border:1px solid var(--card-border);border-left-width:4px}
+  .chapter-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+  .chapter-card .num{font-size:.85em;color:var(--accent);font-weight:600}
+  .chapter-card h3{font-size:1.15em;margin:4px 0 8px}
+  .chapter-card .desc{font-size:.9em;color:var(--ink-light);line-height:1.5}
+  .chapter-card .tag{display:inline-block;font-size:.78em;padding:2px 10px;border-radius:12px;margin-right:4px;margin-top:8px}
+  .chapter-card.active{border-left-color:#e74c3c}
+  .nav-links{margin-top:30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .nav-links a{display:inline-block;padding:10px 24px;background:var(--card-bg);border-radius:8px;text-decoration:none;color:var(--accent);border:1px solid var(--card-border);transition:all .2s;font-size:.93em;font-weight:500}
+  .nav-links a:hover{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  .back2top{position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;border:none;font-size:1.3em;cursor:pointer;opacity:.75;transition:all .2s;z-index:98;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+  .back2top:hover{opacity:1;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+  .theme-toggle{position:fixed;top:14px;right:16px;z-index:200;width:38px;height:38px;border-radius:50%;border:1px solid var(--divider);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .2s}
+  .theme-toggle:hover{box-shadow:0 4px 16px rgba(0,0,0,.18);transform:scale(1.05)}
+  .footer{text-align:center;padding:24px;color:var(--ink-light);font-size:.82em;border-top:1px solid var(--divider)}
+  @media(max-width:768px){.sidebar{display:none}.main-wrap{margin-left:0}body{font-size:11pt}}
+  @media(max-width:640px){.section{padding:18px 16px}.topbar h2{font-size:1em}table{font-size:.85em}th,td{padding:5px 8px}.back2top{right:10px;bottom:20px;width:38px;height:38px;font-size:1.1em}}
 </style>
 </head>
 <body>
+<nav class="sidebar">
+  <div class="sidebar-header"><div class="site-name">模拟电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div>
+    <a href="ch01.html"><span class="tag">1</span>绪论</a>
+    <a href="ch02.html"><span class="tag">2</span>运算放大器</a>
+    <a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div>
+    <a href="ch04.html"><span class="tag">4</span>MOS场效应管</a>
+    <a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div>
+    <a href="ch07.html"><span class="tag">7</span>模拟集成电路</a>
+    <a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与输出</div>
+    <a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px"><span class="tag">&#8962;</span>返回首页</a>
+  </div>
+</nav>
+<script>
+(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();
+</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>
+(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();
+function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}
+</script>
+<div class="main-wrap">
 <div class="header">
-  <h1>&#x1F4D8; 模拟电子技术</h1>
-  <p>Analog Electronics &middot; 课程复习笔记</p>
+  <h1>📖 模拟电子技术基础</h1>
+  <p>华中科技大学 · 电信学院 · 电子技术基础教材编写组</p>
 </div>
 <div class="container">
   <div class="info-card">
@@ -112,69 +128,62 @@
     <p>内容均来源于 PPT 原话，适合考前复习与知识梳理。</p>
   </div>
   <div class="info-card">
-    <h2>&#x1F4C2; 章节导航</h2>
+    <h2>📂 章节导航</h2>
+    <div class="category-title">第一部分：基础理论</div>
     <div class="chapter-grid">
-      <a href="ch01.html" class="chapter-card" style="border-left-color:#2d7fc1;">
-        <div class="num">第1章</div>
-        <h3>绪论</h3>
-        <div class="desc">信号与频谱 · 放大电路模型 · 性能指标</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#2d7fc1;">基础知识</span></div>
+      <a href="ch01.html" class="chapter-card" style="border-left-color:var(--accent);">
+        <div class="num">第1章</div><h3>绪论</h3>
+        <div class="desc">信号与频谱 · 模拟/数字信号 · 放大电路模型 · 性能指标</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--accent);">基础知识</span>
       </a>
-
-      <a href="ch02.html" class="chapter-card" style="border-left-color:#27ae60;">
-        <div class="num">第2章</div>
-        <h3>运算放大器</h3>
-        <div class="desc">理想运放 · 虚短虚断 · 同相/反相放大 · 积分微分</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#27ae60;">核心器件</span></div>
+      <a href="ch02.html" class="chapter-card" style="border-left-color:var(--tag-blue-color);">
+        <div class="num">第2章</div><h3>运算放大器</h3>
+        <div class="desc">理想运放 · 同相/反相放大 · 求和/求差/积分/微分电路</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-blue-color);">核心器件</span>
       </a>
-
-      <a href="ch03.html" class="chapter-card" style="border-left-color:#e67e22;">
-        <div class="num">第3章</div>
-        <h3>二极管及其基本电路</h3>
-        <div class="desc">PN结 · 二极管模型 · 整流·限幅·钳位 · 齐纳二极管</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#e67e22;">基础器件</span></div>
+      <a href="ch03.html" class="chapter-card" style="border-left-color:var(--tag-teal-color);">
+        <div class="num">第3章</div><h3>二极管及其基本电路</h3>
+        <div class="desc">半导体物理 · PN结 · 二极管模型 · 整流/限幅/钳位电路</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-teal-color);">基础器件</span>
       </a>
-
-      <a href="ch04.html" class="chapter-card" style="border-left-color:#8e44ad;">
-        <div class="num">第4章</div>
-        <h3>MOS场效应管及其放大电路</h3>
-        <div class="desc">增强型/耗尽型 · 共源/共漏/共栅 · 小信号模型</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#8e44ad;">核心器件</span><span class="tag" style="background:#e8f4fd;color:#8e44ad;">放大电路</span></div>
+    </div>
+    <div class="category-title">第二部分：放大器件</div>
+    <div class="chapter-grid">
+      <a href="ch04.html" class="chapter-card" style="border-left-color:var(--tag-purple-color);">
+        <div class="num">第4章</div><h3>MOS场效应管</h3>
+        <div class="desc">增强型/耗尽型 · 共源/共漏/共栅 · 小信号模型 · 多级放大</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-purple-color);">核心章节</span>
       </a>
-
-      <a href="ch05.html" class="chapter-card" style="border-left-color:#c0392b;">
-        <div class="num">第5章</div>
-        <h3>双极结型三极管(BJT)及其放大电路</h3>
-        <div class="desc">NPN/PNP · 共射/共集/共基 · H参数模型</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#c0392b;">核心器件</span><span class="tag" style="background:#e8f4fd;color:#c0392b;">放大电路</span></div>
+      <a href="ch05.html" class="chapter-card" style="border-left-color:var(--tag-red-color);">
+        <div class="num">第5章</div><h3>双极结型三极管</h3>
+        <div class="desc">BJT结构 · 放大原理 · 三种组态 · H参数小信号模型</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-red-color);">核心章节</span>
       </a>
-
-      <a href="ch07.html" class="chapter-card" style="border-left-color:#16a085;">
-        <div class="num">第7章</div>
-        <h3>模拟集成电路</h3>
-        <div class="desc">电流源 · 差分放大 · 有源负载 · CMOS运放 · 运放参数</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#16a085;">集成电路</span></div>
+    </div>
+    <div class="category-title">第三部分：集成电路与系统</div>
+    <div class="chapter-grid">
+      <a href="ch07.html" class="chapter-card" style="border-left-color:var(--tag-blue-color);">
+        <div class="num">第7章</div><h3>模拟集成电路</h3>
+        <div class="desc">电流源 · 差分放大电路 · CMOS运放 · 运放参数 · 单电源工作</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-blue-color);">集成电路</span>
       </a>
-
-      <a href="ch08.html" class="chapter-card" style="border-left-color:#2980b9;">
-        <div class="num">第8章</div>
-        <h3>反馈放大电路</h3>
+      <a href="ch08.html" class="chapter-card" style="border-left-color:var(--tag-orange-color);">
+        <div class="num">第8章</div><h3>反馈放大电路</h3>
         <div class="desc">反馈分类 · 四种组态 · 深度负反馈 · 自激振荡与补偿</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#2980b9;">核心概念</span></div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-orange-color);">系统设计</span>
       </a>
-
-      <a href="ch09.html" class="chapter-card" style="border-left-color:#d35400;">
-        <div class="num">第9章</div>
-        <h3>功率放大电路</h3>
-        <div class="desc">甲类·乙类·甲乙类·丁类 · OCL/OTL · 互补对称 · 交越失真</div>
-        <div style="margin-top:10px;"><span class="tag" style="background:#e8f4fd;color:#d35400;">应用</span></div>
+    </div>
+    <div class="category-title">第四部分：功率与输出</div>
+    <div class="chapter-grid">
+      <a href="ch09.html" class="chapter-card" style="border-left-color:var(--tag-pink-color);">
+        <div class="num">第9章</div><h3>功率放大电路</h3>
+        <div class="desc">甲/乙/甲乙/丁类 · OCL/OTL · 互补对称 · 交越失真 · 功率管</div>
+        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-pink-color);">功率输出</span>
       </a>
     </div>
   </div>
 </div>
-<div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT</p>
-  <p><a href="https://github.com/Jacky4212/review-system.git">GitHub: Jacky4212/review-system</a></p>
+<div class="footer"><p>华中科技大学《模拟电子技术基础》</p></div>
 </div>
 </body>
 </html>

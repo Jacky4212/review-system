@@ -5,835 +5,321 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>第3章 二极管及其基本电路 - 模拟电子技术</title>
 <style>
-  :root {
-    --primary: #1a3a5c;
-    --accent: #e67e22;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
-    --code-bg: #f0f4f8;
-  }
+  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #d35400; --accent-hover: #e67e22; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e; --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af; --tag-must-bg: #fee2e2; --tag-must-color: #991b1b; --tag-key-bg: #fef3c7; --tag-freq-bg: #dbeafe; --tag-info-bg: #f0fdf4; --tag-info-color: #166534; --chip-tag-orange-bg: #fdf2e9; --chip-tag-orange-color: #e67e22; --chip-tag-blue-bg: #e8f4fd; --chip-tag-green-bg: #f0f8f0; --chip-tag-green-color: #27ae60; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
+  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #f0a060; --accent-hover: #e88060; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830; --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0; --tag-must-bg: #3d1a1a; --tag-must-color: #e88080; --tag-key-bg: #3d3a1a; --tag-freq-bg: #1a2a3d; --tag-info-bg: #1a3d2a; --tag-info-color: #80c090; --chip-tag-orange-bg: #3d2a1a; --chip-tag-orange-color: #f0a060; --chip-tag-blue-bg: #1a2a3d; --chip-tag-green-bg: #1a3d1a; --chip-tag-green-color: #60d080; --heading-color: var(--ink); background-color: var(--paper); }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-  }
-  .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .topbar-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
-  .topbar a:hover { color: #fff; }
-  .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
-  .section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .section-num {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section h3 {
-    font-size: 1.1em;
-    color: var(--accent);
-    margin: 18px 0 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px dashed var(--border);
-  }
-  .section h3:first-of-type { margin-top: 0; }
-  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section p:last-child { margin-bottom: 0; }
-  .highlight {
-    background: #fffbe6;
-    border-left: 3px solid #f0c040;
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-size: 0.95em;
-  }
-  .def-box {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 10px 0;
-    font-size: 0.95em;
-  }
-  .def-box strong { color: var(--accent); }
-  .formula {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin: 10px 0;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 0.95em;
-  }
-  th, td {
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    text-align: center;
-  }
-  th {
-    background: var(--code-bg);
-    font-weight: 600;
-    color: var(--primary);
-  }
+  body { font-family: var(--font); font-size: 12pt; line-height: 1.75; color: var(--ink); background: var(--paper); display: flex; min-height: 100vh; }
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)}
+  .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px}
+  .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
+  .topbar { background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
+  .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .section h2 { font-size: 1.3em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px; }
+  .section h3 { font-size: 1.08em; color: var(--accent); margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--divider); }
+  .section h3:first-of-type { margin-top: 0; } .section h4 { font-size: 1em; color: var(--ink); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 8px; font-size: 0.95em; } .section ul, .section ol { margin: 8px 0 14px 22px; font-size: 0.95em; } .section li { margin-bottom: 6px; }
+  .highlight { background: var(--highlight-bg); border-left: 3px solid var(--highlight-border); padding: 12px 16px; margin: 14px 0; border-radius: 4px; font-size: 0.95em; }
+  .highlight strong { color: var(--highlight-strong); }
+  .def-box { background: var(--code-bg); border-radius: 6px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em; border: 1px solid var(--card-border); } .def-box strong { color: var(--accent); }
+  .formula { text-align: center; font-size: 1.05em; padding: 12px 16px; background: var(--code-bg); border-radius: 6px; margin: 10px 0; font-weight: 500; letter-spacing: 0.5px; border: 1px solid var(--card-border); font-family: "Times New Roman", "Cascadia Code", monospace; }
+  .checkpoint { background: var(--checkpoint-bg); border: 1px solid var(--checkpoint-border); border-radius: var(--radius); padding: 12px 16px; margin: 18px 0; font-size: 0.93em; } .checkpoint::before { content: '🧠 自查：'; font-weight: 700; color: var(--checkpoint-color); }
+  .dark-mode .checkpoint { background: #1e2a3a; border-color: #2d4a5a; } .dark-mode .checkpoint::before { color: #6a82f0; }
+  .tag-must { background: var(--tag-must-bg); color: var(--tag-must-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-key { background: var(--tag-key-bg); color: #92400e; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-freq { background: var(--tag-freq-bg); color: #1e40af; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-info { background: var(--tag-info-bg); color: var(--tag-info-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .kp { font-weight: 700; color: var(--ink); } .exp { font-weight: 400; color: var(--ink-light); }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; }
+  th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; } .dark-mode th { color: var(--ink); }
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .nav-links a {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--accent);
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-    font-size: 0.95em;
-  }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .nav-links span { flex: 1; }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
-  @media (max-width: 640px) {
-    .section { padding: 16px; }
-    .topbar h2 { font-size: 1em; }
-    table { font-size: 0.85em; }
-    th, td { padding: 6px 8px; }
-  }
+  .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; box-shadow: 0 2px 10px rgba(0,0,0,0.18); } .back2top:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  .theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; } .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
+  .chapter-nav-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px 0 0 8px; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97; opacity: 0.8; transition: all 0.2s; box-shadow: -2px 0 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; } .chapter-nav-toggle:hover { opacity: 1; }
+  .chapter-nav-panel { position: fixed; right: -260px; top: 50%; transform: translateY(-50%); width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px; box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96; transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1); padding: 16px 0 12px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--card-border); } .chapter-nav-panel.open { right: 0; }
+  .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; } .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: #1a3a5c; } .chapter-nav-panel .nav-header .nav-sub { font-size: 0.72em; color: var(--ink-light); margin-top: 2px; }
+  .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .chapter-nav-panel a { display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em; color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0; } .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); } .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .chapter-nav-panel a .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark); font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0; } .chapter-nav-panel a:hover .num { background: var(--accent); color: #fff; } .chapter-nav-panel a.current .num { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } body { font-size: 11pt; } }
+  @media (max-width: 640px) { .section { padding: 18px 16px; } .topbar h2 { font-size: 1em; } .chapter-nav-panel { width: 200px; } table { font-size: 0.85em; } th, td { padding: 5px 8px; } .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; } }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-inner">
-    <a href="index.html">&larr; 返回首页</a>
-    <h2>第3章 二极管及其基本电路</h2>
-    <a href="ch04.html">第4章 MOS场效应管及其放大电路 &rarr;</a>
+<nav class="sidebar">
+  <div class="sidebar-header"><div class="site-name">模拟电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div>
+    <a href="ch01.html"><span class="tag">1</span>绪论</a>
+    <a href="ch02.html"><span class="tag">2</span>运算放大器</a>
+    <a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div>
+    <a href="ch04.html"><span class="tag">4</span>MOS场效应管</a>
+    <a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div>
+    <a href="ch07.html"><span class="tag">7</span>模拟集成电路</a>
+    <a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与输出</div>
+    <a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
   </div>
-</div>
+</nav>
+<script>(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
+<div class="main-wrap">
+<div class="topbar"><div class="topbar-inner"><a href="ch02.html">← 第2章</a><h2>第3章 二极管及其基本电路</h2><a href="ch04.html">第4章 →</a></div></div>
 <div class="container">
-    <div class="section">
-      <div class="section-num">第 1 页</div>
-      <p>3.1 半导体的基本知识
-3.2 P<sub>N</sub>结的形成及特性
-3.3 二极管
-3.4 二极管基本电路及其分析方法
-3.5 特殊二极管</p>
-      <h3>3  二极管及其基本电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 2 页</div>
-      <h3>3.1.1 本征半导体
-3.1.2 杂质半导体</h3>
-      <h3>3.1  半导体的基本知识</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 3 页</div>
-      <h3>3.1  半导体的基本知识</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 4 页</div>
-      <h3>1. 半导体材料</h3>
-      <p>根据物体导电能力(电阻率)的不同，来划分导体、绝缘体和半导体。</p>
-      <p>典型的半导体有硅(Si)和锗(Ge)以及砷化镓(GaAs)等。</p>
-      <p>本征半导体是一种完全纯净、结构完整的半导体晶体。</p>
-      <h3>3.1  半导体的基本知识</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 5 页</div>
-      <h3>2. 半导体的晶体结构</h3>
-      <h3>硅原子结构简化模型</h3>
-      <h3>硅的二维晶格结构</h3>
-      <p>在室温（300K）下，当被束缚的价电子获得足够的随机热振动能量而挣脱共价键束缚成为自由电子时（本征激发），半导体便具备了一定的导电能力。</p>
-      <h3>3.1  半导体的基本知识</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 6 页</div>
-      <h3>3. 本征半导体的导电性</h3>
-      <p>但与良导体相比，本征硅晶体内自由电子数量较少，因而其导电性能远不及导体。</p>
-      <h3>3.1  半导体的基本知识</h3>
-      <p>在室温（300K）下，当被束缚的价电子获得足够的随机热振动能量而挣脱共价键束缚成为自由电子时（本征激发），半导体便具备了一定的导电能力。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 7 页</div>
-      <h3>3. 本征半导体的导电性</h3>
-      <h3>3.1  半导体的基本知识</h3>
-      <p>空穴就是价电子挣脱束缚成为自由电子后，共价键中留下的空位。</p>
-      <p>因为空穴表示共价键中失去了一个带负电荷的电子，所以认为其带有与电子电荷等量的正电荷。</p>
-      <h3>空穴</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 8 页</div>
-      <h3>3. 本征半导体的导电性</h3>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>空穴的移动</h3>
-      <p>空穴的移动实际上反映了受束缚的价电子的移动，只是移动方向与价电子移动方向相反。
-    可以用空穴移动产生的电流来代表价电子移动产生的电流。</p>
-      <p>空穴的出现是半导体区别于导体的一个重要特点。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 9 页</div>
-      <h3>3. 本征半导体的导电性</h3>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>载流子的产生与复合</h3>
-      <h3>载流子——可以自由移动的带电粒子</h3>
-      <p>本征激发产生的自由电子和空穴总是成对出现的。</p>
-      <h3>自由电子和空穴都是载流子</h3>
-      <p>自由电子与空穴相遇时，两者同时消失，称为自由电子与空穴的复合。</p>
-      <p>外部环境不变的情况下，载流子的产生与复合达到动态平衡。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 10 页</div>
-      <h3>3. 本征半导体的导电性</h3>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>载流子的产生与复合</h3>
-      <p>当温度升高时，将产生更多的自由电子和空穴，意味着载流子的浓度升高，晶体的导电能力也会增强。即本征半导体的电导率将随温度的升高而增加。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 11 页</div>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>4. 杂质半导体</h3>
-      <p>在本征半导体中掺入某些微量元素作为杂质，可使半导体的导电性发生显著变化。掺入的杂质主要是三价或五价元素。掺入杂质的本征半导体称为杂质半导体。</p>
-      <p>N型半导体——掺入五价杂质元素（如磷）的半导体。</p>
-      <p>P型半导体——掺入三价杂质元素（如硼）的半导体。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 12 页</div>
-      <h3>P型半导体</h3>
-      <h3>因三价杂质原子在与硅原子形成共价键时，缺少一个价电子而在共价键中留下一个空穴</h3>
-      <p>在P型半导体中空穴是多数载流子，它主要由掺杂形成；自由电子是少数载流子， 由热激发形成。</p>
-      <p>空穴很容易俘获电子，使杂质原子成为负离子。三价杂质因而也称为受主杂质。</p>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>4. 杂质半导体</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 13 页</div>
-      <h3>N型半导体</h3>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>4. 杂质半导体</h3>
-      <p>因五价杂质原子中只有四个价电子能与周围四个半导体原子中的价电子形成共价键，而多余的一个价电子因无共价键束缚而很容易形成自由电子。</p>
-      <p>在N型半导体中自由电子是多数载流子，它主要由杂质原子提供；空穴是少数载流子, 由热激发形成。</p>
-      <p>提供自由电子的五价杂质原子因带正电荷而成为正离子，因此五价杂质原子也称为施主杂质。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 14 页</div>
-      <h3>掺入杂质对本征半导体的导电性有很大的影响，以下是一组典型数据:</h3>
-      <h3>以上三个浓度基本上依次相差106/cm3</h3>
-      <h3>3.1  半导体的基本知识</h3>
-      <h3>4. 杂质半导体</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 15 页</div>
-      <p>3.1 半导体的基本知识
-3.2 P<sub>N</sub>结的形成及特性
-3.3 二极管
-3.4 二极管基本电路及其分析方法
-3.5 特殊二极管</p>
-      <h3>3  二极管及其基本电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 16 页</div>
-      <h3>3.2.1 P<sub>N</sub>结的形成
-3.2.2 P<sub>N</sub>结的单向导电性
-3.2.3 P<sub>N</sub>结的反向击穿
-3.2.4 P<sub>N</sub>结的电容效应</h3>
-      <h3>3.2  P<sub>N</sub>结的形成及特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 17 页</div>
-      <h3>1. 载流子的漂移与扩散</h3>
-      <h3>3.2.1  P<sub>N</sub>结的形成</h3>
-      <h3>漂移运动：
-    在电场作用下引起的载流子运动</h3>
-      <h3>扩散运动：
-    由载流子浓度差引起的载流子运动</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 18 页</div>
-      <h3>2. P<sub>N</sub>结的形成</h3>
-      <h3>3.2.1  P<sub>N</sub>结的形成</h3>
-      <h3>多数载流子的扩散</h3>
-      <h3>少数载流子的漂移</h3>
-      <p>空间电荷区也称为耗尽层、势垒区。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 19 页</div>
-      <h3>3.2.1  P<sub>N</sub>结的形成</h3>
-      <p>在一块本征半导体两侧通过扩散不同的杂质,分别形成N型半导体和P型半导体。此时将在N型半导体和P型半导体的结合面上形成如下物理过程:</p>
-      <h3>因浓度差
-         ↕</h3>
-      <h3>空间电荷区形成内电场</h3>
-      <h3>↕
-   内电场促使少子漂移</h3>
-      <h3>↕
-内电场阻止多子扩散</h3>
-      <p>最后,多子的扩散和少子的漂移达到动态平衡。</p>
-      <h3>多子的扩散运动↓</h3>
-      <h3>由杂质离子形成空间电荷区
-        ↕</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 20 页</div>
-      <h3>3.2.1 P<sub>N</sub>结的形成
-3.2.2 P<sub>N</sub>结的单向导电性
-3.2.3 P<sub>N</sub>结的反向击穿
-3.2.4 P<sub>N</sub>结的电容效应</h3>
-      <h3>3.2  P<sub>N</sub>结的形成及特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 21 页</div>
-      <h3>1. 外加正向电压</h3>
-      <h3>3.2.2  P<sub>N</sub>结的单向导电性</h3>
-      <p>当外加电压使P<sub>N</sub>结中P区的电位高于N区的电位，称为加正向电压，简称正偏；反之称为加反向电压，简称反偏。</p>
-      <h3>外加正向电压</h3>
-      <h3>削弱了内电场的作用，P<sub>N</sub>结电阻减小</h3>
-      <h3>有利于多数载流子的扩散运动</h3>
-      <h3>回路中产生由多数载流子形成的扩散电流，称为正向电流</h3>
-      <h3>低电阻
- 大的正向扩散电流</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 22 页</div>
-      <h3>1. 外加正向电压</h3>
-      <h3>3.2.2  P<sub>N</sub>结的单向导电性</h3>
-      <p>当外加电压使P<sub>N</sub>结中P区的电位高于N区的电位，称为加正向电压，简称正偏；反之称为加反向电压，简称反偏。</p>
-      <h3>外加正向电压</h3>
-      <h3>低电阻
- 大的正向扩散电流</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 23 页</div>
-      <h3>2. 外加反向电压</h3>
-      <h3>3.2.2  P<sub>N</sub>结的单向导电性</h3>
-      <h3>外加反向电压</h3>
-      <h3>增强了内电场的作用，P<sub>N</sub>结电阻增大</h3>
-      <h3>阻止多子扩散，有利于少子漂移</h3>
-      <h3>回路中产生由少数载流子形成的漂移电流，称为反向电流</h3>
-      <h3>高电阻
- 很小的反向漂移电流</h3>
-      <p>在一定的温度条件下，由本征激发决定的少子浓度是一定的，故少子形成的漂移电流是恒定的，基本上与所加反向电压的大小无关，这个电流也称为反向饱和电流。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 24 页</div>
-      <h3>2. 外加反向电压</h3>
-      <h3>3.2.2  P<sub>N</sub>结的单向导电性</h3>
-      <h3>外加反向电压</h3>
-      <h3>高电阻
- 很小的反向漂移电流</h3>
-      <p>在一定的温度条件下，由本征激发决定的少子浓度是一定的，故少子形成的漂移电流是恒定的，基本上与所加反向电压的大小无关，这个电流也称为反向饱和电流。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 25 页</div>
-      <h3>3.2.2  P<sub>N</sub>结的单向导电性</h3>
-      <p>P<sub>N</sub>结加正向电压时，呈现低电阻，具有较大的正向扩散电流。
-        P<sub>N</sub>结加反向电压时，呈现高电阻，具有很小的反向漂移电流。
-        由此可以得出结论：P<sub>N</sub>结具有单向导电性。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 26 页</div>
-      <h3>3. P<sub>N</sub>结的I−V特性</h3>
-      <h3>3.2.2  P<sub>N</sub>结的单向导电性</h3>
-      <h3>其中</h3>
-      <h3>P<sub>N</sub>结单向导电性的I−V特性曲线</h3>
-      <h3>I<sub>S</sub> ——反向饱和电流</h3>
-      <h3>V<sub>T</sub> ——温度电压当量</h3>
-      <h3>且在常温下（T=300K）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 27 页</div>
-      <h3>3.2.1 P<sub>N</sub>结的形成
-3.2.2 P<sub>N</sub>结的单向导电性
-3.2.3 P<sub>N</sub>结的反向击穿
-3.2.4 P<sub>N</sub>结的电容效应</h3>
-      <h3>3.2  P<sub>N</sub>结的形成及特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 28 页</div>
-      <h3>3.2.3  P<sub>N</sub>结的反向击穿</h3>
-      <p>当P<sub>N</sub>结的反向电压增加到一定数值时，反向电流突然快速增加，此现象称为P<sub>N</sub>结的反向击穿。</p>
-      <h3>热击穿——不可逆</h3>
-      <h3>电击穿——可逆</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 29 页</div>
-      <h3>3.2.3  P<sub>N</sub>结的反向击穿</h3>
-      <h3>反向电压增大到一定程度</h3>
-      <h3>载流子的倍增效应</h3>
-      <h3>电场足够强</h3>
-      <h3>漂移运动的少子获得足够的动能</h3>
-      <h3>撞击出更多的自由电子-空穴对</h3>
-      <h3>新的自由电子-空穴对继续撞击出更多的自由电子-空穴对</h3>
-      <h3>雪崩击穿</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 30 页</div>
-      <h3>3.2.3  P<sub>N</sub>结的反向击穿</h3>
-      <h3>反向电压增大到一定程度</h3>
-      <h3>电场足够强</h3>
-      <h3>破坏共价键的束缚，分离出电子，产生大量的自由电子-空穴对</h3>
-      <h3>形成较大的反向电流</h3>
-      <h3>齐纳击穿</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 31 页</div>
-      <h3>3.2.1 P<sub>N</sub>结的形成
-3.2.2 P<sub>N</sub>结的单向导电性
-3.2.3 P<sub>N</sub>结的反向击穿
-3.2.4 P<sub>N</sub>结的电容效应</h3>
-      <h3>3.2  P<sub>N</sub>结的形成及特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 32 页</div>
-      <h3>3.2.4  P<sub>N</sub>结的电容效应</h3>
-      <h3>扩散电容</h3>
-      <h3>外加电压变化</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 33 页</div>
-      <h3>3.2.4  P<sub>N</sub>结的电容效应</h3>
-      <h3>势垒电容</h3>
-      <h3>外加电压变化</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 34 页</div>
-      <p>3.1 半导体的基本知识
-3.2 P<sub>N</sub>结的形成及特性
-3.3 二极管
-3.4 二极管基本电路及其分析方法
-3.5 特殊二极管</p>
-      <h3>3  二极管及其基本电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 35 页</div>
-      <h3>3.3  二极管</h3>
-      <h3>结构</h3>
-    </div>
 
-    <div class="section">
-      <div class="section-num">第 36 页</div>
-      <h3>3.3  二极管</h3>
-      <h3>(1) 点接触型二极管</h3>
-      <p>P<sub>N</sub>结面积小，结电容小，用于检波和变频等高频电路。</p>
-      <h3>结构</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 37 页</div>
-      <h3>(2) 面接触型二极管</h3>
-      <p>P<sub>N</sub>结面积大，用于工频大电流整流电路。</p>
-      <h3>3.3  二极管</h3>
-      <h3>结构</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 38 页</div>
-      <h3>I-V特性</h3>
-      <h3>硅二极管2CP10</h3>
-      <h3>锗二极管2AP15</h3>
-      <h3>① ——正向特性
-② ——反向特性
-③ ——反向击穿特性</h3>
-      <h3>Vth ——门坎电压
-V<sub>BR</sub> ——反向击穿电压</h3>
-      <h3>3.3  二极管</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 39 页</div>
-      <h3>3.3  二极管</h3>
-      <h3>主要参数</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 40 页</div>
-      <p>3.1 半导体的基本知识
-3.2 P<sub>N</sub>结的形成及特性
-3.3 二极管
-3.4 二极管基本电路及其分析方法
-3.5 特殊二极管</p>
-      <h3>3  二极管及其基本电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 41 页</div>
-      <h3>3.4.1 简单二极管电路的图解分析法3.4.2 二极管电路的简化模型分析法</h3>
-      <h3>3.4 二极管基本电路及其分析方法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 42 页</div>
-      <h3>3.4.1 简单二极管电路的图解分析法</h3>
-      <p>例3.4.1  电路如图所示，已知二极管的V-I特性曲线、电源V<sub>DD</sub>和电阻R，求二极管两端电压v<sub>D</sub>和流过二极管的电流i<sub>D</sub> 。</p>
-      <h3>是一条斜率为-1/R的直线，称为负载线</h3>
-      <h3>Q的坐标值（V<sub>D</sub>，I<sub>D</sub>）即为所求。Q点称为电路的工作点</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 43 页</div>
-      <h3>vs =Vmsin◇t 时  （Vm&lt;&lt;V<sub>DD</sub> ，小信号）</h3>
-      <p>Q点称为静态工作点 ，反映直流时的工作状态。</p>
-      <p>例3.4.1  加入小信号激励源后，求二极管电压、电流的变化。</p>
-      <h3>3.4.1 简单二极管电路的图解分析法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 44 页</div>
-      <h3>3.4.1 简单二极管电路的图解分析法3.4.2 二极管电路的简化模型分析法</h3>
-      <h3>3.4 二极管基本电路及其分析方法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 45 页</div>
-      <h3>1.  二极管模型</h3>
-      <h3>I-V 特性</h3>
-      <h3>代表符号</h3>
-      <h3>正向偏置时的电路模型</h3>
-      <h3>反向偏置时的电路模型</h3>
-      <h3>3.4.2 二极管电路的简化模型分析法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 46 页</div>
-      <h3>恒压降模型</h3>
-      <h3>折线模型</h3>
-      <h3>（a）I-V特性  （b）电路模型</h3>
-      <h3>（a）I-V特性  （b）电路模型</h3>
-      <h3>1.  二极管模型</h3>
-      <h3>3.4.2 二极管电路的简化模型分析法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 47 页</div>
-      <h3>二极管上的电压（或二极管中电流）仅在一较小范围内发生变化时所建立的模型称为小信号模型</h3>
-      <h3>将二极管I−V特性近似为以Q点为切点的一条直线，其斜率的倒数就是小信号模型的微变电阻r<sub>d</sub></h3>
-      <h3>1.  二极管模型</h3>
-      <h3>3.4.2 二极管电路的简化模型分析法</h3>
-      <h3>小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 48 页</div>
-      <h3>1.  二极管模型</h3>
-      <h3>Q点切线的斜率
-（电导）：</h3>
-      <h3>且满足v<sub>D</sub> &gt;&gt;V<sub>T</sub> =26mV</h3>
-      <h3>（常温下，T=300K）</h3>
-      <p>Q点称为静态工作点 ，反映直流时的工作状态。</p>
-      <h3>小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 49 页</div>
-      <p>特别注意：
- 小信号模型中的微变电阻r<sub>d</sub>与静态工作点Q有关。
- 该模型用于二极管处于正向偏置条件下，且v<sub>D</sub>&gt;&gt;V<sub>T</sub> 。</p>
-      <h3>1.  二极管模型</h3>
-      <h3>小信号模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 50 页</div>
-      <h3>符号中大小写的含义：</h3>
-      <h3>大写字母大写下标：静态值（直流），如，I<sub>B</sub></h3>
-      <h3>（参见“本书常用符号表”）</h3>
-      <h3>小写字母大写下标：总量（直流+交流），如，i<sub>B</sub></h3>
-      <h3>小写字母小写下标：瞬时值（交流），如，ib</h3>
-      <h3>3.4.2 二极管电路的简化模型分析法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 51 页</div>
-      <h3>整流电路
-限幅电路
-钳位电路
-开关电路
-小信号工作情况分析</h3>
-      <h3>2.  模型分析法应用举例</h3>
-      <h3>3.4.2 二极管电路的简化模型分析法</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 52 页</div>
-      <h3>2.  模型分析法应用举例</h3>
-      <h3>半波整流</h3>
-      <h3>二极管采用理想模型时，负载上的平均电压</h3>
-      <h3>▲ 0.45Vs</h3>
-      <h3>二极管中的整流电流</h3>
-      <h3>二极管承受的最大反向电压</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 53 页</div>
-      <h3>采用恒压降模型时</h3>
-      <h3>2.  模型分析法应用举例</h3>
-      <h3>半波整流</h3>
-    </div>
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>理解半导体的基本知识：本征半导体、杂质半导体（N型/P型）</li>
+      <li>掌握PN结的形成原理与单向导电性</li>
+      <li>理解PN结的反向击穿机制（雪崩击穿/齐纳击穿）与电容效应</li>
+      <li>掌握二极管的I-V特性、主要参数和简化模型（理想/恒压降/折线/小信号）</li>
+      <li>能运用模型分析法分析整流、限幅、钳位、开关等二极管应用电路</li>
+      <li>了解特殊二极管：齐纳、变容、肖特基、光电器件</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>3.1 半导体的基本知识</h2>
+
+    <h3>3.1.1 本征半导体</h3>
+    <h4>1. 半导体材料</h4>
+    <p>根据物体导电能力（电阻率）的不同，来划分导体、绝缘体和半导体。典型的半导体有<strong>硅（Si）</strong>和<strong>锗（Ge）</strong>以及<strong>砷化镓（GaAs）</strong>等。</p>
+    <div class="def-box"><strong>本征半导体</strong>是一种完全纯净、结构完整的半导体晶体。</div>
+
+    <h4>2. 半导体的晶体结构</h4>
+    <p>硅原子通过共价键形成晶体结构。在室温（300K）下，当被束缚的价电子获得足够的随机热振动能量而挣脱共价键束缚成为自由电子时（<strong>本征激发</strong>），半导体便具备了一定的导电能力。</p>
+
+    <h4>3. 本征半导体的导电性</h4>
+    <p><strong>空穴</strong>就是价电子挣脱束缚成为自由电子后，共价键中留下的空位。因为空穴表示共价键中失去了一个带负电荷的电子，所以认为其带有与电子电荷等量的正电荷。空穴的出现是半导体区别于导体的一个重要特点。</p>
+    <p>空穴的移动实际上反映了受束缚的价电子的移动，只是移动方向与价电子移动方向相反。可以用空穴移动产生的电流来代表价电子移动产生的电流。</p>
+
+    <p><strong>载流子</strong>——可以自由移动的带电粒子。本征激发产生的自由电子和空穴总是<strong>成对出现</strong>的。自由电子和空穴都是载流子。自由电子与空穴相遇时，两者同时消失，称为自由电子与空穴的<strong>复合</strong>。外部环境不变的情况下，载流子的产生与复合达到动态平衡。</p>
+
+    <div class="highlight"><strong>温度特性：</strong>当温度升高时，将产生更多的自由电子和空穴，意味着载流子的浓度升高，晶体的导电能力也会增强。即<strong>本征半导体的电导率将随温度的升高而增加</strong>。</div>
+
+    <h3>3.1.2 杂质半导体</h3>
+    <p>在本征半导体中掺入某些微量元素作为杂质，可使半导体的导电性发生显著变化。掺入的杂质主要是三价或五价元素。掺入杂质的本征半导体称为<strong>杂质半导体</strong>。</p>
+
+    <h4>P型半导体</h4>
+    <p>掺入<strong>三价杂质元素</strong>（如硼）的半导体。因三价杂质原子在与硅原子形成共价键时，缺少一个价电子而在共价键中留下一个空穴。在P型半导体中<strong>空穴是多数载流子</strong>（多子），它主要由掺杂形成；<strong>自由电子是少数载流子</strong>（少子），由热激发形成。三价杂质因而也称为<strong>受主杂质</strong>。</p>
+
+    <h4>N型半导体</h4>
+    <p>掺入<strong>五价杂质元素</strong>（如磷）的半导体。因五价杂质原子中只有四个价电子能与周围四个半导体原子中的价电子形成共价键，而多余的一个价电子因无共价键束缚而很容易形成自由电子。在N型半导体中<strong>自由电子是多数载流子</strong>，它主要由杂质原子提供；<strong>空穴是少数载流子</strong>，由热激发形成。五价杂质原子也称为<strong>施主杂质</strong>。</p>
+
+    <div class="highlight"><strong>掺杂效果：</strong>掺入杂质对本征半导体的导电性有很大的影响。典型数据：本征硅的原子浓度约 10<sup>22</sup>/cm³，掺杂浓度约 10<sup>16</sup>/cm³（仅百万分之一），载流子浓度即可增加约 10<sup>6</sup> 倍。以上三个浓度基本上依次相差 10<sup>6</sup>/cm³。</div>
+  </div>
+
+  <div class="section">
+    <h2>3.2 PN结的形成及特性</h2>
+
+    <h3>3.2.1 PN结的形成</h3>
+    <h4>1. 载流子的漂移与扩散</h4>
+    <ul>
+      <li><strong>漂移运动：</strong>在电场作用下引起的载流子运动</li>
+      <li><strong>扩散运动：</strong>由载流子浓度差引起的载流子运动</li>
+    </ul>
+
+    <h4>2. PN结的形成过程</h4>
+    <p>在一块本征半导体两侧通过扩散不同的杂质，分别形成N型半导体和P型半导体。此时将在N型和P型半导体的结合面上形成如下物理过程：</p>
+    <div class="def-box">
+      <strong>形成步骤：</strong><br>
+      ① 因浓度差 → 多子的扩散运动（P区空穴向N区扩散，N区电子向P区扩散）<br>
+      ② → 由杂质离子形成<strong>空间电荷区</strong>（耗尽层、势垒区）<br>
+      ③ → 空间电荷区形成内电场（由N区指向P区）<br>
+      ④ → 内电场促使少子漂移 / 内电场阻止多子扩散<br>
+      ⑤ 最后，多子的扩散和少子的漂移达到<strong>动态平衡</strong>
+    </div>
+
+    <h3>3.2.2 PN结的单向导电性</h3>
+    <p>当外加电压使PN结中P区的电位高于N区的电位，称为加正向电压，简称<strong>正偏</strong>；反之称为加反向电压，简称<strong>反偏</strong>。</p>
+
+    <table>
+      <tr><th></th><th>外加正向电压（正偏）</th><th>外加反向电压（反偏）</th></tr>
+      <tr><td>对内电场影响</td><td>削弱内电场</td><td>增强内电场</td></tr>
+      <tr><td>PN结电阻</td><td>减小（低电阻）</td><td>增大（高电阻）</td></tr>
+      <tr><td>载流子运动</td><td>有利于多子扩散</td><td>阻止多子扩散，有利于少子漂移</td></tr>
+      <tr><td>电流特性</td><td>大的正向扩散电流</td><td>很小的反向漂移电流（反向饱和电流 I<sub>S</sub>）</td></tr>
+    </table>
+
+    <div class="highlight"><strong>结论：PN结具有单向导电性。</strong>正向偏置时呈现低电阻，具有较大的正向扩散电流；反向偏置时呈现高电阻，具有很小的反向漂移电流。</div>
+
+    <h4>PN结的I−V特性方程</h4>
+    <div class="formula">i<sub>D</sub> = I<sub>S</sub> (e<sup>v<sub>D</sub>/V<sub>T</sub></sup> − 1)</div>
+    <p>其中 I<sub>S</sub> ——反向饱和电流，V<sub>T</sub> ——温度电压当量，在常温下（T = 300K）V<sub>T</sub> = kT/q ≈ 26 mV。</p>
+
+    <h3>3.2.3 PN结的反向击穿</h3>
+    <p>当PN结的反向电压增加到一定数值时，反向电流突然快速增加，此现象称为PN结的反向击穿。分为：</p>
+    <ul>
+      <li><strong>热击穿</strong>——不可逆（损坏器件）</li>
+      <li><strong>电击穿</strong>——可逆（在限流条件下）</li>
+    </ul>
+
+    <h4>雪崩击穿</h4>
+    <p>反向电压增大 → 电场足够强 → 漂移运动的少子获得足够的动能 → 撞击出更多的自由电子-空穴对 → 新的自由电子-空穴对继续撞击出更多 → <strong>载流子的倍增效应</strong> → 雪崩击穿。</p>
+
+    <h4>齐纳击穿</h4>
+    <p>反向电压增大 → 电场足够强 → 直接破坏共价键的束缚，分离出电子，产生大量的自由电子-空穴对 → 形成较大的反向电流 → 齐纳击穿。</p>
+
+    <h3>3.2.4 PN结的电容效应</h3>
+    <ul>
+      <li><strong>扩散电容 C<sub>D</sub>：</strong>由PN结正向偏置时非平衡少子的存储效应引起，与正向电流成正比</li>
+      <li><strong>势垒电容 C<sub>B</sub>：</strong>由空间电荷区宽度随外加电压变化引起，类似于平行板电容</li>
+    </ul>
+    <p>PN结的电容效应限制了二极管在高频下的应用。反向偏置时势垒电容占主导，正向偏置时扩散电容占主导。</p>
+  </div>
+
+  <div class="section">
+    <h2>3.3 二极管</h2>
+
+    <h3>结构类型</h3>
+    <ul>
+      <li><strong>点接触型二极管：</strong>PN结面积小，结电容小，用于<strong>检波和变频等高频电路</strong></li>
+      <li><strong>面接触型二极管：</strong>PN结面积大，用于<strong>工频大电流整流电路</strong></li>
+    </ul>
+
+    <h3>二极管的I−V特性</h3>
+    <table>
+      <tr><th>特性区域</th><th>硅二极管 (2CP10)</th><th>锗二极管 (2AP15)</th></tr>
+      <tr><td>门坎电压 V<sub>th</sub></td><td>约 0.5~0.7 V</td><td>约 0.1~0.3 V</td></tr>
+      <tr><td>正向导通压降</td><td>约 0.7 V</td><td>约 0.3 V</td></tr>
+      <tr><td>反向饱和电流</td><td>很小（nA级）</td><td>较大（μA级）</td></tr>
+    </table>
+    <p>I−V特性三个区域：①正向特性 ②反向特性 ③反向击穿特性。V<sub>th</sub>——门坎电压（死区电压），V<sub>BR</sub>——反向击穿电压。</p>
+
+    <h3>主要参数</h3>
+    <ul>
+      <li><strong>最大整流电流 I<sub>F</sub>：</strong>二极管长期运行时允许通过的最大正向平均电流</li>
+      <li><strong>最大反向工作电压 V<sub>R</sub>：</strong>允许施加的最大反向电压（通常为 V<sub>BR</sub> 的一半）</li>
+      <li><strong>反向饱和电流 I<sub>S</sub>：</strong>未击穿时的反向电流，越小越好</li>
+      <li><strong>最高工作频率 f<sub>M</sub>：</strong>受结电容限制的最高工作频率</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>3.4 二极管基本电路及其分析方法</h2>
+
+    <h3>3.4.1 简单二极管电路的图解分析法</h3>
+    <p>利用二极管的I−V特性曲线和负载线求解静态工作点Q（V<sub>D</sub>, I<sub>D</sub>）。负载线方程为：</p>
+    <div class="formula">i<sub>D</sub> = (V<sub>DD</sub> − v<sub>D</sub>) / R</div>
+    <p>是一条斜率为 −1/R 的直线，称为<strong>负载线</strong>。Q的坐标值（V<sub>D</sub>, I<sub>D</sub>）即为所求，Q点称为电路的<strong>工作点</strong>。</p>
+
+    <h3>3.4.2 二极管电路的简化模型分析法</h3>
+    <h4>1. 二极管模型</h4>
+    <table>
+      <tr><th>模型</th><th>正向偏置</th><th>反向偏置</th><th>适用场景</th></tr>
+      <tr><td>理想模型</td><td>v<sub>D</sub> = 0（短路）</td><td>i<sub>D</sub> = 0（开路）</td><td>大信号、电源电压远大于 V<sub>D</sub></td></tr>
+      <tr><td>恒压降模型</td><td>v<sub>D</sub> = 0.7V (Si) / 0.3V (Ge)</td><td>i<sub>D</sub> = 0</td><td>一般分析，最常用</td></tr>
+      <tr><td>折线模型</td><td>v<sub>D</sub> = V<sub>th</sub> + i<sub>D</sub>·r<sub>D</sub></td><td>i<sub>D</sub> = 0</td><td>要求更精确时</td></tr>
+      <tr><td>小信号模型</td><td colspan="2">r<sub>d</sub> = V<sub>T</sub> / I<sub>DQ</sub>（Q点处切线斜率的倒数，即微变电阻）</td><td>小信号交流分析</td></tr>
+    </table>
+
+    <div class="highlight"><strong>小信号模型特别注意：</strong>
+      <ul>
+        <li>小信号模型中的微变电阻 r<sub>d</sub> 与静态工作点Q有关</li>
+        <li>该模型用于二极管处于正向偏置条件下，且 v<sub>D</sub> ≫ V<sub>T</sub> (= 26mV)</li>
+        <li>Q点切线的斜率（电导）：g<sub>d</sub> = 1/r<sub>d</sub> = I<sub>DQ</sub> / V<sub>T</sub></li>
+      </ul>
+    </div>
+
+    <div class="def-box">
+      <strong>符号中大小写的含义：</strong><br>
+      大写字母大写下标：静态值（直流），如 I<sub>B</sub><br>
+      小写字母大写下标：总量（直流+交流），如 i<sub>B</sub><br>
+      小写字母小写下标：瞬时值（交流），如 i<sub>b</sub>
+    </div>
+
+    <h4>2. 模型分析法应用举例</h4>
+
+    <h4>（1）整流电路</h4>
+    <p><strong>半波整流：</strong>二极管采用理想模型时，负载上的平均电压 V<sub>L</sub> ≈ 0.45V<sub>s</sub>（V<sub>s</sub> 为变压器次级电压有效值）。二极管承受的最大反向电压 V<sub>RM</sub> = √2 V<sub>s</sub>。</p>
+    <p><strong>桥式整流：</strong>二极管采用理想模型时，负载上的平均电压 V<sub>L</sub> ≈ 0.9V<sub>s</sub>。二极管承受的最大反向电压 V<sub>RM</sub> = √2 V<sub>s</sub>。</p>
+
+    <h4>（2）限幅电路</h4>
+    <p>利用二极管的单向导电性将输出电压限制在某一范围内。分析时可用理想模型或恒压降模型。</p>
+
+    <h4>（3）钳位电路</h4>
+    <p>利用二极管和电容将信号的整体电平搬移到某一参考电平。二极管用理想模型，电路处于稳态时电容上的电压维持不变。</p>
+
+    <h4>（4）开关电路</h4>
+    <p>利用二极管的导通/截止状态实现逻辑判断。分析方法：先断开二极管，比较阳极电位和阴极电位——阳极电位高于阴极电位则导通，否则截止。导通后，二极管压降等于零（理想模型），即输出电位近似等于阳极电位。</p>
+
+    <h4>（5）小信号工作情况分析</h4>
+    <p>分析方法分为两步：</p>
+    <ol>
+      <li><strong>直流分析：</strong>令交流信号源为零（v<sub>s</sub> = 0），求静态工作点 Q（I<sub>DQ</sub>, V<sub>DQ</sub>）</li>
+      <li><strong>交流分析：</strong>令直流电源为零（V<sub>DD</sub> = 0），用微变电阻 r<sub>d</sub> = V<sub>T</sub>/I<sub>DQ</sub> 替换二极管，建立小信号等效电路求解</li>
+    </ol>
+    <p>总响应 = 直流分量 + 交流分量：v<sub>O</sub> = V<sub>O</sub> + v<sub>o</sub></p>
+  </div>
+
+  <div class="section">
+    <h2>3.5 特殊二极管</h2>
+
+    <h3>3.5.1 齐纳二极管（稳压二极管）</h3>
+    <p>利用二极管<strong>反向击穿特性</strong>实现稳压。齐纳二极管稳压时工作在<strong>反向电击穿状态</strong>。正常稳压时 V<sub>O</sub> = V<sub>Z</sub>。</p>
+    <p>稳压条件：反向电流需在 I<sub>Zmin</sub> ~ I<sub>Zmax</sub> 范围内。限流电阻 R 的选择需保证在最坏情况下（V<sub>I</sub> 最大且 R<sub>L</sub> 最大时，I<sub>Z</sub> < I<sub>Zmax</sub>；V<sub>I</sub> 最小且 R<sub>L</sub> 最小时，I<sub>Z</sub> > I<sub>Zmin</sub>）。</p>
+
+    <h3>3.5.2 变容二极管</h3>
+    <p>结电容随反向电压显著变化的二极管，用于压控振荡器（VCO）和调谐电路。反向偏压越大，结电容越小。</p>
+
+    <h3>3.5.3 肖特基二极管（SBD）</h3>
+    <p>由金属-半导体接触形成，而非PN结。特点：正向压降小（约 0.3~0.4V）、开关速度极快、无少子存储效应。用于高频整流和高速开关电路。</p>
+
+    <h3>3.5.4 光电器件</h3>
+    <ul>
+      <li><strong>光电二极管：</strong>将光转换为电的二极管，工作在反向偏置状态下，其反向电流随光照强度变化</li>
+      <li><strong>发光二极管（LED）：</strong>将电转换为光的二极管，通过一定正向电流时会发光</li>
+      <li><strong>激光二极管（LD）：</strong>产生相干光的半导体器件</li>
+      <li><strong>太阳能电池：</strong>将光能直接转换为电能的器件，工作在第三象限（不需要外加偏压即可产生功率输出）</li>
+    </ul>
+  </div>
 
-    <div class="section">
-      <div class="section-num">第 54 页</div>
-      <h3>2.  模型分析法应用举例</h3>
-      <h3>桥式整流</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 55 页</div>
-      <h3>二极管采用理想模型时，负载上的平均电压</h3>
-      <h3>▲ 0.9Vs</h3>
-      <h3>二极管中的整流电流</h3>
-      <h3>二极管承受的最大反向电压</h3>
-      <h3>2.  模型分析法应用举例</h3>
-      <h3>桥式整流</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 56 页</div>
-      <h3>理想模型结果</h3>
-      <h3>恒压降模型结果</h3>
-      <h3>理想模型</h3>
-      <h3>恒压降模型</h3>
-      <h3>限幅电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 57 页</div>
-      <h3>钳位电路</h3>
-      <h3>二极管用理想模型，电路处于稳态时</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 58 页</div>
-      <h3>电路如图所示，求AO的电压值</h3>
-      <h3>解：</h3>
-      <p>先断开D，以O为基准电位， 
-     即O点为0V。</p>
-      <p>则接D阳极的电位为-6V，接阴极的电位为-12V。</p>
-      <p>阳极电位高于阴极电位，D接入时正向导通。</p>
-      <p>导通后，D的压降等于零，即A点的电位就是D阳极的电位。</p>
-      <p>所以，AO的电压值为-6V。</p>
-      <h3>开关电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 59 页</div>
-      <p>例   二极管开关电路如图3.4.6所示。利用二极管理想模型求解：当v<sub>I1</sub>和v<sub>I2</sub>为0V或5V时，求v<sub>I1</sub>和v<sub>I2</sub>电压的不同组合情况下，输出电压v<sub>O</sub>的值。</p>
-      <table>
-      <tr>
-        <th>v<sub>I1</sub>/V</th>
-        <th>v<sub>I2</sub>/V</th>
-        <th>二极管工作状态</th>
-        <th></th>
-        <th>v<sub>O</sub>/V</th>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>D1</td>
-        <td>D2</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>0
-0
-5
-5</td>
-        <td>0
-5
-0
-5</td>
-        <td>导通
-导通
-截止
-截止</td>
-        <td>导通
-截止
-导通
-截止</td>
-        <td>0
-0
-0
-5</td>
-      </tr>
-      </table>
-      <h3>开关电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 60 页</div>
-      <h3>例：求图中输出电压。设 V<sub>DD</sub>=5V , R=5k✓, V<sub>D</sub>=0.7V , vs =0.1sinwt V.</h3>
-      <h3>解:</h3>
-      <h3>(1) 直流分析, 令 vs =0, 则</h3>
-      <h3>(2) 交流分析, 令 V<sub>DD</sub> =0, 则</h3>
-      <h3>小信号等效电路</h3>
-      <h3>有</h3>
-      <h3>因为</h3>
-      <h3>小信号工作情况分析</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 61 页</div>
-      <h3>v<sub>O</sub> = V<sub>O</sub> + vo = 4.3 + 0.0994sinwt  V</h3>
-      <h3>解:</h3>
-      <h3>小信号工作情况分析</h3>
-      <h3>例：求图中输出电压。设 V<sub>DD</sub>=5V , R=5k✓, V<sub>D</sub>=0.7V , vs =0.1sinwt V.</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 62 页</div>
-      <p>3.1 半导体的基本知识
-3.2 P<sub>N</sub>结的形成及特性
-3.3 二极管
-3.4 二极管基本电路及其分析方法
-3.5 特殊二极管</p>
-      <h3>3  二极管及其基本电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 63 页</div>
-      <h3>3.5.1 齐纳二极管
-3.5.2 变容二极管
-3.5.3 肖特基二极管
-3.5.4 光电器件</h3>
-      <h3>3.5  特殊二极管</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 64 页</div>
-      <h3>电路符号</h3>
-      <h3>I−V特性</h3>
-      <p>利用二极管反向击穿特性实现稳压。齐纳二极管稳压时工作在反向电击穿状态。</p>
-      <h3>3.5.1  齐纳二极管</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 65 页</div>
-      <h3>稳压应用电路</h3>
-      <h3>3.5.1  齐纳二极管</h3>
-      <h3>正常稳压时    V<sub>O</sub> =V<sub>Z</sub></h3>
-      <p># 稳压条件是什么？</p>
-      <p># 当V<sub>I</sub>变化或R<sub>L</sub>变化时，为什么V<sub>O</sub>能保持基本不变？</p>
-      <p># 选择DZ的依据是什么？如何确定限流电阻R的阻值？</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 66 页</div>
-      <h3>3.5.2  变容二极管</h3>
-      <h3>结电容随反向电压显著变化的二极管</h3>
-      <h3>电路符号                   结电容与电压的关系（纵坐标为对数刻度）</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 67 页</div>
-      <h3>3.5.3  肖特基二极管</h3>
-      <h3>电路符号                     正向I−V特性</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 68 页</div>
-      <h3>1. 光电二极管</h3>
-      <h3>3.5.4  光电器件</h3>
-      <h3>电路符号</h3>
-      <h3>电路模型</h3>
-      <h3>特性曲线</h3>
-      <p>将光转换为电的二极管，工作在反向偏置状态下，其反向电流随光照强度（简称照度）变化。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 69 页</div>
-      <h3>2. 发光二极管</h3>
-      <h3>电路符号</h3>
-      <h3>光电传输系统</h3>
-      <p>将电转换为光的二极管，通过一定正向电流时会发光。</p>
-      <h3>3.5.4  光电器件</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 70 页</div>
-      <h3>3. 激光二极管</h3>
-      <h3>电路符号</h3>
-      <h3>物理结构示意图</h3>
-      <h3>3.5.4  光电器件</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 71 页</div>
-      <h3>4. 太阳能电池</h3>
-      <h3>3.5.4  光电器件</h3>
-      <h3>end</h3>
-    </div>
   <div class="nav-links">
-    <a href="index.html">&larr; 返回首页</a>
-    <a href="ch02.html">&larr; 第2章 运算放大器</a>
-    <a href="ch04.html">第4章 MOS场效应管及其放大电路 &rarr;</a>
+    <a href="ch02.html">← 第2章 运算放大器</a>
+    <a href="index.html">返回首页</a>
+    <a href="ch04.html">第4章 MOS场效应管 →</a>
   </div>
 </div>
-<div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT &middot; 第3章 二极管及其基本电路</p>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>华中科技大学《模拟电子技术基础》</p></div>
 </div>
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-header"><div class="nav-title">📂 章节导航</div><div class="nav-sub">模拟电子技术基础</div></div>
+  <div class="nav-section">基础理论</div>
+  <a href="ch01.html"><span class="num">1</span> 绪论</a>
+  <a href="ch02.html"><span class="num">2</span> 运算放大器</a>
+  <a href="ch03.html"><span class="num">3</span> 二极管及其电路</a>
+  <div class="nav-section">放大器件</div>
+  <a href="ch04.html"><span class="num">4</span> MOS场效应管</a>
+  <a href="ch05.html"><span class="num">5</span> 双极结型三极管</a>
+  <div class="nav-section">集成电路与系统</div>
+  <a href="ch07.html"><span class="num">7</span> 模拟集成电路</a>
+  <a href="ch08.html"><span class="num">8</span> 反馈放大电路</a>
+  <div class="nav-section">功率与输出</div>
+  <a href="ch09.html"><span class="num">9</span> 功率放大电路</a>
+  <a href="index.html"><span class="num">🏠</span> 返回首页</a>
+</div>
+<script>function toggleChapterNav(){document.getElementById('chapterNav').classList.toggle('open');}</script>
 </body>
 </html>

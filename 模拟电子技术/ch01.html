@@ -6,367 +6,478 @@
 <title>第1章 绪论 - 模拟电子技术</title>
 <style>
   :root {
-    --primary: #1a3a5c;
-    --accent: #2d7fc1;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
-    --code-bg: #f0f4f8;
+    --paper: #fdf6e3; --paper-dark: #f5ecd7;
+    --ink: #2c2c2c; --ink-light: #555;
+    --accent: #d35400; --accent-hover: #e67e22;
+    --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
+    --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
+    --code-bg: #eee8d8;
+    --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e;
+    --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af;
+    --tag-must-bg: #fee2e2; --tag-must-color: #991b1b;
+    --tag-key-bg: #fef3c7; --tag-freq-bg: #dbeafe; --tag-info-bg: #f0fdf4; --tag-info-color: #166534;
+    --chip-tag-orange-bg: #fdf2e9; --chip-tag-orange-color: #e67e22;
+    --chip-tag-blue-bg: #e8f4fd; --chip-tag-green-bg: #f0f8f0; --chip-tag-green-color: #27ae60;
+    --tag-red-color: #c0392b; --tag-teal-color: #16a085; --tag-purple-color: #8e44ad;
+    --tag-blue-color: #2980b9; --tag-orange-color: #d35400; --tag-pink-color: #e91e63; --tag-cyan-color: #1abc9c;
+    --heading-color: #1a3a5c;
+    --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;
+  }
+  .dark-mode {
+    --paper: #1a1a2e; --paper-dark: #22223a;
+    --ink: #e0e0ec; --ink-light: #8888aa;
+    --accent: #f0a060; --accent-hover: #e88060;
+    --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
+    --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
+    --code-bg: #2a2a3e;
+    --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830;
+    --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0;
+    --tag-must-bg: #3d1a1a; --tag-must-color: #e88080;
+    --tag-key-bg: #3d3a1a; --tag-freq-bg: #1a2a3d; --tag-info-bg: #1a3d2a; --tag-info-color: #80c090;
+    --chip-tag-orange-bg: #3d2a1a; --chip-tag-orange-color: #f0a060;
+    --chip-tag-blue-bg: #1a2a3d; --chip-tag-green-bg: #1a3d1a; --chip-tag-green-color: #60d080;
+    --tag-red-color: #e88080; --tag-teal-color: #60d0b0; --tag-purple-color: #b080d0;
+    --tag-blue-color: #80b8e0; --tag-orange-color: #e88060; --tag-pink-color: #e880a0; --tag-cyan-color: #60d0b8;
+    --heading-color: var(--ink);
+    background-color: var(--paper);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
+    font-family: var(--font); font-size: 12pt; line-height: 1.75;
+    color: var(--ink); background: var(--paper);
   }
+  /* === Sidebar === */
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)}
+  .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px}
+  .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  /* === Layout === */
+  body { display: flex; min-height: 100vh; }
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
   .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px;
+    position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
-  .topbar-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; }
   .topbar a:hover { color: #fff; }
   .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
   .section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
-  .section-num {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
+  .section h2 {
+    font-size: 1.3em; color: var(--heading-color);
+    border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px;
   }
   .section h3 {
-    font-size: 1.1em;
-    color: var(--accent);
-    margin: 18px 0 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px dashed var(--border);
+    font-size: 1.08em; color: var(--accent); margin: 18px 0 8px;
+    padding-bottom: 4px; border-bottom: 1px dashed var(--divider);
   }
   .section h3:first-of-type { margin-top: 0; }
-  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section p:last-child { margin-bottom: 0; }
-  .highlight {
-    background: #fffbe6;
-    border-left: 3px solid #f0c040;
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-size: 0.95em;
+  .section h4 { font-size: 1em; color: var(--ink); margin: 14px 0 6px; font-weight: 600; }
+  .section p { margin-bottom: 8px; font-size: 0.95em; }
+  .section ul, .section ol { margin: 8px 0 14px 22px; font-size: 0.95em; }
+  .section li { margin-bottom: 6px; }
+  .section-num {
+    font-size: 0.8rem; color: var(--ink-light); font-weight: 600;
+    letter-spacing: 0.5px; margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--divider);
   }
+  /* === Utility blocks === */
+  .highlight { background: var(--highlight-bg); border-left: 3px solid var(--highlight-border);
+    padding: 12px 16px; margin: 14px 0; border-radius: 4px; font-size: 0.95em;
+  }
+  .highlight strong { color: var(--highlight-strong); }
   .def-box {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 10px 0;
-    font-size: 0.95em;
+    background: var(--code-bg); border-radius: 6px;
+    padding: 14px 18px; margin: 12px 0; font-size: 0.95em;
+    border: 1px solid var(--card-border);
   }
   .def-box strong { color: var(--accent); }
   .formula {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin: 10px 0;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    text-align: center; font-size: 1.05em; padding: 12px 16px;
+    background: var(--code-bg); border-radius: 6px; margin: 10px 0;
+    font-weight: 500; letter-spacing: 0.5px;
+    border: 1px solid var(--card-border);
+    font-family: "Times New Roman", "Cascadia Code", monospace;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 0.95em;
+  .checkpoint { background: var(--checkpoint-bg); border: 1px solid var(--checkpoint-border); border-radius: var(--radius);
+    padding: 12px 16px; margin: 18px 0; font-size: 0.93em;
   }
-  th, td {
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    text-align: center;
-  }
-  th {
-    background: var(--code-bg);
-    font-weight: 600;
-    color: var(--primary);
-  }
+  .checkpoint::before { content: '🧠 自查：'; font-weight: 700; color: var(--checkpoint-color); }
+  .dark-mode .checkpoint { background: #1e2a3a; border-color: #2d4a5a; }
+  .dark-mode .checkpoint::before { color: #6a82f0; }
+  /* === Priority tags === */
+  .tag-must { background: var(--tag-must-bg); color: var(--tag-must-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-key { background: var(--tag-key-bg); color: #92400e; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-freq { background: var(--tag-freq-bg); color: #1e40af; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .tag-info { background: var(--tag-info-bg); color: var(--tag-info-color); padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; }
+  .kp { font-weight: 700; color: var(--ink); }
+  .exp { font-weight: 400; color: var(--ink-light); }
+  /* === Tables === */
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; }
+  th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; }
+  .dark-mode th { color: var(--ink); }
+  /* === Navigation === */
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   .nav-links a {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--accent);
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-    font-size: 0.95em;
+    display: inline-block; padding: 10px 24px; background: var(--card-bg);
+    border-radius: 8px; text-decoration: none; color: var(--accent);
+    border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em;
+    font-weight: 500;
   }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .nav-links span { flex: 1; }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
+  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top {
+    position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none;
+    font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+  }
+  .back2top:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+  .theme-toggle {
+    position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px;
+    border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s;
+  }
+  .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
+  .chapter-nav-toggle {
+    position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+    width: 38px; height: 38px; border-radius: 8px 0 0 8px;
+    background: linear-gradient(135deg, #1a3a5c, var(--accent));
+    color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97;
+    opacity: 0.8; transition: all 0.2s;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.15);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chapter-nav-toggle:hover { opacity: 1; }
+  .chapter-nav-panel {
+    position: fixed; right: -260px; top: 50%; transform: translateY(-50%);
+    width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px;
+    box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96;
+    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 16px 0 12px; max-height: 85vh; overflow-y: auto;
+    border: 1px solid var(--card-border);
+  }
+  .chapter-nav-panel.open { right: 0; }
+  .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; }
+  .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: #1a3a5c; }
+  .chapter-nav-panel .nav-header .nav-sub { font-size: 0.72em; color: var(--ink-light); margin-top: 2px; }
+  .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .chapter-nav-panel a {
+    display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em;
+    color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0;
+  }
+  .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); }
+  .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .chapter-nav-panel a .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark);
+    font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0;
+  }
+  .chapter-nav-panel a:hover .num { background: var(--accent); color: #fff; }
+  .chapter-nav-panel a.current .num { background: var(--accent); color: #fff; }
+  .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main-wrap { margin-left: 0; }
+    body { font-size: 11pt; }
+  }
   @media (max-width: 640px) {
-    .section { padding: 16px; }
+    .section { padding: 18px 16px; }
     .topbar h2 { font-size: 1em; }
+    .chapter-nav-panel { width: 200px; }
     table { font-size: 0.85em; }
-    th, td { padding: 6px 8px; }
+    th, td { padding: 5px 8px; }
+    .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; }
   }
 </style>
 </head>
 <body>
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="site-name">模拟电子技术</div>
+    <div class="site-sub">基础 · 复习系统</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div>
+    <a href="ch01.html"><span class="tag">1</span>绪论</a>
+    <a href="ch02.html"><span class="tag">2</span>运算放大器</a>
+    <a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div>
+    <a href="ch04.html"><span class="tag">4</span>MOS场效应管</a>
+    <a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div>
+    <a href="ch07.html"><span class="tag">7</span>模拟集成电路</a>
+    <a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与输出</div>
+    <a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
+  </div>
+</nav>
+
+<script>
+(function(){var p=window.location.pathname.split('/').pop()||'index.html';
+document.querySelectorAll('.sidebar-nav a').forEach(function(a){
+  if(a.getAttribute('href')===p)a.classList.add('current');
+});})();
+</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+
+<script>
+(function(){
+  var d=localStorage.getItem('analogelec-theme');
+  if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}
+})();
+function toggleTheme(){
+  var b=document.body;b.classList.toggle('dark-mode');
+  var btn=document.querySelector('.theme-toggle');
+  var isDark=b.classList.contains('dark-mode');
+  btn.textContent=isDark?'☀️':'🌙';
+  localStorage.setItem('analogelec-theme',isDark?'dark':'light');
+}
+</script>
+<div class="main-wrap">
 <div class="topbar">
   <div class="topbar-inner">
-    <a href="index.html">&larr; 返回首页</a>
+    <a href="index.html">← 返回首页</a>
     <h2>第1章 绪论</h2>
-    <a href="ch02.html">第2章 运算放大器 &rarr;</a>
+    <a href="ch02.html">第2章 →</a>
   </div>
 </div>
 <div class="container">
-    <div class="section">
-      <div class="section-num">第 1 页</div>
-      <h3>1.1 信号
-1.2 信号的频谱
-1.3 模拟信号和数字信号
-1.4 放大电路模型 
-1.5 放大电路的主要性能指标</h3>
-      <h3>1  绪论</h3>
+
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>了解信号与信号频谱的基本概念</li>
+      <li>掌握模拟信号与数字信号的区别</li>
+      <li>理解放大电路的四种模型（电压/电流/互阻/互导）</li>
+      <li>掌握放大电路的主要性能指标：输入电阻、输出电阻、增益、频率响应</li>
+      <li>理解频率失真（线性失真）与非线性失真的区别</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>1.1 信号</h2>
+    <div class="def-box">
+      <strong>信号</strong>是信息的载体或表达形式。
+    </div>
+    <p>在电子电路中，信号通常以<strong>电信号</strong>的形式存在，即随时间变化的电压或电流。例如微音器（麦克风）输出的某一段信号的波形，就是将声音信息转换为电信号。</p>
+    <p>电信号可以通过电路进行传输、处理和变换，这是模拟电子技术研究的基本对象。</p>
+  </div>
+
+  <div class="section">
+    <h2>1.2 信号的频谱</h2>
+    <h3>正弦信号</h3>
+    <p>正弦信号是最基本的周期信号，其数学表达式为：</p>
+    <div class="formula">v(t) = V<sub>m</sub> sin(ωt + φ)</div>
+    <p>其中 V<sub>m</sub> 为振幅，ω 为角频率（ω = 2πf），φ 为初相位。</p>
+
+    <h3>方波信号的傅里叶级数</h3>
+    <p>方波信号满足<strong>狄里赫利条件</strong>，可以展开成傅里叶级数：</p>
+    <div class="formula">
+      v(t) = V<sub>s</sub> · (4/π) [ sinωt + (1/3)sin3ωt + (1/5)sin5ωt + … ]
+    </div>
+    <p>方波信号可以看作由<strong>基波</strong>（角频率为ω）和<strong>奇次谐波</strong>（角频率为3ω、5ω……）叠加而成。信号的频谱描述了各频率分量的幅值和相位。</p>
+
+    <h3>非周期信号</h3>
+    <p>非周期信号不能用傅里叶级数表示，但可以通过<strong>傅里叶变换</strong>得到其频谱：</p>
+    <div class="formula">
+      F(ω) = ∫<sub>-∞</sub><sup>+∞</sup> f(t) e<sup>-jωt</sup> dt
+    </div>
+    <p>非周期信号的频谱是<strong>连续谱</strong>，包含了从零到无穷大的所有频率分量。</p>
+
+    <div class="highlight">
+      <strong>关键结论：</strong>实际电路的处理能力是有限的——任何实际放大电路的带宽都是有限的，只能对一定频率范围内的信号进行有效放大。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>1.3 模拟信号和数字信号</h2>
+    <table>
+      <tr><th>特性</th><th>模拟信号</th><th>数字信号</th></tr>
+      <tr><td>时间特性</td><td>在时间上是<strong>连续</strong>的</td><td>在时间上是<strong>离散</strong>的</td></tr>
+      <tr><td>幅值特性</td><td>在幅值上是<strong>连续</strong>的</td><td>在幅值上是<strong>离散</strong>的</td></tr>
+      <tr><td>处理电路</td><td>模拟电路</td><td>数字电路</td></tr>
+    </table>
+    <div class="def-box">
+      <strong>模拟信号：</strong>在时间和幅值上都是连续的信号。<br>
+      <strong>数字信号：</strong>在时间和幅值上都是离散的信号。<br>
+      <strong>模拟电路：</strong>处理模拟信号的电子电路称为模拟电路。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>1.4 放大电路模型</h2>
+
+    <h3>1. 信号放大时电路的一般构成</h3>
+    <p>放大电路需要<strong>供电电源</strong>，是一个<strong>双口网络</strong>（输入端口和输出端口）。</p>
+    <p>电路中的电位参考基准点，定义为零电位，用接地符号"⏚"表示。接地也是输入、输出和电源的<strong>共同端</strong>。</p>
+
+    <h3>2. 放大电路增益形式</h3>
+    <table>
+      <tr><th>增益类型</th><th>定义</th><th>表达式</th><th>分贝表示</th></tr>
+      <tr><td>电压增益</td><td>输出电压与输入电压之比</td><td>A<sub>v</sub> = v<sub>o</sub> / v<sub>i</sub></td><td>20lg|A<sub>v</sub>| dB</td></tr>
+      <tr><td>电流增益</td><td>输出电流与输入电流之比</td><td>A<sub>i</sub> = i<sub>o</sub> / i<sub>i</sub></td><td>20lg|A<sub>i</sub>| dB</td></tr>
+      <tr><td>互阻增益</td><td>输出电压与输入电流之比</td><td>A<sub>r</sub> = v<sub>o</sub> / i<sub>i</sub> (Ω)</td><td>—</td></tr>
+      <tr><td>互导增益</td><td>输出电流与输入电压之比</td><td>A<sub>g</sub> = i<sub>o</sub> / v<sub>i</sub> (S)</td><td>—</td></tr>
+      <tr><td>功率增益</td><td>输出功率与输入功率之比</td><td>A<sub>p</sub> = P<sub>o</sub> / P<sub>i</sub></td><td>10lgA<sub>p</sub> dB</td></tr>
+    </table>
+
+    <h3>3. 放大电路模型</h3>
+    <p>放大电路是一个<strong>双口网络</strong>。从端口特性来研究放大电路，可将其等效成具有某种端口特性的等效电路（此处均忽略了电抗元件的影响）。</p>
+    <ul>
+      <li>输入端口特性可以等效为一个<strong>输入电阻 R<sub>i</sub></strong></li>
+      <li>输出端口可以根据不同情况等效成不同的电路形式</li>
+    </ul>
+
+    <h4>（1）电压放大模型</h4>
+    <p>输入回路中，信号源 v<sub>s</sub> 通过内阻 R<sub>s</sub> 加到输入电阻 R<sub>i</sub> 上：</p>
+    <div class="formula">v<sub>i</sub> = v<sub>s</sub> · R<sub>i</sub> / (R<sub>s</sub> + R<sub>i</sub>)</div>
+    <p>由输出回路得：v<sub>o</sub> = A<sub>vo</sub> · v<sub>i</sub> · R<sub>L</sub> / (R<sub>o</sub> + R<sub>L</sub>)</p>
+    <p>则电压增益为：</p>
+    <div class="formula">A<sub>v</sub> = v<sub>o</sub> / v<sub>s</sub> = A<sub>vo</sub> · [R<sub>i</sub> / (R<sub>s</sub> + R<sub>i</sub>)] · [R<sub>L</sub> / (R<sub>o</sub> + R<sub>L</sub>)]</div>
+
+    <div class="highlight">
+      <strong>重要结论：</strong>
+      <ul>
+        <li>负载 R<sub>L</sub> 的大小会影响增益的大小——要想减小负载的影响，则希望 <strong>R<sub>o</sub> ≪ R<sub>L</sub></strong>（理想情况 R<sub>o</sub> → 0）</li>
+        <li>信号源内阻 R<sub>s</sub> 会导致输入信号衰减——要想减小衰减，则希望 <strong>R<sub>i</sub> ≫ R<sub>s</sub></strong>（理想情况 R<sub>i</sub> → ∞）</li>
+      </ul>
     </div>
 
-    <div class="section">
-      <div class="section-num">第 2 页</div>
-      <h3>1.1  信号</h3>
-      <h3>信号是信息的载体或表达形式</h3>
-      <h3>微音器输出的某一段信号的波形</h3>
+    <h4>（2）电流放大模型</h4>
+    <p>电流增益：A<sub>i</sub> = i<sub>o</sub> / i<sub>i</sub>。理想电流放大器应满足：R<sub>i</sub> → 0，R<sub>o</sub> → ∞。</p>
+
+    <h4>（3）互阻放大模型</h4>
+    <p>互阻增益：A<sub>r</sub> = v<sub>o</sub> / i<sub>i</sub> (Ω)。输入为电流，输出为电压。</p>
+
+    <h4>（4）互导放大模型</h4>
+    <p>互导增益：A<sub>g</sub> = i<sub>o</sub> / v<sub>i</sub> (S)。输入为电压，输出为电流。</p>
+
+    <h4>（5）隔离放大模型</h4>
+    <p>隔离放大器的电压增益 A<sub>vo</sub> = 1，输入电阻 R<sub>i</sub> → ∞，输出电阻 R<sub>o</sub> → 0，起到<strong>阻抗变换</strong>（缓冲）的作用。</p>
+
+    <table>
+      <tr><th>放大模型</th><th>输入信号</th><th>输出信号</th><th>理想 R<sub>i</sub></th><th>理想 R<sub>o</sub></th></tr>
+      <tr><td>电压放大</td><td>电压</td><td>电压</td><td>∞</td><td>0</td></tr>
+      <tr><td>电流放大</td><td>电流</td><td>电流</td><td>0</td><td>∞</td></tr>
+      <tr><td>互阻放大</td><td>电流</td><td>电压</td><td>0</td><td>0</td></tr>
+      <tr><td>互导放大</td><td>电压</td><td>电流</td><td>∞</td><td>∞</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>1.5 放大电路的主要性能指标</h2>
+
+    <h3>1. 输入电阻 R<sub>i</sub></h3>
+    <p>从放大电路输入端看进去的等效电阻：</p>
+    <div class="formula">R<sub>i</sub> = v<sub>i</sub> / i<sub>i</sub></div>
+    <p>输入电阻反映了放大电路对信号源的负载效应。R<sub>i</sub> 越大，从信号源索取的电流越小。</p>
+
+    <h3>2. 输出电阻 R<sub>o</sub></h3>
+    <p>从放大电路输出端看进去的戴维南等效电阻。测量方法：将信号源置零（v<sub>s</sub> = 0，保留 R<sub>s</sub>），在输出端加测试电压求电流。</p>
+    <div class="highlight">
+      <strong>注意：</strong>输入、输出电阻为<strong>交流电阻</strong>，不是直流电阻。
     </div>
 
-    <div class="section">
-      <div class="section-num">第 3 页</div>
-      <h3>1.1  信号</h3>
-      <h3>电信号的电路表示</h3>
+    <h3>3. 增益</h3>
+    <p>增益反映放大电路在输入信号控制下，将<strong>供电电源能量</strong>转换为<strong>输出信号能量</strong>的能力。</p>
+    <p>常用分贝(dB)表示增益，因为：</p>
+    <ul>
+      <li>人耳对声音的感知近似对数关系</li>
+      <li>多级放大电路的总增益为各级增益的乘积，用dB表示时变为<strong>相加</strong>，便于计算</li>
+    </ul>
+
+    <h3>4. 频率响应</h3>
+    <h4>A. 频率响应及带宽</h4>
+    <p>在输入正弦信号情况下，输出随输入信号频率连续变化的稳态响应，称为放大电路的<strong>频率响应</strong>。</p>
+    <p>电压增益可表示为频率的函数：</p>
+    <div class="formula">A<sub>v</sub>(jω) = |A<sub>v</sub>(jω)| ∠φ(ω)</div>
+    <p>其中 |A<sub>v</sub>(jω)| 称为<strong>幅频响应</strong>，φ(ω) 称为<strong>相频响应</strong>。</p>
+
+    <p><strong>带宽 BW</strong>：放大电路增益下降至中频增益的 1/√2 倍（即 -3dB）时所对应的频率范围。</p>
+    <ul>
+      <li>f<sub>L</sub> —— 下限截止频率（低频端）</li>
+      <li>f<sub>H</sub> —— 上限截止频率（高频端）</li>
+      <li>BW = f<sub>H</sub> − f<sub>L</sub></li>
+    </ul>
+    <p>直流放大电路的幅频响应中 f<sub>L</sub> = 0，带宽 BW = f<sub>H</sub>。</p>
+
+    <h4>B. 频率失真（线性失真）</h4>
+    <p><strong>幅度失真：</strong>放大电路对信号中不同频率分量的放大倍数不同而产生的失真。例如当放大基波幅值的倍数大于放大二次谐波的倍数时，复合波形出现失真。</p>
+    <p><strong>相位失真：</strong>放大电路对信号中不同频率分量产生的时延不同而出现的失真。如果基波分量和二次谐波分量经放大电路产生不同的时延，则复合波形出现失真。</p>
+
+    <div class="highlight">
+      <strong>频率失真（线性失真）：</strong>幅度失真和相位失真通常都是同时发生的，它们统称为频率失真，也称为<strong>线性失真</strong>。<br>
+      <strong>特点：</strong>线性失真的输出信号中不会产生新的频率分量。
     </div>
 
-    <div class="section">
-      <div class="section-num">第 4 页</div>
-      <h3>1.2  信号的频谱</h3>
-      <h3>正弦信号</h3>
+    <h3>5. 非线性失真</h3>
+    <p>由元器件（如晶体管）的<strong>非线性特性</strong>引起的失真。非线性失真会使输出信号中产生输入信号所没有的<strong>新的频率分量</strong>（谐波分量）。</p>
+    <p>非线性失真系数：</p>
+    <div class="formula">
+      γ = √(V<sub>o2</sub>² + V<sub>o3</sub>² + … ) / V<sub>o1</sub>
     </div>
+    <p>其中 V<sub>o1</sub> 是输出电压信号基波分量的有效值，V<sub>ok</sub>（k ≥ 2）是高次谐波分量的有效值。</p>
 
-    <div class="section">
-      <div class="section-num">第 5 页</div>
-      <h3>方波信号</h3>
-      <h3>满足狄里赫利条件，展开成傅里叶级数</h3>
-      <h3>其中</h3>
-      <h3>方波的时域表示</h3>
-      <h3>1.2  信号的频谱</h3>
-    </div>
+    <table>
+      <tr><th>对比项</th><th>频率失真（线性失真）</th><th>非线性失真</th></tr>
+      <tr><td>产生原因</td><td>电路中存在电抗元件（电容、电感），对不同频率响应不同</td><td>元器件的非线性特性（如晶体管的非线性伏安特性）</td></tr>
+      <tr><td>新频率分量</td><td>不产生新频率分量</td><td>产生新的频率分量（谐波）</td></tr>
+      <tr><td>与信号幅度关系</td><td>通常与信号幅度无关（小信号条件下）</td><td>随信号幅度增大而增大</td></tr>
+    </table>
+  </div>
 
-    <div class="section">
-      <div class="section-num">第 6 页</div>
-      <h3>方波的时域表示</h3>
-      <h3>方波信号</h3>
-      <h3>1.2  信号的频谱</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 7 页</div>
-      <h3>非周期信号</h3>
-      <h3>傅里叶变换：</h3>
-      <h3>实际电路的处理能力是有限的</h3>
-      <h3>1.2  信号的频谱</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 8 页</div>
-      <h3>1.3  模拟信号和数字信号</h3>
-      <p>处理模拟信号的电子电路称为模拟电路。</p>
-      <p>模拟信号：在时间和幅值上都是连续的信号。</p>
-      <p>数字信号：在时间和幅值上都是离散的信号。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 9 页</div>
-      <h3>简化形式</h3>
-      <p>需要供电电源；是双口网络。</p>
-      <p>电路中的电位参考基准点，定义为零电位。</p>
-      <h3>接地符号“▲”的含义</h3>
-      <p>也是输入、输出和电源的“共同端”。</p>
-      <h3>1.4  放大电路模型</h3>
-      <h3>1. 信号放大时电路的一般构成</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 10 页</div>
-      <h3>1.4  放大电路模型</h3>
-      <h3>2. 放大电路增益形式</h3>
-      <h3>电压增益（电压放大倍数）</h3>
-      <h3>电流增益</h3>
-      <h3>互阻增益</h3>
-      <h3>互导增益</h3>
-      <h3>功率增益</h3>
-      <h3>增益分贝数表示</h3>
-      <h3>电压增益= 20lg|A<sub>v</sub>| dB</h3>
-      <h3>电流增益= 20lg|A<sub>i</sub> | dB</h3>
-      <h3>功率增益= 10lgAp dB</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 11 页</div>
-      <h3>1.4  放大电路模型</h3>
-      <h3>3. 放大电路模型</h3>
-      <p>放大电路是一个双口网络。从端口特性来研究放大电路，可将其等效成具有某种端口特性的等效电路。（此处均忽略了电抗元件的影响。）</p>
-      <h3>输入端口特性可以等效为一个输入电阻</h3>
-      <h3>输出端口可以根据不同情况等效成不同的电路形式</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 12 页</div>
-      <h3>电压放大模型</h3>
-      <h3>1.4  放大电路模型</h3>
-      <h3>3. 放大电路模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 13 页</div>
-      <h3>电压放大模型</h3>
-      <h3>由输出回路得</h3>
-      <h3>则电压增益为</h3>
-      <h3>由此可见</h3>
-      <h3>即负载的大小会影响增益的大小</h3>
-      <h3>要想减小负载的影响，则希望</h3>
-      <h3>理想情况</h3>
-      <h3>1.4  放大电路模型</h3>
-      <h3>3. 放大电路模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 14 页</div>
-      <h3>电压放大模型</h3>
-      <h3>在输入回路</h3>
-      <h3>1.4  放大电路模型</h3>
-      <h3>3. 放大电路模型</h3>
-      <h3>理想情况</h3>
-      <h3>要想减小衰减，则希望</h3>
-      <h3>即信号源内阻会导致输入信号衰减</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 15 页</div>
-      <h3>电流放大模型</h3>
-      <h3>1.4  放大电路模型</h3>
-      <h3>3. 放大电路模型</h3>
-      <h3>电流增益</h3>
-      <h3>互阻放大模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 16 页</div>
-      <h3>互导放大模型</h3>
-      <h3>1.4  放大电路模型</h3>
-      <h3>3. 放大电路模型</h3>
-      <h3>隔离放大模型</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 17 页</div>
-      <h3>1.5  放大电路的主要性能指标</h3>
-      <h3>1. 输入电阻</h3>
-      <h3>或</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 18 页</div>
-      <h3>1.5  放大电路的主要性能指标</h3>
-      <h3>2. 输出电阻</h3>
-      <h3>注意：输入、输出电阻为交流电阻</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 19 页</div>
-      <h3>1.5  放大电路的主要性能指标</h3>
-      <h3>3. 增益</h3>
-      <p>反映放大电路在输入信号控制下，将供电电源能量转换为输出信号能量的能力。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 20 页</div>
-      <h3>4. 频率响应</h3>
-      <h3>A.频率响应及带宽</h3>
-      <h3>电压增益可表示为</h3>
-      <p>在输入正弦信号情况下，输出随输入信号频率连续变化的稳态响应，称为放大电路的频率响应。</p>
-      <h3>其中</h3>
-      <h3>1.5  放大电路的主要性能指标</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 21 页</div>
-      <h3>其中</h3>
-      <h3>普通音响系统放大电路的幅频响应</h3>
-      <h3>直流放大电路的幅频响应</h3>
-      <h3>4. 频率响应</h3>
-      <h3>A.频率响应及带宽</h3>
-      <h3>1.5  放大电路的主要性能指标</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 22 页</div>
-      <h3>4. 频率响应</h3>
-      <h3>B.频率失真（线性失真）</h3>
-      <h3>1.5  放大电路的主要性能指标</h3>
-      <p>当放大基波幅值的倍数大于放大二次谐波的倍数时，复合波形出现失真。</p>
-      <h3>幅度失真：</h3>
-      <p>放大电路对信号中不同频率分量的放大倍数不同而产生的失真。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 23 页</div>
-      <p>如果基波分量和二次谐波分量经放大电路产生不同的时延，则复合波形出现失真。</p>
-      <h3>相位失真：</h3>
-      <p>放大电路对信号中不同频率分量产生的时延不同而出现的失真。</p>
-      <p>幅度失真和相位失真通常都是同时发生的，它们统称为频率失真，也称为线性失真。</p>
-      <h3>4. 频率响应</h3>
-      <h3>B.频率失真（线性失真）</h3>
-      <h3>1.5  放大电路的主要性能指标</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 24 页</div>
-      <h3>end</h3>
-      <h3>5. 非线性失真</h3>
-      <h3>1.5  放大电路的主要性能指标</h3>
-      <p>由元器件非线性特性引起的失真。</p>
-      <h3>非线性失真系数:</h3>
-      <p>Vo1是输出电压信号基波分量的有效值，Vok是高次谐波分量的有效值，k为正整数。</p>
-    </div>
   <div class="nav-links">
-    <a href="index.html">&larr; 返回首页</a>
-    <span></span>
-    <a href="ch02.html">第2章 运算放大器 &rarr;</a>
+    <a href="index.html">← 返回首页</a>
+    <a href="ch02.html">第2章 运算放大器 →</a>
   </div>
 </div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT &middot; 第1章 绪论</p>
+  <p>华中科技大学《模拟电子技术基础》</p>
 </div>
+</div>
+
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-header">
+    <div class="nav-title">📂 章节导航</div>
+    <div class="nav-sub">模拟电子技术基础</div>
+  </div>
+  <div class="nav-section">基础理论</div>
+  <a href="ch01.html"><span class="num">1</span> 绪论</a>
+  <a href="ch02.html"><span class="num">2</span> 运算放大器</a>
+  <a href="ch03.html"><span class="num">3</span> 二极管及其电路</a>
+  <div class="nav-section">放大器件</div>
+  <a href="ch04.html"><span class="num">4</span> MOS场效应管</a>
+  <a href="ch05.html"><span class="num">5</span> 双极结型三极管</a>
+  <div class="nav-section">集成电路与系统</div>
+  <a href="ch07.html"><span class="num">7</span> 模拟集成电路</a>
+  <a href="ch08.html"><span class="num">8</span> 反馈放大电路</a>
+  <div class="nav-section">功率与输出</div>
+  <a href="ch09.html"><span class="num">9</span> 功率放大电路</a>
+  <a href="index.html"><span class="num">🏠</span> 返回首页</a>
+</div>
+
+<script>
+function toggleChapterNav() {
+  var panel = document.getElementById('chapterNav');
+  panel.classList.toggle('open');
+}
+</script>
 </body>
 </html>

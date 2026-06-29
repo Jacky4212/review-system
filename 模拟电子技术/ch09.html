@@ -5,455 +5,174 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>第9章 功率放大电路 - 模拟电子技术</title>
 <style>
-  :root {
-    --primary: #1a3a5c;
-    --accent: #d35400;
-    --bg: #f5f7fa;
-    --card-bg: #ffffff;
-    --text: #2c3e50;
-    --text-light: #7f8c8d;
-    --border: #e1e8ed;
-    --code-bg: #f0f4f8;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-  }
-  .topbar {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    padding: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .topbar-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; }
-  .topbar a:hover { color: #fff; }
-  .topbar h2 { font-size: 1.2em; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
-  .section {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .section-num {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section h3 {
-    font-size: 1.1em;
-    color: var(--accent);
-    margin: 18px 0 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px dashed var(--border);
-  }
-  .section h3:first-of-type { margin-top: 0; }
-  .section p { margin-bottom: 8px; color: var(--text); font-size: 0.95em; }
-  .section p:last-child { margin-bottom: 0; }
-  .highlight {
-    background: #fffbe6;
-    border-left: 3px solid #f0c040;
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-size: 0.95em;
-  }
-  .def-box {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 10px 0;
-    font-size: 0.95em;
-  }
-  .def-box strong { color: var(--accent); }
-  .formula {
-    background: var(--code-bg);
-    border-radius: 8px;
-    padding: 10px 16px;
-    margin: 10px 0;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 0.95em;
-  }
-  th, td {
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    text-align: center;
-  }
-  th {
-    background: var(--code-bg);
-    font-weight: 600;
-    color: var(--primary);
-  }
-  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .nav-links a {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--accent);
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-    font-size: 0.95em;
-  }
-  .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .nav-links span { flex: 1; }
-  .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); }
-  @media (max-width: 640px) {
-    .section { padding: 16px; }
-    .topbar h2 { font-size: 1em; }
-    table { font-size: 0.85em; }
-    th, td { padding: 6px 8px; }
-  }
+  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #d35400; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e; --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
+  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #f0a060; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830; --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0; --heading-color: var(--ink); background-color: var(--paper); }
+  * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: var(--font); font-size: 12pt; line-height: 1.75; color: var(--ink); background: var(--paper); display: flex; min-height: 100vh; }
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column} .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)} .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)} .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px} .sidebar-nav {flex:1;padding:10px 0 16px} .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase} .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent} .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)} .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600} .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0} .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; } .topbar { background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15); } .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; } .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; } .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; } .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); } .section h2 { font-size: 1.3em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px; } .section h3 { font-size: 1.08em; color: var(--accent); margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--divider); } .section h3:first-of-type { margin-top: 0; } .section h4 { font-size: 1em; color: var(--ink); margin: 14px 0 6px; font-weight: 600; } .section p { margin-bottom: 8px; font-size: 0.95em; } .section ul, .section ol { margin: 8px 0 14px 22px; font-size: 0.95em; } .section li { margin-bottom: 6px; }
+  .highlight { background: var(--highlight-bg); border-left: 3px solid var(--highlight-border); padding: 12px 16px; margin: 14px 0; border-radius: 4px; font-size: 0.95em; } .highlight strong { color: var(--highlight-strong); } .def-box { background: var(--code-bg); border-radius: 6px; padding: 14px 18px; margin: 12px 0; font-size: 0.95em; border: 1px solid var(--card-border); } .def-box strong { color: var(--accent); } .formula { text-align: center; font-size: 1.05em; padding: 12px 16px; background: var(--code-bg); border-radius: 6px; margin: 10px 0; font-weight: 500; letter-spacing: 0.5px; border: 1px solid var(--card-border); font-family: "Times New Roman", "Cascadia Code", monospace; } .checkpoint { background: var(--checkpoint-bg); border: 1px solid var(--checkpoint-border); border-radius: var(--radius); padding: 12px 16px; margin: 18px 0; font-size: 0.93em; } .checkpoint::before { content: '🧠 自查：'; font-weight: 700; color: var(--checkpoint-color); } .dark-mode .checkpoint { background: #1e2a3a; border-color: #2d4a5a; } .dark-mode .checkpoint::before { color: #6a82f0; }
+  .tag-must { background: #fee2e2; color: #991b1b; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .tag-key { background: #fef3c7; color: #92400e; padding: 1px 7px; border-radius: 3px; font-size: 0.8em; font-weight: 600; } .kp { font-weight: 700; color: var(--ink); } .exp { font-weight: 400; color: var(--ink-light); }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; } th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; } th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; } .dark-mode th { color: var(--ink); }
+  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; } .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; box-shadow: 0 2px 10px rgba(0,0,0,0.18); } .back2top:hover { opacity: 1; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); } .theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; } .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); } .chapter-nav-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px 0 0 8px; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97; opacity: 0.8; transition: all 0.2s; box-shadow: -2px 0 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; } .chapter-nav-toggle:hover { opacity: 1; } .chapter-nav-panel { position: fixed; right: -260px; top: 50%; transform: translateY(-50%); width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px; box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96; transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1); padding: 16px 0 12px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--card-border); } .chapter-nav-panel.open { right: 0; } .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; } .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; } .chapter-nav-panel a { display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em; color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0; } .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); } .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; } .chapter-nav-panel a .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark); font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0; } .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } body { font-size: 11pt; } } @media (max-width: 640px) { .section { padding: 18px 16px; } .topbar h2 { font-size: 1em; } .chapter-nav-panel { width: 200px; } table { font-size: 0.85em; } th, td { padding: 5px 8px; } .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; } }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="topbar-inner">
-    <a href="index.html">&larr; 返回首页</a>
-    <h2>第9章 功率放大电路</h2>
+<nav class="sidebar">
+  <div class="sidebar-header"><div class="site-name">模拟电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div><a href="ch01.html"><span class="tag">1</span>绪论</a><a href="ch02.html"><span class="tag">2</span>运算放大器</a><a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div><a href="ch04.html"><span class="tag">4</span>MOS场效应管</a><a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div><a href="ch07.html"><span class="tag">7</span>模拟集成电路</a><a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与输出</div><a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
+  </div>
+</nav>
+<script>(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
+<div class="main-wrap">
+<div class="topbar"><div class="topbar-inner"><a href="ch08.html">← 第8章</a><h2>第9章 功率放大电路</h2><a href="index.html">返回首页 →</a></div></div>
+<div class="container">
+
+  <div class="section">
+    <h2>📌 教学基本要求</h2>
+    <ul>
+      <li>了解功率放大电路与电压放大电路的区别</li>
+      <li>掌握甲/乙/甲乙/丙/丁类功放的工作状态分类</li>
+      <li>掌握乙类双电源互补对称功放（OCL）的分析计算</li>
+      <li>理解交越失真的产生原因及消除方法（甲乙类）</li>
+      <li>了解丁类（D类）功放的工作原理</li>
+      <li>了解功率管的安全工作与散热问题</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9.1 功率放大电路的一般问题</h2>
+
+    <h3>1. 功率放大电路的特点及主要研究对象</h3>
+    <p>放大电路实质上都是<strong>能量转换电路</strong>。从能量控制的观点来看，功率放大电路和电压放大电路没有本质的区别。但它们的任务不同：</p>
+    <ul>
+      <li><strong>电压放大电路</strong>：得到不失真的电压输出信号，关心电压增益</li>
+      <li><strong>功率放大电路</strong>：获得一定的不失真（或失真较小）的<strong>输出功率</strong>，更关注<strong>效率</strong>而非功率增益</li>
+    </ul>
+    <p>功率放大电路是一种以输出较大功率为目的的放大电路，因此要求同时输出较大的电压和电流，三极管工作在接近极限状态。要解决的问题：<strong>提高效率、减小失真、三极管的保护</strong>。</p>
+
+    <h3>2. 输出级工作状态分类及提高效率的主要途径</h3>
+    <p><strong>提高效率的主要途径：降低静态功耗，即减小静态电流。</strong></p>
+    <p>根据正弦信号整个周期内三极管的导通情况划分：</p>
+    <table>
+      <tr><th>类别</th><th>导通角</th><th>特点</th><th>效率</th></tr>
+      <tr><td>甲类(A)</td><td>360°（一个周期内均导通）</td><td>静态电流大，效率最低</td><td>≤25%（电阻负载）</td></tr>
+      <tr><td>乙类(B)</td><td>= 180°</td><td>静态电流为零，存在交越失真</td><td>≤78.5%（理论）</td></tr>
+      <tr><td>甲乙类(AB)</td><td>> 180°</td><td>小静态电流克服交越失真</td><td>介于甲类和乙类之间</td></tr>
+      <tr><td>丙类(C)</td><td>< 180°</td><td>用于高频谐振功放</td><td>最高</td></tr>
+      <tr><td>丁类(D)</td><td>开关状态</td><td>三极管工作于开关状态，效率极高</td><td>> 90%</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>9.2 射极输出器——甲类放大的实例</h2>
+    <p>射极输出器（共集电极放大电路）作为甲类功放的典型实例。其特点是：电压增益≈1，输入阻抗高，输出阻抗低。但由于静态电流的存在，效率很低。</p>
+  </div>
+
+  <div class="section">
+    <h2>9.3 乙类双电源互补对称功率放大电路（OCL）</h2>
+
+    <h3>1. 电路组成</h3>
+    <p>由一对NPN和PNP三极管（T1和T2）组成<strong>互补对称</strong>结构。基本互补对称电路实现了<strong>静态时两管不导电</strong>，而在有信号时，T1和T2<strong>轮流导电</strong>，组成<strong>推挽式</strong>电路。双电源 ±V<sub>CC</sub> 供电，输出直接耦合到负载（无输出电容，故称OCL——Output Capacitor-Less）。</p>
+
+    <h3>2. 分析计算（大信号下图解法）</h3>
+    <h4>（1）输出功率 P<sub>o</sub></h4>
+    <div class="formula">
+      P<sub>o</sub> = V<sub>om</sub>² / (2R<sub>L</sub>)
+    </div>
+    <p>最大输出功率（忽略 V<sub>CES</sub> 时）：</p>
+    <div class="formula">
+      P<sub>omax</sub> = V<sub>CC</sub>² / (2R<sub>L</sub>)
+    </div>
+
+    <h4>（2）管耗 P<sub>T</sub></h4>
+    <p>设输出电压为 v<sub>o</sub> = V<sub>om</sub> sinωt，单管在半个周期内的管耗：</p>
+    <div class="formula">
+      P<sub>T</sub> = (1/R<sub>L</sub>) · [(V<sub>CC</sub>V<sub>om</sub>/π) − (V<sub>om</sub>²/4)]
+    </div>
+
+    <h4>（3）直流电源供给的功率 P<sub>V</sub></h4>
+    <div class="formula">
+      P<sub>V</sub> = 2V<sub>CC</sub>V<sub>om</sub> / (πR<sub>L</sub>)
+    </div>
+
+    <h4>（4）效率 η</h4>
+    <div class="formula">
+      η = P<sub>o</sub> / P<sub>V</sub> = (π/4) · (V<sub>om</sub>/V<sub>CC</sub>)
+    </div>
+    <p>当 V<sub>om</sub> = V<sub>CC</sub> 时，最大效率：</p>
+    <div class="formula">
+      η<sub>max</sub> = π/4 ≈ 78.5%
+    </div>
+
+    <div class="highlight">
+      <strong>交越失真：</strong>乙类功放在输入信号的零点附近，由于三极管需要克服死区电压（|v<sub>BE</sub>| < 0.7V），两管均不导通，输出电压在零点附近出现"平台"状的失真。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>9.4 甲乙类互补对称功率放大电路</h2>
+    <p>为克服乙类功放的<strong>交越失真</strong>，给两个输出管提供<strong>小静态偏置电流</strong>（微导通状态），使其工作在甲乙类。</p>
+    <p>常见实现方式：</p>
+    <ul>
+      <li><strong>二极管偏置：</strong>在两个输出管的基极之间接入两个串联二极管（或V<sub>BE</sub>倍增电路），提供约 1.4V 的偏置电压</li>
+      <li><strong>V<sub>BE</sub>倍增电路：</strong>由一只三极管和两个电阻组成，等效于一个可调节的电压源，提供稳定的偏置电压</li>
+    </ul>
+
+    <h4>单电源互补对称功放（OTL）</h4>
+    <p>当只有单电源供电时，输出端需通过大电容耦合到负载（OTL——Output Transformer-Less）。静态时，输出端电压为 V<sub>CC</sub>/2。</p>
+
+    <table>
+      <tr><th>特性</th><th>OCL（双电源）</th><th>OTL（单电源）</th></tr>
+      <tr><td>电源</td><td>±V<sub>CC</sub></td><td>V<sub>CC</sub></td></tr>
+      <tr><td>输出端静态电压</td><td>0V</td><td>V<sub>CC</sub>/2</td></tr>
+      <tr><td>输出耦合</td><td>直接耦合</td><td>电容耦合</td></tr>
+      <tr><td>最大输出功率</td><td>V<sub>CC</sub>²/(2R<sub>L</sub>)</td><td>V<sub>CC</sub>²/(8R<sub>L</sub>)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>9.5 丁类（D类）功率放大电路原理简介</h2>
+    <p>D类功放的三极管工作于<strong>开关状态</strong>（导通时饱和，截止时关断），理论上管耗为零，效率可接近 100%。</p>
+    <p>工作原理：输入信号通过PWM（脉宽调制）转换为高频方波 → 开关功率管放大 → 低通滤波器滤除高频载波，恢复信号波形。D类功放广泛应用于便携式音频设备、手机等要求高效率的场合。</p>
+  </div>
+
+  <div class="section">
+    <h2>9.6 功率管</h2>
+    <p>功率管的安全工作需要考虑：</p>
+    <ul>
+      <li><strong>二次击穿</strong>：大电流下的局部热点导致的破坏性击穿</li>
+      <li><strong>散热设计</strong>：功率管的散热器选择，热阻 θ<sub>JA</sub>（结到环境）、θ<sub>JC</sub>（结到外壳）</li>
+      <li><strong>安全工作区（SOA）</strong>：由最大电流、最大电压、最大耗散功率和二次击穿限制围成的区域</li>
+    </ul>
+    <p>常用的功率管类型：功率BJT、功率MOSFET（VMOS/VDMOS）、IGBT等。</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="ch08.html">← 第8章 反馈放大电路</a>
     <a href="index.html">返回首页</a>
   </div>
 </div>
-<div class="container">
-    <div class="section">
-      <div class="section-num">第 1 页</div>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-      <h3>9  功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 2 页</div>
-      <h3>9.1 功率放大电路的一般问题</h3>
-      <h3>1. 功率放大电路的特点及主要研究对象</h3>
-      <p>放大电路实质上都是能量转换电路。
-从能量控制的观点来看，功率放大电路和电压放大电路没有本质的区别。
-功率放大电路和电压放大电路要完成的任务不同：
-电压放大电路：得到不失真的电压输出信号，关心电压增益。
-功率放大电路：获得一定的不失真（或失真较小）的输出功率，更关注效率而非功率增益。</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 3 页</div>
-      <h3>主要特点</h3>
-      <p>功率放大电路是一种以输出较大功率为目的的放大电路。因此，要求同时输出较大的电压和电流。三极管工作在接近极限状态。</p>
-      <h3>要解决的问题</h3>
-      <h3>提高效率</h3>
-      <h3>减小失真</h3>
-      <h3>三极管的保护</h3>
-      <p>一般直接驱动负载，带载能力要强。</p>
-      <h3>9.1 功率放大电路的一般问题</h3>
-      <h3>1. 功率放大电路的特点及主要研究对象</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 4 页</div>
-      <h3>2. 输出级工作状态分类及提高效率的主要途径</h3>
-      <p>提高效率的主要途径：降低静态功耗，即减小静态电流。</p>
-      <h3>四种工作状态：</h3>
-      <h3>根据正弦信号整个周期内三极管的导通情况划分</h3>
-      <h3>乙类：导通角等于180°</h3>
-      <h3>甲类：一个周期内均导通</h3>
-      <h3>甲乙类：导通角大于180°</h3>
-      <h3>丙类：导通角小于180°</h3>
-      <h3>9.1 功率放大电路的一般问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 5 页</div>
-      <h3>9  功率放大电路</h3>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 6 页</div>
-      <h3>9.2 射极输出器——甲类放大的实例</h3>
-      <h3>略</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 7 页</div>
-      <h3>9  功率放大电路</h3>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 8 页</div>
-      <h3>1.  电路组成</h3>
-      <p>基本互补对称电路实现了静态时两管不导电，而在有信号时，T1和T2轮流导电，组成推挽式电路。</p>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-      <h3>大信号</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 9 页</div>
-      <h3>2.  分析计算</h3>
-      <p>三极管工作于大信号下，采用图解法分析。</p>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 10 页</div>
-      <h3>1）输出功率</h3>
-      <h3>2.  分析计算</h3>
-      <h3>最大输出功率</h3>
-      <h3>忽略V<sub>CES</sub>时</h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 11 页</div>
-      <h3>单个管子在半个周期内的管耗</h3>
-      <h3>两管管耗</h3>
-      <div class="formula">设输出电压为vo＝Vomsinωt</div>
-      <h3>2.  分析计算</h3>
-      <h3>2）管耗P<sub>T</sub></h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 12 页</div>
-      <h3>3）直流电源供给的功率P<sub>V</sub></h3>
-      <h3>4）效率▲</h3>
-      <h3>2.  分析计算</h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 13 页</div>
-      <h3>3.  功率BJT的选择</h3>
-      <h3>1）最大管耗和最大输出功率的关系</h3>
-      <h3>选管依据之一</h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 14 页</div>
-      <h3>乙类互补对称电路Po、P<sub>V</sub>和P<sub>T</sub>1与Vom/V<sub>CC</sub>变化的关系曲线</h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 15 页</div>
-      <h3>2）功率BJT的选择</h3>
-      <h3>最大允许管耗P<sub>CM</sub>
-最大集-射极电压|V(BR)CEO|
-最大集电极电流I<sub>CM</sub></h3>
-      <h3>3.  功率BJT的选择</h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 16 页</div>
-      <h3>4. MOS管乙类功放</h3>
-      <h3>9.3 乙类双电源互补对称功率放大电路</h3>
-      <h3>定量计算与BJT类似</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 17 页</div>
-      <h3>9  功率放大电路</h3>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 18 页</div>
-      <h3>9.4 甲乙类互补对称功率放大电路</h3>
-      <h3>乙类互补对称电路存在的问题</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 19 页</div>
-      <h3>1. 甲乙类双电源互补对称电路</h3>
-      <p>T3正常工作，D1和D2一直导通，等效为恒压降模型，为T1、T2提供适当的静态偏置，使T1和T2处于微导通状态。</p>
-      <h3>T1和T2两基极之间的静态压差不易调整</h3>
-      <h3>利用二极管进行偏置克服交越失真</h3>
-      <h3>9.4 甲乙类互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 20 页</div>
-      <h3>利用V<sub>BE</sub>扩大电路进行偏置克服交越失真</h3>
-      <h3>V<sub>BE4</sub>可视为定值
-V<sub>CE4</sub>为T1和T2基极间的压差</h3>
-      <h3>1. 甲乙类双电源互补对称电路</h3>
-      <p>当V<sub>CE4</sub>为定值时，可等效为恒压源。</p>
-      <p>Po、P<sub>T</sub>、P<sub>V</sub>和P<sub>T</sub>m仍然按照乙类功放计算公式进行估算。</p>
-      <h3>9.4 甲乙类互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 21 页</div>
-      <h3>2.  甲乙类单电源互补对称电路（OTL电路）</h3>
-      <h3>1）基本电路</h3>
-      <div class="formula">直流时
-V<sub>K</sub>＝V<sub>C</sub> ≈ V<sub>CC</sub> /2</div>
-      <h3>9.4 甲乙类互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 22 页</div>
-      <h3>2）工作原理</h3>
-      <h3>条件：
-▪ =R<sub>LC</sub>远大于信号最长的第周期</h3>
-      <h3>应用 OCL 电路有关公式时，要用 V<sub>CC</sub> / 2 取代 V<sub>CC</sub></h3>
-      <h3>2.  甲乙类单电源互补对称电路（OTL电路）</h3>
-      <h3>9.4 甲乙类互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 23 页</div>
-      <h3>3.  MOS管甲乙类双电源互补对称电路</h3>
-      <h3>9.4 甲乙类互补对称功率放大电路</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 24 页</div>
-      <h3>9  功率放大电路</h3>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 25 页</div>
-      <h3>9.5 丁类（D类）功率放大电路原理简介</h3>
-      <h3>脉宽与v<sub>I</sub>幅值成正比</h3>
-      <h3>MOS管工作于开关状态
-功耗几乎零</h3>
-      <h3>滤除高频调制信号
-输出频率较低的音频信号</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 26 页</div>
-      <h3>9  功率放大电路</h3>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 27 页</div>
-      <h3>9.6 功率管</h3>
-      <h3>略</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 28 页</div>
-      <h3>9  功率放大电路</h3>
-      <p>9.1 功率放大电路的一般问题
-9.2 射极输出器——甲类放大的实例
-9.3 乙类双电源互补对称功率放大电路
-9.4 甲乙类互补对称功率放大电路
-9.5 丁类（D类）功率放大电路原理简介
-9.6 功率管
-9.7 集成功率放大器举例</p>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 29 页</div>
-      <h3>集成功率放大器TDA7294</h3>
-      <h3>9.7 集成功率放大器举例</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 30 页</div>
-      <h3>集成功率放大器TDA7294</h3>
-      <h3>9.7 集成功率放大器举例</h3>
-      <h3>等效P沟道源极输出的电压跟随器</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 31 页</div>
-      <h3>典型应用电路</h3>
-      <h3>9.7 集成功率放大器举例</h3>
-      <h3>集成功率放大器TDA7294</h3>
-      <h3>最大输出功率： 100W</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 32 页</div>
-      <h3>BJT集成音频功率放大器LM386</h3>
-      <h3>9.7 集成功率放大器举例</h3>
-    </div>
-
-    <div class="section">
-      <div class="section-num">第 33 页</div>
-      <h3>典型应用电路</h3>
-      <h3>BJT集成音频功率放大器LM386</h3>
-      <h3>9.7 集成功率放大器举例</h3>
-      <h3>1和8脚之间接10μF电容交流短路时，增益为200倍</h3>
-      <h3>输出功率：0.325W</h3>
-      <h3>end</h3>
-    </div>
-  <div class="nav-links">
-    <a href="index.html">&larr; 返回首页</a>
-    <a href="ch08.html">&larr; 第8章 反馈放大电路</a>
-  </div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>华中科技大学《模拟电子技术基础》</p></div>
 </div>
-<div class="footer">
-  <p>内容来源: 模拟电子技术课程PPT &middot; 第9章 功率放大电路</p>
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-header"><div class="nav-title">📂 章节导航</div><div class="nav-sub">模拟电子技术基础</div></div>
+  <div class="nav-section">基础理论</div><a href="ch01.html"><span class="num">1</span> 绪论</a><a href="ch02.html"><span class="num">2</span> 运算放大器</a><a href="ch03.html"><span class="num">3</span> 二极管及其电路</a>
+  <div class="nav-section">放大器件</div><a href="ch04.html"><span class="num">4</span> MOS场效应管</a><a href="ch05.html"><span class="num">5</span> 双极结型三极管</a>
+  <div class="nav-section">集成电路与系统</div><a href="ch07.html"><span class="num">7</span> 模拟集成电路</a><a href="ch08.html"><span class="num">8</span> 反馈放大电路</a>
+  <div class="nav-section">功率与输出</div><a href="ch09.html"><span class="num">9</span> 功率放大电路</a>
+  <a href="index.html"><span class="num">🏠</span> 返回首页</a>
 </div>
+<script>function toggleChapterNav(){document.getElementById('chapterNav').classList.toggle('open');}</script>
 </body>
 </html>
