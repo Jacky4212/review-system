@@ -62,7 +62,7 @@
   body { display: flex; min-height: 100vh; }
   .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
   .topbar {
-    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px;
+    background: linear-gradient(135deg, #3d1400, var(--accent)); color: #fff; padding: 20px;
     position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -127,7 +127,7 @@
   /* === Tables === */
   table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93em; }
   th, td { border: 1px solid var(--card-border); padding: 8px 12px; text-align: center; }
-  th { background: var(--paper-dark); font-weight: 700; color: #1a3a5c; }
+  th { background: var(--paper-dark); font-weight: 700; color: var(--heading-color); }
   .dark-mode th { color: var(--ink); }
   /* === Navigation === */
   .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
@@ -140,7 +140,7 @@
   .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
   .back2top {
     position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
-    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none;
+    background: linear-gradient(135deg, #3d1400, var(--accent)); color: #fff; border: none;
     font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98;
     box-shadow: 0 2px 10px rgba(0,0,0,0.18);
   }
@@ -155,7 +155,7 @@
   .chapter-nav-toggle {
     position: fixed; right: 0; top: 50%; transform: translateY(-50%);
     width: 38px; height: 38px; border-radius: 8px 0 0 8px;
-    background: linear-gradient(135deg, #1a3a5c, var(--accent));
+    background: linear-gradient(135deg, #3d1400, var(--accent));
     color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97;
     opacity: 0.8; transition: all 0.2s;
     box-shadow: -2px 0 10px rgba(0,0,0,0.15);
@@ -172,7 +172,7 @@
   }
   .chapter-nav-panel.open { right: 0; }
   .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; }
-  .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: #1a3a5c; }
+  .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: var(--heading-color); }
   .chapter-nav-panel .nav-header .nav-sub { font-size: 0.72em; color: var(--ink-light); margin-top: 2px; }
   .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; }
   .chapter-nav-panel a {
