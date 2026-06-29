@@ -64,7 +64,6 @@
   .header{background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;padding:40px 20px;text-align:center}
   .header h1{font-size:2.2em;margin-bottom:8px}
   .header p{opacity:.9;font-size:1.1em}
-  .container {max-width:1100px;margin:0 auto;padding:30px 20px}
   .info-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:30px;margin-bottom:30px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
   .info-card h2{font-size:1.3em;color:#1a3a5c;border-bottom:2px solid var(--divider);padding-bottom:8px;margin-bottom:16px}
   .info-card p{color:var(--ink-light);margin-bottom:8px}
@@ -84,9 +83,23 @@
   .back2top:hover{opacity:1;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
   .theme-toggle{position:fixed;top:14px;right:16px;z-index:200;width:38px;height:38px;border-radius:50%;border:1px solid var(--divider);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .2s}
   .theme-toggle:hover{box-shadow:0 4px 16px rgba(0,0,0,.18);transform:scale(1.05)}
+  .chapter-nav-toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:8px 0 0 8px;background:linear-gradient(135deg,#1a3a5c,var(--accent));color:#fff;border:none;font-size:1.1em;cursor:pointer;z-index:97;opacity:.8;transition:all .2s;box-shadow:-2px 0 10px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}
+  .chapter-nav-toggle:hover{opacity:1}
+  .chapter-nav-panel{position:fixed;right:-260px;top:50%;transform:translateY(-50%);width:240px;background:var(--card-bg);border-radius:14px 0 0 14px;box-shadow:-6px 0 28px rgba(0,0,0,.15);z-index:96;transition:right .35s cubic-bezier(0.4,0,0.2,1);padding:16px 0 12px;max-height:85vh;overflow-y:auto;border:1px solid var(--card-border)}
+  .chapter-nav-panel.open{right:0}
+  .chapter-nav-panel .nav-header{padding:0 18px 12px;border-bottom:2px solid var(--accent);margin-bottom:8px}
+  .chapter-nav-panel .nav-header .nav-title{font-size:.95em;font-weight:700;color:#1a3a5c}
+  .chapter-nav-panel .nav-header .nav-sub{font-size:.72em;color:var(--ink-light);margin-top:2px}
+  .chapter-nav-panel .nav-section{font-size:.68em;font-weight:600;color:var(--ink-light);padding:10px 18px 3px;text-transform:uppercase;letter-spacing:.5px}
+  .chapter-nav-panel a{display:flex;align-items:center;gap:8px;padding:7px 18px;font-size:.88em;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent;margin:1px 0}
+  .chapter-nav-panel a:hover{background:var(--paper-dark);border-left-color:var(--accent);color:var(--accent)}
+  .chapter-nav-panel a.current{background:var(--paper-dark);border-left-color:var(--accent);color:var(--accent);font-weight:600}
+  .chapter-nav-panel a .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:var(--paper-dark);font-size:.78em;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .chapter-nav-panel a:hover .num{background:var(--accent);color:#fff}
+  .chapter-nav-panel a.current .num{background:var(--accent);color:#fff}
   .footer{text-align:center;padding:24px;color:var(--ink-light);font-size:.82em;border-top:1px solid var(--divider)}
   @media(max-width:768px){.sidebar{display:none}.main-wrap{margin-left:0}body{font-size:11pt}}
-  @media(max-width:640px){.section{padding:18px 16px}.topbar h2{font-size:1em}table{font-size:.85em}th,td{padding:5px 8px}.back2top{right:10px;bottom:20px;width:38px;height:38px;font-size:1.1em}}
+  @media(max-width:640px){.section{padding:18px 16px}.topbar h2{font-size:1em}.chapter-nav-panel{width:200px}table{font-size:.85em}th,td{padding:5px 8px}.back2top{right:10px;bottom:20px;width:38px;height:38px;font-size:1.1em}}
 </style>
 </head>
 <body>
@@ -103,9 +116,8 @@
     <div class="group-label">集成电路与系统</div>
     <a href="ch07.html"><span class="tag">7</span>模拟集成电路</a>
     <a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
-    <div class="group-label">功率与输出</div>
+    <div class="group-label">功率与信号</div>
     <a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
-    <div class="group-label">信号处理</div>
     <a href="ch10.html"><span class="tag">10</span>信号处理与产生</a>
     <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px"><span class="tag">&#8962;</span>返回首页</a>
   </div>
@@ -123,74 +135,69 @@ function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var b
   <h1>📖 模拟电子技术基础</h1>
   <p>华中科技大学 · 电信学院 · 电子技术基础教材编写组</p>
 </div>
-<div class="container">
-  <div class="info-card">
-    <h2>课程说明</h2>
-    <p>本复习网站基于课程 PPT 内容整理，涵盖模拟电子技术的核心知识点。</p>
-    <p>内容均来源于 PPT 原话，适合考前复习与知识梳理。</p>
+<div class="info-card">
+  <h2>课程说明</h2>
+  <p>本复习网站基于课程 PPT 内容整理，涵盖模拟电子技术的核心知识点。</p>
+  <p>内容均来源于 PPT 原话，适合考前复习与知识梳理。</p>
+</div>
+<div class="info-card">
+  <h2>📂 章节导航</h2>
+  <div class="category-title">第一部分：基础理论</div>
+  <div class="chapter-grid">
+    <a href="ch01.html" class="chapter-card" style="border-left-color:var(--accent);">
+      <div class="num">第1章</div><h3>绪论</h3>
+      <div class="desc">信号与频谱 · 模拟/数字信号 · 放大电路模型 · 性能指标</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--accent);">基础知识</span>
+    </a>
+    <a href="ch02.html" class="chapter-card" style="border-left-color:var(--tag-blue-color);">
+      <div class="num">第2章</div><h3>运算放大器</h3>
+      <div class="desc">理想运放 · 同相/反相放大 · 求和/求差/积分/微分 · 仪用放大器</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-blue-color);">核心器件</span>
+    </a>
+    <a href="ch03.html" class="chapter-card" style="border-left-color:var(--tag-teal-color);">
+      <div class="num">第3章</div><h3>二极管及其基本电路</h3>
+      <div class="desc">半导体物理 · PN结 · 二极管模型 · 整流/限幅/钳位 · 特殊二极管</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-teal-color);">基础器件</span>
+    </a>
   </div>
-  <div class="info-card">
-    <h2>📂 章节导航</h2>
-    <div class="category-title">第一部分：基础理论</div>
-    <div class="chapter-grid">
-      <a href="ch01.html" class="chapter-card" style="border-left-color:var(--accent);">
-        <div class="num">第1章</div><h3>绪论</h3>
-        <div class="desc">信号与频谱 · 模拟/数字信号 · 放大电路模型 · 性能指标</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--accent);">基础知识</span>
-      </a>
-      <a href="ch02.html" class="chapter-card" style="border-left-color:var(--tag-blue-color);">
-        <div class="num">第2章</div><h3>运算放大器</h3>
-        <div class="desc">理想运放 · 同相/反相放大 · 求和/求差/积分/微分电路</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-blue-color);">核心器件</span>
-      </a>
-      <a href="ch03.html" class="chapter-card" style="border-left-color:var(--tag-teal-color);">
-        <div class="num">第3章</div><h3>二极管及其基本电路</h3>
-        <div class="desc">半导体物理 · PN结 · 二极管模型 · 整流/限幅/钳位电路</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-teal-color);">基础器件</span>
-      </a>
-    </div>
-    <div class="category-title">第二部分：放大器件</div>
-    <div class="chapter-grid">
-      <a href="ch04.html" class="chapter-card" style="border-left-color:var(--tag-purple-color);">
-        <div class="num">第4章</div><h3>MOS场效应管</h3>
-        <div class="desc">增强型/耗尽型 · 共源/共漏/共栅 · 小信号模型 · 多级放大</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-purple-color);">核心章节</span>
-      </a>
-      <a href="ch05.html" class="chapter-card" style="border-left-color:var(--tag-red-color);">
-        <div class="num">第5章</div><h3>双极结型三极管</h3>
-        <div class="desc">BJT结构 · 放大原理 · 三种组态 · H参数小信号模型</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-red-color);">核心章节</span>
-      </a>
-    </div>
-    <div class="category-title">第三部分：集成电路与系统</div>
-    <div class="chapter-grid">
-      <a href="ch07.html" class="chapter-card" style="border-left-color:var(--tag-blue-color);">
-        <div class="num">第7章</div><h3>模拟集成电路</h3>
-        <div class="desc">电流源 · 差分放大电路 · CMOS运放 · 运放参数 · 单电源工作</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-blue-color);">集成电路</span>
-      </a>
-      <a href="ch08.html" class="chapter-card" style="border-left-color:var(--tag-orange-color);">
-        <div class="num">第8章</div><h3>反馈放大电路</h3>
-        <div class="desc">反馈分类 · 四种组态 · 深度负反馈 · 自激振荡与补偿</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-orange-color);">系统设计</span>
-      </a>
-    </div>
-    <div class="category-title">第四部分：功率与输出</div>
-    <div class="chapter-grid">
-      <a href="ch09.html" class="chapter-card" style="border-left-color:var(--tag-pink-color);">
-        <div class="num">第9章</div><h3>功率放大电路</h3>
-        <div class="desc">甲/乙/甲乙/丁类 · OCL/OTL · 互补对称 · 交越失真 · 功率管</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-pink-color);">功率输出</span>
-      </a>
-    </div>
-    <div class="category-title">第五部分：信号处理与产生</div>
-    <div class="chapter-grid">
-      <a href="ch10.html" class="chapter-card" style="border-left-color:var(--tag-cyan-color);">
-        <div class="num">第10章</div><h3>信号处理与信号产生电路</h3>
-        <div class="desc">有源滤波 · LPF/HPF/BPF · RC正弦波振荡 · 文氏桥 · 非正弦产生</div>
-        <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-cyan-color);">信号处理</span>
-      </a>
-    </div>
+  <div class="category-title">第二部分：放大器件</div>
+  <div class="chapter-grid">
+    <a href="ch04.html" class="chapter-card" style="border-left-color:var(--tag-purple-color);">
+      <div class="num">第4章</div><h3>MOS场效应管</h3>
+      <div class="desc">增强型/耗尽型 · 共源/共漏/共栅 · 小信号模型 · 沟道调制效应</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-purple-color);">核心章节</span>
+    </a>
+    <a href="ch05.html" class="chapter-card" style="border-left-color:var(--tag-red-color);">
+      <div class="num">第5章</div><h3>双极结型三极管</h3>
+      <div class="desc">BJT结构 · 放大原理 · 三种组态 · H参数模型 · FET/BJT比较</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-red-color);">核心章节</span>
+    </a>
+  </div>
+  <div class="category-title">第三部分：集成电路与系统</div>
+  <div class="chapter-grid">
+    <a href="ch07.html" class="chapter-card" style="border-left-color:var(--tag-blue-color);">
+      <div class="num">第7章</div><h3>模拟集成电路</h3>
+      <div class="desc">电流源 · 差分放大电路 · CMOS运放 · 共模抑制比 · 运放参数</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-blue-color);">集成电路</span>
+    </a>
+    <a href="ch08.html" class="chapter-card" style="border-left-color:var(--tag-orange-color);">
+      <div class="num">第8章</div><h3>反馈放大电路</h3>
+      <div class="desc">反馈分类 · 四种组态 · 深度负反馈 · 自激振荡与频率补偿</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-orange-color);">系统设计</span>
+    </a>
+  </div>
+  <div class="category-title">第四部分：功率与信号处理</div>
+  <div class="chapter-grid">
+    <a href="ch09.html" class="chapter-card" style="border-left-color:var(--tag-pink-color);">
+      <div class="num">第9章</div><h3>功率放大电路</h3>
+      <div class="desc">甲/乙/甲乙/丁类 · OCL/OTL · 互补对称 · 交越失真 · 功率管</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-pink-color);">功率输出</span>
+    </a>
+    <a href="ch10.html" class="chapter-card" style="border-left-color:var(--tag-cyan-color);">
+      <div class="num">第10章</div><h3>信号处理与信号产生电路</h3>
+      <div class="desc">有源滤波 · 一阶/高阶滤波器 · RC文氏桥振荡 · 非正弦波产生</div>
+      <span class="tag" style="background:var(--chip-tag-blue-bg);color:var(--tag-cyan-color);">信号处理</span>
+    </a>
   </div>
 </div>
 <div class="footer"><p>华中科技大学《模拟电子技术基础》</p></div>
