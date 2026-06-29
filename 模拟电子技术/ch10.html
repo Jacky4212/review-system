@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第9章 功率放大电路 - 模拟电子技术</title>
+<title>第10章 信号处理与信号产生电路 - 模拟电子技术</title>
 <style>
   :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #d35400; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e; --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
   .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #f0a060; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830; --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0; --heading-color: var(--ink); background-color: var(--paper); }
@@ -26,8 +26,7 @@
     <div class="group-label">放大器件</div><a href="ch04.html"><span class="tag">4</span>MOS场效应管</a><a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
     <div class="group-label">集成电路与系统</div><a href="ch07.html"><span class="tag">7</span>模拟集成电路</a><a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
     <div class="group-label">功率与输出</div><a href="ch09.html"><span class="tag">9</span>功率放大电路</a>
-    <div class="group-label">信号处理</div>
-    <a href="ch10.html"><span class="tag">10</span>信号处理与产生</a>
+    <div class="group-label">信号处理</div><a href="ch10.html"><span class="tag">10</span>信号处理与产生</a>
     <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
   </div>
 </nav>
@@ -35,131 +34,166 @@
 <button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
 <script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
 <div class="main-wrap">
-<div class="topbar"><div class="topbar-inner"><a href="ch08.html">← 第8章</a><h2>第9章 功率放大电路</h2><a href="ch10.html">第10章 →</a></div></div>
+<div class="topbar"><div class="topbar-inner"><a href="ch09.html">← 第9章</a><h2>第10章 信号处理与信号产生电路</h2><a href="index.html">返回首页 →</a></div></div>
 <div class="container">
 
   <div class="section">
     <h2>📌 教学基本要求</h2>
     <ul>
-      <li>了解功率放大电路与电压放大电路的区别</li>
-      <li>掌握甲/乙/甲乙/丙/丁类功放的工作状态分类</li>
-      <li>掌握乙类双电源互补对称功放（OCL）的分析计算</li>
-      <li>理解交越失真的产生原因及消除方法（甲乙类）</li>
-      <li>了解丁类（D类）功放的工作原理</li>
-      <li>了解功率管的安全工作与散热问题</li>
+      <li>掌握滤波电路的分类（LPF/HPF/BPF/BRF/APF）和基本概念</li>
+      <li>掌握一阶和二阶有源滤波电路的结构与传递函数</li>
+      <li>理解正弦波振荡电路的自激振荡条件（幅值平衡和相位平衡）</li>
+      <li>掌握RC桥式（文氏桥）正弦波振荡电路的工作原理</li>
+      <li>了解非正弦信号产生电路（比较器/方波/三角波发生器）</li>
     </ul>
   </div>
 
   <div class="section">
-    <h2>9.1 功率放大电路的一般问题</h2>
+    <h2>10.1 滤波电路的基本概念与分类</h2>
 
-    <h3>1. 功率放大电路的特点及主要研究对象</h3>
-    <p>放大电路实质上都是<strong>能量转换电路</strong>。从能量控制的观点来看，功率放大电路和电压放大电路没有本质的区别。但它们的任务不同：</p>
-    <ul>
-      <li><strong>电压放大电路</strong>：得到不失真的电压输出信号，关心电压增益</li>
-      <li><strong>功率放大电路</strong>：获得一定的不失真（或失真较小）的<strong>输出功率</strong>，更关注<strong>效率</strong>而非功率增益</li>
-    </ul>
-    <p>功率放大电路是一种以输出较大功率为目的的放大电路，因此要求同时输出较大的电压和电流，三极管工作在接近极限状态。要解决的问题：<strong>提高效率、减小失真、三极管的保护</strong>。</p>
+    <h3>1. 基本概念</h3>
+    <div class="def-box">
+      <strong>滤波器：</strong>是一种能使有用频率信号通过而同时抑制或衰减无用频率信号的电子装置。<br>
+      <strong>有源滤波器：</strong>由有源器件（如运放）和相关元件构成的滤波器。
+    </div>
+    <p>滤波电路的传递函数（s域）：</p>
+    <div class="formula">T(s) = V<sub>o</sub>(s) / V<sub>i</sub>(s)</div>
+    <p>|T(jω)| —— 幅频响应（模）；φ(ω) —— 相频响应（相位角）。群时延响应 τ(ω) = −dφ(ω)/dω，相位失真与群时延响应有关。</p>
 
-    <h3>2. 输出级工作状态分类及提高效率的主要途径</h3>
-    <p><strong>提高效率的主要途径：降低静态功耗，即减小静态电流。</strong></p>
-    <p>根据正弦信号整个周期内三极管的导通情况划分：</p>
+    <h3>2. 分类</h3>
     <table>
-      <tr><th>类别</th><th>导通角</th><th>特点</th><th>效率</th></tr>
-      <tr><td>甲类(A)</td><td>360°（一个周期内均导通）</td><td>静态电流大，效率最低</td><td>≤25%（电阻负载）</td></tr>
-      <tr><td>乙类(B)</td><td>= 180°</td><td>静态电流为零，存在交越失真</td><td>≤78.5%（理论）</td></tr>
-      <tr><td>甲乙类(AB)</td><td>> 180°</td><td>小静态电流克服交越失真</td><td>介于甲类和乙类之间</td></tr>
-      <tr><td>丙类(C)</td><td>< 180°</td><td>用于高频谐振功放</td><td>最高</td></tr>
-      <tr><td>丁类(D)</td><td>开关状态</td><td>三极管工作于开关状态，效率极高</td><td>> 90%</td></tr>
+      <tr><th>类型</th><th>通带</th><th>应用举例</th></tr>
+      <tr><td>低通（LPF）</td><td>0 ~ f<sub>H</sub></td><td>滤除高频噪声</td></tr>
+      <tr><td>高通（HPF）</td><td>f<sub>L</sub> ~ ∞</td><td>阻断直流分量</td></tr>
+      <tr><td>带通（BPF）</td><td>f<sub>L</sub> ~ f<sub>H</sub></td><td>选频放大（如收音机中频）</td></tr>
+      <tr><td>带阻（BRF）</td><td>0 ~ f<sub>L</sub> 及 f<sub>H</sub> ~ ∞</td><td>抑制50Hz工频干扰（陷波器）</td></tr>
+      <tr><td>全通（APF）</td><td>全部频率</td><td>相位校正/时延均衡</td></tr>
     </table>
+    <div class="checkpoint">希望抑制50Hz的干扰信号，应选用哪种类型的滤波电路？（带阻/陷波器）放大音频信号应选用？（带通滤波器）</div>
+
+    <h3>3. 频率响应的逼近方式</h3>
+    <ul>
+      <li><strong>巴特沃斯（Butterworth）：</strong>通带内最平坦，无纹波</li>
+      <li><strong>切比雪夫（Chebyshev）：</strong>通带内有等幅纹波，过渡带更陡</li>
+      <li><strong>反切比雪夫：</strong>阻带内有等幅纹波</li>
+      <li><strong>椭圆函数（Cauer）：</strong>通带和阻带均有纹波，过渡带最陡</li>
+    </ul>
+
+    <h3>4. 实际滤波电路的参数</h3>
+    <ul>
+      <li>通带纹波 γ<sub>max</sub>、通带截止角频率 ω<sub>p</sub></li>
+      <li>阻带截止角频率 ω<sub>s</sub>、阻带最小衰减量 γ<sub>min</sub></li>
+      <li>频率选择性因子 = ω<sub>s</sub>/ω<sub>p</sub></li>
+    </ul>
   </div>
 
   <div class="section">
-    <h2>9.2 射极输出器——甲类放大的实例</h2>
-    <p>射极输出器（共集电极放大电路）作为甲类功放的典型实例。其特点是：电压增益≈1，输入阻抗高，输出阻抗低。但由于静态电流的存在，效率很低。</p>
+    <h2>10.2 一阶有源滤波电路</h2>
+    <h3>1. 低通（LPF）</h3>
+    <p>传递函数（同相放大结构）：</p>
+    <div class="formula">T(s) = A<sub>0</sub> / (1 + s/ω<sub>c</sub>)，其中 ω<sub>c</sub> = 1/RC 为特征角频率</div>
+    <p>一阶滤波器的带外衰减速率较慢（−20dB/dec）。</p>
+
+    <h3>2. 高通（HPF）</h3>
+    <p>将低通电路中的电容和电阻对换，便成为高通电路。传递函数：</p>
+    <div class="formula">T(s) = A<sub>0</sub> · s/ω<sub>c</sub> / (1 + s/ω<sub>c</sub>)</div>
+
+    <p><strong>有源滤波器与无源滤波器相比：</strong>优点是不用电感、体积小、重量轻，有一定的电压放大和缓冲作用；缺点是工作频率难以做得很高，不适宜大功率场合。</p>
   </div>
 
   <div class="section">
-    <h2>9.3 乙类双电源互补对称功率放大电路（OCL）</h2>
+    <h2>10.3 高阶有源滤波电路</h2>
 
-    <h3>1. 电路组成</h3>
-    <p>由一对NPN和PNP三极管（T1和T2）组成<strong>互补对称</strong>结构。基本互补对称电路实现了<strong>静态时两管不导电</strong>，而在有信号时，T1和T2<strong>轮流导电</strong>，组成<strong>推挽式</strong>电路。双电源 ±V<sub>CC</sub> 供电，输出直接耦合到负载（无输出电容，故称OCL——Output Capacitor-Less）。</p>
-
-    <h3>2. 分析计算（大信号下图解法）</h3>
-    <h4>（1）输出功率 P<sub>o</sub></h4>
-    <div class="formula">
-      P<sub>o</sub> = V<sub>om</sub>² / (2R<sub>L</sub>)
-    </div>
-    <p>最大输出功率（忽略 V<sub>CES</sub> 时）：</p>
-    <div class="formula">
-      P<sub>omax</sub> = V<sub>CC</sub>² / (2R<sub>L</sub>)
-    </div>
-
-    <h4>（2）管耗 P<sub>T</sub></h4>
-    <p>设输出电压为 v<sub>o</sub> = V<sub>om</sub> sinωt，单管在半个周期内的管耗：</p>
-    <div class="formula">
-      P<sub>T</sub> = (1/R<sub>L</sub>) · [(V<sub>CC</sub>V<sub>om</sub>/π) − (V<sub>om</sub>²/4)]
-    </div>
-
-    <h4>（3）直流电源供给的功率 P<sub>V</sub></h4>
-    <div class="formula">
-      P<sub>V</sub> = 2V<sub>CC</sub>V<sub>om</sub> / (πR<sub>L</sub>)
-    </div>
-
-    <h4>（4）效率 η</h4>
-    <div class="formula">
-      η = P<sub>o</sub> / P<sub>V</sub> = (π/4) · (V<sub>om</sub>/V<sub>CC</sub>)
-    </div>
-    <p>当 V<sub>om</sub> = V<sub>CC</sub> 时，最大效率：</p>
-    <div class="formula">
-      η<sub>max</sub> = π/4 ≈ 78.5%
-    </div>
+    <h3>10.3.1 有源低通滤波电路</h3>
+    <h4>1. 二阶压控电压源型（Sallen-Key）</h4>
+    <p>传递函数：</p>
+    <div class="formula">T(s) = A<sub>0</sub> / [1 + (3−A<sub>0</sub>)sRC + (sRC)²]</div>
+    <p>令通带增益 A<sub>0</sub> = 1 + R<sub>f</sub>/R<sub>1</sub>，特征角频率 ω<sub>c</sub> = 1/RC，等效品质因数 Q = 1/(3−A<sub>0</sub>)。</p>
 
     <div class="highlight">
-      <strong>交越失真：</strong>乙类功放在输入信号的零点附近，由于三极管需要克服死区电压（|v<sub>BE</sub>| < 0.7V），两管均不导通，输出电压在零点附近出现"平台"状的失真。
+      <strong>Q值与滤波特性：</strong>
+      <ul>
+        <li>Q = 0.707（巴特沃斯）：通带内最平坦，无过冲</li>
+        <li>Q > 0.707（切比雪夫）：通带内有过冲（纹波），过渡带更陡</li>
+        <li>Q < 0.707：无过冲，但截止特性较差</li>
+      </ul>
     </div>
+
+    <h4>2. 二阶无限增益多路反馈型</h4>
+    <p>传递函数分母不变，Q值不会出现负值，对增益无限制。通过级联二阶或一阶有源滤波电路构成高阶有源滤波电路。n阶巴特沃斯归一化幅频响应：|T(jω)| = A<sub>0</sub> / √(1+(ω/ω<sub>c</sub>)²ⁿ)。</p>
+
+    <h3>10.3.2 有源高通滤波电路</h3>
+    <p>将低通电路中的电容和电阻位置互换即可得到高通电路。</p>
+
+    <h3>10.3.3 有源带通滤波电路</h3>
+    <p>可由低通和高通<strong>串联</strong>得到，需满足低通截止频率 > 高通截止频率。</p>
+
+    <h3>10.3.4 有源带阻滤波电路</h3>
+    <p>可由低通和高通<strong>并联</strong>得到，或采用双T选频网络构成陷波器。</p>
   </div>
 
   <div class="section">
-    <h2>9.4 甲乙类互补对称功率放大电路</h2>
-    <p>为克服乙类功放的<strong>交越失真</strong>，给两个输出管提供<strong>小静态偏置电流</strong>（微导通状态），使其工作在甲乙类。</p>
-    <p>常见实现方式：</p>
+    <h2>10.5 正弦波振荡电路的振荡条件</h2>
+
+    <h3>1. 振荡条件</h3>
+    <p>正反馈放大电路的闭环增益：A<sub>f</sub> = A/(1−AF)。当 AF = 1 时，A<sub>f</sub> → ∞，产生自激振荡。</p>
+    <div class="formula">
+      幅值平衡条件：|AF| = 1<br>
+      相位平衡条件：φ<sub>A</sub> + φ<sub>F</sub> = 2nπ（n为整数）
+    </div>
+
+    <h3>2. 起振和稳幅</h3>
+    <p><strong>起振条件：</strong>|AF| > 1。起振的信号源来自电路器件内部<strong>噪声</strong>以及电源接通扰动。噪声中，满足相位平衡条件的某一角频率 ω<sub>0</sub> 的噪声信号被放大，成为振荡电路的输出信号。</p>
+    <p>当输出信号幅值增加到一定程度时，就要限制它继续增加，否则波形将出现失真——这就是<strong>稳幅环节</strong>的作用。</p>
+
+    <h3>3. 振荡电路基本组成部分</h3>
+    <ol>
+      <li><strong>放大电路</strong>（包括负反馈放大电路）</li>
+      <li><strong>反馈网络</strong>（构成正反馈）</li>
+      <li><strong>选频网络</strong>（选择满足相位平衡条件的一个频率，经常与反馈网络合二为一）</li>
+      <li><strong>稳幅环节</strong></li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>10.6 RC正弦波振荡电路</h2>
+
+    <h3>1. RC桥式振荡电路（文氏桥振荡器）</h3>
+    <p>由RC串并联选频网络作为正反馈通路，配合负反馈放大电路构成。</p>
+
+    <h3>2. RC串并联选频网络的选频特性</h3>
+    <p>反馈系数（令 ω<sub>0</sub> = 1/RC）：</p>
+    <div class="formula">F = V<sub>f</sub>/V<sub>o</sub> = 1 / [3 + j(ω/ω<sub>0</sub> − ω<sub>0</sub>/ω)]</div>
+    <p>当 ω = ω<sub>0</sub> = 1/RC 时：|F|<sub>max</sub> = 1/3，相移 φ<sub>F</sub> = 0°。</p>
+
+    <h3>3. 振荡电路工作原理</h3>
+    <p>满足相位平衡条件（φ<sub>A</sub> + φ<sub>F</sub> = 0°），若放大电路的电压增益 A > 3，则满足振幅平衡条件 |AF| > 1。</p>
+    <p>RC正弦波振荡电路一般用于产生频率低于 <strong>1 MHz</strong> 的正弦波。</p>
+
+    <h3>4. 稳幅措施</h3>
     <ul>
-      <li><strong>二极管偏置：</strong>在两个输出管的基极之间接入两个串联二极管（或V<sub>BE</sub>倍增电路），提供约 1.4V 的偏置电压</li>
-      <li><strong>V<sub>BE</sub>倍增电路：</strong>由一只三极管和两个电阻组成，等效于一个可调节的电压源，提供稳定的偏置电压</li>
+      <li><strong>热敏电阻稳幅：</strong>利用热敏电阻的阻值随温度变化自动调节增益</li>
+      <li><strong>场效应管（JFET）稳幅：</strong>T为压控电阻，通过整流滤波电路控制栅极电压，自动调节增益</li>
+      <li><strong>二极管稳幅：</strong>利用二极管的非线性特性实现自动增益控制</li>
     </ul>
 
-    <h4>单电源互补对称功放（OTL）</h4>
-    <p>当只有单电源供电时，输出端需通过大电容耦合到负载（OTL——Output Transformer-Less）。静态时，输出端电压为 V<sub>CC</sub>/2。</p>
-
-    <table>
-      <tr><th>特性</th><th>OCL（双电源）</th><th>OTL（单电源）</th></tr>
-      <tr><td>电源</td><td>±V<sub>CC</sub></td><td>V<sub>CC</sub></td></tr>
-      <tr><td>输出端静态电压</td><td>0V</td><td>V<sub>CC</sub>/2</td></tr>
-      <tr><td>输出耦合</td><td>直接耦合</td><td>电容耦合</td></tr>
-      <tr><td>最大输出功率</td><td>V<sub>CC</sub>²/(2R<sub>L</sub>)</td><td>V<sub>CC</sub>²/(8R<sub>L</sub>)</td></tr>
-    </table>
+    <h3>RC移相式正弦波振荡电路</h3>
+    <p>利用多级RC移相网络实现180°相移，配合反相放大电路实现振荡。通常用于固定频率的低频振荡。</p>
   </div>
 
   <div class="section">
-    <h2>9.5 丁类（D类）功率放大电路原理简介</h2>
-    <p>D类功放的三极管工作于<strong>开关状态</strong>（导通时饱和，截止时关断），理论上管耗为零，效率可接近 100%。</p>
-    <p>工作原理：输入信号通过PWM（脉宽调制）转换为高频方波 → 开关功率管放大 → 低通滤波器滤除高频载波，恢复信号波形。D类功放广泛应用于便携式音频设备、手机等要求高效率的场合。</p>
-  </div>
-
-  <div class="section">
-    <h2>9.6 功率管</h2>
-    <p>功率管的安全工作需要考虑：</p>
+    <h2>10.8 非正弦信号产生电路</h2>
+    <p>非正弦信号产生电路通常利用<strong>比较器</strong>和<strong>RC充放电回路</strong>实现：</p>
     <ul>
-      <li><strong>二次击穿</strong>：大电流下的局部热点导致的破坏性击穿</li>
-      <li><strong>散热设计</strong>：功率管的散热器选择，热阻 θ<sub>JA</sub>（结到环境）、θ<sub>JC</sub>（结到外壳）</li>
-      <li><strong>安全工作区（SOA）</strong>：由最大电流、最大电压、最大耗散功率和二次击穿限制围成的区域</li>
+      <li><strong>方波发生器：</strong>由施密特触发器（正反馈比较器）和RC积分电路构成</li>
+      <li><strong>三角波发生器：</strong>由方波发生器后接积分器构成</li>
+      <li><strong>锯齿波发生器：</strong>改变积分器的充放电时间常数比例</li>
     </ul>
-    <p>常用的功率管类型：功率BJT、功率MOSFET（VMOS/VDMOS）、IGBT等。</p>
+    <p>555定时器是多功能非正弦信号产生电路的典型集成器件，可构成多谐振荡器、单稳态触发器和施密特触发器。</p>
   </div>
 
   <div class="nav-links">
-    <a href="ch08.html">← 第8章 反馈放大电路</a>
+    <a href="ch09.html">← 第9章 功率放大电路</a>
     <a href="index.html">返回首页</a>
   </div>
 </div>
