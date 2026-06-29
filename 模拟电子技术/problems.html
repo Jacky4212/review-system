@@ -199,6 +199,22 @@
     <p><span class="p-label">稳定Q点：</span>带源极电阻的偏置电路（反馈控制：IDQ↓→VS↓→VGSQ↑→IDQ↑）。</p>
     <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch04 4.3.2 图解分析—Q点对波形失真的影响</p>
   </div>
+
+  <div class="problem-card">
+    <div class="p-title">4.6 VDS极性接反导致MOS管失效</div>
+    <p><span class="p-label">PPT原文：</span>"VDS极性接反会怎样？PN结正偏，MOS管失效。"</p>
+    <p><span class="p-label">原因：</span>NMOS的VDS必须为正（漏极为正），PMOS的VDS必须为负。极性接反使漏极-衬底PN结正向偏置，产生大电流使管子失效。</p>
+    <p><span class="p-label">解决：</span>确保NMOS漏极接高电位/PMOS漏极接低电位；电路中加入防反接保护。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch04 4.1.1 N沟道增强型MOSFET—VDS极性</p>
+  </div>
+
+  <div class="problem-card">
+    <div class="p-title">4.7 偏置电阻降低栅极输入阻抗</div>
+    <p><span class="p-label">PPT原文：</span>"受静态偏置电路的影响，栅极绝缘的特性并未充分表现出来。"</p>
+    <p><span class="p-label">原因：</span>MOSFET栅极本身绝缘（输入电阻极高，>10^9Ω），但外接偏置电阻Rg1//Rg2并联在栅极上，实际输入电阻Ri=Rg1//Rg2，远小于栅极本身电阻。</p>
+    <p><span class="p-label">解决：</span>偏置电阻与输入阻抗的折中——偏置电阻大→输入阻抗高但偏置受噪声干扰大；偏置电阻小→稳定但降低输入阻抗。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch04 4.4.2 小信号模型分析共源放大电路—输入电阻计算</p>
+  </div>
   </div>
 
   <!-- ====== 第5章 ====== -->
@@ -216,6 +232,14 @@
     <p><span class="p-label">同MOSFET，NPN和PNP失真方向不同：</span>NPN共射底部失真=截止（ICQ太小，增大之）；NPN共射顶部失真=饱和（ICQ太大，减小之）。PNP极性相反。</p>
     <p><span class="p-label">解决：</span>合理分压偏置使VCEQ≈VCC/2；射极电阻Re稳Q。</p>
     <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch05 5.2.2 BJT放大电路的图解分析</p>
+  </div>
+
+  <div class="problem-card">
+    <div class="p-title">5.3 射极电阻Re降低交流增益</div>
+    <p><span class="p-label">PPT原文：</span>"放大电路的电压增益Av很小，只有1.05倍，其原因是发射极接入了电阻Re。在两端并联一个大电容可以消除Re的影响。"</p>
+    <p><span class="p-label">原因：</span>Re引入交流负反馈，使Av=(Rc//RL)/(re+Re)，增益大幅下降。Re越大，增益越低。</p>
+    <p><span class="p-label">解决：</span>在Re两端并联大电容Ce（旁路电容）——直流时Ce开路，Re起稳Q作用；交流时Ce短路Re，增益恢复为Av=(Rc//RL)/re。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch05 5.2 放大电路分析—射极旁路电容的作用</p>
   </div>
   </div>
 
@@ -268,6 +292,22 @@
     <p><span class="p-label">后果：</span>负反馈误判为正反馈→电路设计错误→不稳定甚至振荡。</p>
     <p><span class="p-label">正确步骤（PPT原文）：</span>①先正确区分基本放大电路和反馈网络；②顺着信号传输方向逐级标注瞬时极性；③知道各种基本放大电路的相位关系；④正确确定反馈信号的引入位置。</p>
     <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch08 8.1.3 正反馈与负反馈—瞬时极性法</p>
+  </div>
+
+  <div class="problem-card">
+    <div class="p-title">8.3 深度负反馈近似计算存在误差</div>
+    <p><span class="p-label">PPT原文：</span>"环路增益直接影响着误差的大小，环路增益越大，误差越小。注：此处忽略了频率变化导致A减小带来的影响。"</p>
+    <p><span class="p-label">原因：</span>深度负反馈近似公式Af≈1/F是在AF→∞的极限下得到的。实际AF有限，计算存在误差。当环路增益不够大时误差不可忽略。且高频时开环增益A下降，AF进一步减小，误差增大。</p>
+    <p><span class="p-label">解决：</span>①确保环路增益AF足够大（通常AF>=10时误差<10%）；②精确计算时使用完整公式Af=A/(1+AF)；③考虑频率对A的影响。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch08 8.4 深度负反馈近似计算—4.近似计算带来的误差</p>
+  </div>
+
+  <div class="problem-card">
+    <div class="p-title">8.4 反馈环内噪声干扰</div>
+    <p><span class="p-label">PPT原文：</span>负反馈可以"抑制反馈环内噪声"。</p>
+    <p><span class="p-label">原因：</span>放大电路内部元件会产生噪声（热噪声、散粒噪声等），这些噪声等效为环内干扰信号，被负反馈抑制。</p>
+    <p><span class="p-label">注意：</span>负反馈只能抑制反馈环内的噪声，对环外噪声（如输入端引入的噪声）无效。无噪声前置放大+负反馈是常用设计策略。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch08 8.3.3 抑制反馈环内噪声</p>
   </div>
   </div>
 
@@ -325,6 +365,22 @@
     <p><span class="p-label">现象：</span>单门限比较器在vi接近VTH时，因噪声叠加导致输出反复跳变（震颤）。</p>
     <p><span class="p-label">解决：</span>施密特触发器（迟滞比较器）——引入正反馈，上下门限不同（VTH+≠VTH-），滞回宽度=VTH+-VTH-有效抑制噪声抖动。PPT原文："门限电压随输出电压变化"。</p>
     <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch10 10.8 施密特触发器</p>
+  </div>
+
+  <div class="problem-card">
+    <div class="p-title">10.4 有源滤波器频率和功率限制</div>
+    <p><span class="p-label">PPT原文：</span>"优点：不用电感、体积小、重量轻，有一定的电压放大和缓冲作用。缺点：工作频率难以做得很高，不适宜大功率场合。"</p>
+    <p><span class="p-label">原因：</span>运放的增益带宽积有限，高频时开环增益下降，滤波特性恶化。运放输出电流有限，无法驱动大功率负载。</p>
+    <p><span class="p-label">解决：</span>①高频应用选用宽带宽运放或改用无源LC滤波器；②大功率场合用功率运放或无源滤波。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch10 10.2 一阶有源滤波电路—有源与无源对比</p>
+  </div>
+
+  <div class="problem-card">
+    <div class="p-title">10.5 集成比较器灵敏度不足</div>
+    <p><span class="p-label">PPT原文：</span>"开环增益低、失调电压大、共模抑制比小，灵敏度往往不如用集成运放构成的比较器高。"</p>
+    <p><span class="p-label">原因：</span>专用集成比较器虽然速度比运放快，但开环增益和精度不如通用运放，输入失调电压和偏置电流较大。</p>
+    <p><span class="p-label">解决：</span>对精度要求高的场合（如精密电压比较），可用集成运放替代比较器（需注意运放从饱和恢复的速度）。</p>
+    <p style="color:var(--ink-light);font-size:.82em;">PPT来源：ch10 10.8 集成电压比较器</p>
   </div>
   </div>
 
