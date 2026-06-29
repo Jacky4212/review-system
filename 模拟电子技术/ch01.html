@@ -8,7 +8,7 @@
   :root {
     --paper: #fdf6e3; --paper-dark: #f5ecd7;
     --ink: #2c2c2c; --ink-light: #555;
-    --accent: #d35400; --accent-hover: #e67e22;
+    --accent: #2d7fc1; --accent-hover: #1d4ed8;
     --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8;
     --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0;
     --code-bg: #eee8d8;
@@ -26,7 +26,7 @@
   .dark-mode {
     --paper: #1a1a2e; --paper-dark: #22223a;
     --ink: #e0e0ec; --ink-light: #8888aa;
-    --accent: #f0a060; --accent-hover: #e88060;
+    --accent: #6a82f0; --accent-hover: #5a72e0;
     --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d;
     --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45;
     --code-bg: #2a2a3e;
@@ -62,7 +62,7 @@
   body { display: flex; min-height: 100vh; }
   .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
   .topbar {
-    background: linear-gradient(135deg, #3d1400, var(--accent)); color: #fff; padding: 20px;
+    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px;
     position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -140,7 +140,7 @@
   .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
   .back2top {
     position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%;
-    background: linear-gradient(135deg, #3d1400, var(--accent)); color: #fff; border: none;
+    background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none;
     font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98;
     box-shadow: 0 2px 10px rgba(0,0,0,0.18);
   }
@@ -155,7 +155,7 @@
   .chapter-nav-toggle {
     position: fixed; right: 0; top: 50%; transform: translateY(-50%);
     width: 38px; height: 38px; border-radius: 8px 0 0 8px;
-    background: linear-gradient(135deg, #3d1400, var(--accent));
+    background: linear-gradient(135deg, #1a3a5c, var(--accent));
     color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97;
     opacity: 0.8; transition: all 0.2s;
     box-shadow: -2px 0 10px rgba(0,0,0,0.15);
