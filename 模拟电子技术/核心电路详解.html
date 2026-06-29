@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>核心电路详解 - 模拟电子技术</title>
+<style>
+  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #2d7fc1; --accent-hover: #1d4ed8; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
+  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #6a82f0; --accent-hover: #5a72e0; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --heading-color: var(--ink); background-color: var(--paper); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); font-size: 12pt; line-height: 1.75; color: var(--ink); background: var(--paper); display: flex; min-height: 100vh; }
+  .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
+  .sidebar-header {padding:22px 18px 16px;border-bottom:1px solid var(--sidebar-border)}
+  .sidebar-header .site-name {font-size:1rem;font-weight:700;color:var(--ink)}
+  .sidebar-header .site-sub {font-size:.7rem;color:var(--ink-light);margin-top:2px}
+  .sidebar-nav {flex:1;padding:10px 0 16px}
+  .sidebar-nav .group-label {font-size:.62rem;font-weight:600;color:var(--ink-light);padding:14px 18px 4px;letter-spacing:.06em;text-transform:uppercase}
+  .sidebar-nav a {display:flex;align-items:center;gap:8px;padding:7px 18px;margin:1px 8px;border-radius:6px;font-size:.82rem;color:var(--ink);text-decoration:none;transition:all .15s;border-left:3px solid transparent}
+  .sidebar-nav a:hover {background:var(--paper-dark);border-left-color:var(--divider)}
+  .sidebar-nav a.current {background:var(--card-bg);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+  .sidebar-nav a .tag {display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:var(--paper-dark);font-size:.65rem;font-weight:600;color:var(--ink-light);flex-shrink:0}
+  .sidebar-nav a.current .tag {background:var(--accent);color:#fff}
+  .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
+  .topbar { background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
+  .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .section h2 { font-size: 1.2em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 6px; margin-bottom: 14px; }
+  .section h3 { font-size: 1.05em; color: var(--accent); margin: 14px 0 6px; padding-bottom: 3px; border-bottom: 1px dashed var(--divider); }
+  .section h3:first-of-type { margin-top: 0; }
+  .section p, .section li { font-size: .95em; margin-bottom: 4px; }
+  .section ul, .section ol { margin: 6px 0 10px 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .9em; }
+  th, td { border: 1px solid var(--card-border); padding: 6px 10px; text-align: center; }
+  th { background: var(--paper-dark); font-weight: 700; color: var(--heading-color); } .dark-mode th { color: var(--ink); }
+  .formula { text-align: center; font-size: 1em; padding: 8px 14px; background: var(--code-bg); border-radius: 6px; margin: 8px 0; font-weight: 500; border: 1px solid var(--card-border); font-family: "Times New Roman","Cascadia Code",monospace; }
+  .ppt-ref { font-size: .8em; color: var(--ink-light); margin-top: 8px; padding-top: 6px; border-top: 1px dotted var(--divider); }
+  .nav-links { margin-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; } .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; } .back2top:hover { opacity: 1; }
+  .theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); } .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
+  .chapter-nav-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px 0 0 8px; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97; opacity: 0.8; box-shadow: -2px 0 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; } .chapter-nav-toggle:hover { opacity: 1; }
+  .chapter-nav-panel { position: fixed; right: -260px; top: 50%; transform: translateY(-50%); width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px; box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96; transition: right 0.35s; padding: 16px 0 12px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--card-border); } .chapter-nav-panel.open { right: 0; }
+  .chapter-nav-panel .nav-header { padding: 0 18px 12px; border-bottom: 2px solid var(--accent); margin-bottom: 8px; } .chapter-nav-panel .nav-header .nav-title { font-size: 0.95em; font-weight: 700; color: var(--heading-color); }
+  .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .chapter-nav-panel a { display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em; color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0; } .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); } .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .chapter-nav-panel a .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark); font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0; }
+  .footer { text-align: center; padding: 20px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } }
+  @media (max-width: 640px) { .section { padding: 14px 16px; } .topbar h2 { font-size: 1em; } .formula { font-size: .9em; padding: 6px 10px; } }
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-header"><div class="site-name">模拟电子技术</div><div class="site-sub">基础 · 复习系统</div></div>
+  <div class="sidebar-nav">
+    <div class="group-label">基础理论</div><a href="ch01.html"><span class="tag">1</span>绪论</a><a href="ch02.html"><span class="tag">2</span>运算放大器</a><a href="ch03.html"><span class="tag">3</span>二极管及其电路</a>
+    <div class="group-label">放大器件</div><a href="ch04.html"><span class="tag">4</span>MOS场效应管</a><a href="ch05.html"><span class="tag">5</span>双极结型三极管</a>
+    <div class="group-label">集成电路与系统</div><a href="ch07.html"><span class="tag">7</span>模拟集成电路</a><a href="ch08.html"><span class="tag">8</span>反馈放大电路</a>
+    <div class="group-label">功率与信号</div><a href="ch09.html"><span class="tag">9</span>功率放大电路</a><a href="ch10.html"><span class="tag">10</span>信号处理与产生</a>
+    <div class="group-label">专题</div><a href="problems.html"><span class="tag">&#9679;</span>电路问题汇总</a><a href="关键注意事项.html"><span class="tag">&#9679;</span>关键注意事项</a><a href="核心电路详解.html"><span class="tag">&#9679;</span>核心电路详解</a>
+    <a href="index.html" style="margin-top:6px;border-top:1px solid var(--sidebar-border);padding-top:8px;"><span class="tag">&#8962;</span>返回首页</a>
+  </div>
+</nav>
+<script>(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();</script>
+<button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
+<script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
+<div class="main-wrap"><div class="topbar"><div class="topbar-inner"><a href="index.html">← 返回首页</a><h2>📐 核心电路详解</h2><a href="ch02.html">第2章 →</a></div></div>
+<div class="container">
+
+<!-- ==================== 1. 运放电路 ==================== -->
+<div class="section">
+<h2>一、运算放大器电路（ch02）</h2>
+<div class="ppt-ref">PPT来源：ch02 2.2~2.4</div>
+
+<h3>1. 核心法则</h3>
+<div class="formula"><strong>虚短：</strong>vP ≈ vN&emsp;|&emsp;<strong>虚断：</strong>iP ≈ 0, iN ≈ 0</div>
+<p>PPT原文：""虚短"和"虚断"是用来分析各种运放线性应用电路的有力法则，<strong>必须熟练掌握</strong>。"（ch02 2.2）</p>
+
+<h3>2. 同相放大 vs 反相放大</h3>
+<table>
+<tr><th></th><th>同相放大</th><th>反相放大</th></tr>
+<tr><td>电路特征</td><td>信号从同相端(+)输入</td><td>信号从反相端(−)输入</td></tr>
+<tr><td>电压增益</td><td class="formula" style="margin:0;padding:4px;">Av = 1 + R2/R1</td><td class="formula" style="margin:0;padding:4px;">Av = −Rf/R1</td></tr>
+<tr><td>输入电阻</td><td>Ri → ∞（极高）</td><td>Ri = R1</td></tr>
+<tr><td>输出电阻</td><td>Ro → 0</td><td>Ro → 0</td></tr>
+<tr><td>共模电压</td><td>有（vP = vi）</td><td>无（虚地，vN ≈ 0）</td></tr>
+<tr><td>相位关系</td><td>同相</td><td>反相</td></tr>
+<tr><td>特例</td><td>R2=0→电压跟随器 Av=1</td><td>Rf=R1→反相器 Av=−1</td></tr>
+</table>
+
+<h3>3. 电压跟随器</h3>
+<p>同相放大的特例（R2=0或R1=∞）：Av = 1。作用——<strong>"隔离或缓冲"</strong>。PPT原文："电压跟随器对电压增益有贡献吗？隔离或缓冲"</p>
+
+<h3>4. 信号运算电路</h3>
+<table>
+<tr><th>电路类型</th><th>输出-输入关系</th><th>要点</th></tr>
+<tr><td><strong>反相加法</strong></td><td class="formula" style="margin:0;padding:4px;">vo = −Rf(vi1/R1 + vi2/R2 + …)</td><td>虚短虚断+N点KCL</td></tr>
+<tr><td><strong>求差电路</strong></td><td class="formula" style="margin:0;padding:4px;">vo = (R4/R1)(vi2−vi1)</td><td>需 R3/R2=R4/R1</td></tr>
+<tr><td><strong>积分电路</strong></td><td class="formula" style="margin:0;padding:4px;">vo = −(1/RC)∫vi dt</td><td>负号表示反相</td></tr>
+<tr><td><strong>微分电路</strong></td><td class="formula" style="margin:0;padding:4px;">vo = −RC·dvi/dt</td><td>方波入→尖脉冲出</td></tr>
+<tr><td><strong>仪用放大器</strong></td><td>高输入阻抗差分放大</td><td>如INA128，用于心电信号</td></tr>
+</table>
+
+<h3>5. 分析注意事项</h3>
+<ul>
+<li>运放正常工作时<strong>必须提供工作电源</strong></li>
+<li>实际运放带宽<strong>有限</strong>——"需要特别注意，它们最大的差别是，理想运放的频带宽度是无限的，而实际运放的带宽是有限的。"</li>
+<li>用理想运放分析误差约0.05%，完全可行</li>
+</ul>
+</div>
+
+<!-- ==================== 2. 共源/共射放大电路 ==================== -->
+<div class="section">
+<h2>二、共源(CS)/共射(CE)放大电路（ch04/ch05）</h2>
+<div class="ppt-ref">PPT来源：ch04 4.2~4.4（共源），ch05 5.2（共射）</div>
+
+<h3>1. 静态工作点（Q点）分析</h3>
+<table>
+<tr><th>步骤</th><th>MOSFET共源（ch04 4.2.2）</th><th>BJT共射（ch05 5.2.1）</th></tr>
+<tr><td>直流偏置</td><td>VGSQ=VGG(或分压)</td><td>一般硅管VBEQ=0.7V</td></tr>
+<tr><td>漏/集电流</td><td>IDQ=Kn(VGSQ−VTN)²</td><td>ICQ=β·IBQ</td></tr>
+<tr><td>漏/集电压</td><td>VDSQ=VDD−IDQ·Rd</td><td>VCEQ=VCC−ICQ·Rc</td></tr>
+<tr><td><strong>关键验证</strong></td><td colspan="2">"必须检验是否满足恒流区工作条件"（FET）或放大区条件（BJT）。如不满足"必须作出新的假设，同时重新分析电路。"</td></tr>
+</table>
+
+<h3>2. 小信号模型与动态分析</h3>
+<table>
+<tr><th></th><th>MOSFET共源</th><th>BJT共射</th></tr>
+<tr><td>受控源类型</td><td>VCCS：gm·vgs</td><td>CCCS：β·ib</td></tr>
+<tr><td>跨导/输入电阻</td><td>gm=2Kn(VGSQ−VTN)</td><td>rbe=200+(1+β)·26mV/IEQ</td></tr>
+<tr><td>电压增益</td><td class="formula" style="margin:0;padding:4px;">Av=−gm(Rd‖RL)</td><td class="formula" style="margin:0;padding:4px;">Av=−β(Rc‖RL)/rbe</td></tr>
+<tr><td>输入电阻</td><td>Ri=Rg1‖Rg2</td><td>Ri=Rb‖rbe</td></tr>
+<tr><td>输出电阻</td><td>Ro=Rd‖rds</td><td>Ro=Rc</td></tr>
+<tr><td>小信号前提</td><td>vgs≪2(VGSQ−VTN)</td><td>小信号，H参数简化</td></tr>
+</table>
+
+<h3>3. 三种组态对比</h3>
+<table>
+<tr><th>组态</th><th>Av</th><th>Ri</th><th>Ro</th><th>相位</th><th>用途</th></tr>
+<tr><td>共源(CS)/共射(CE)</td><td>高(−)</td><td>中/高</td><td>中</td><td>反相</td><td>电压放大</td></tr>
+<tr><td>共漏(CD)/共集(CC)</td><td>≈1</td><td>高</td><td>低</td><td>同相</td><td>缓冲/阻抗变换</td></tr>
+<tr><td>共栅(CG)/共基(CB)</td><td>中(+)</td><td>低</td><td>中</td><td>同相</td><td>高频/宽带</td></tr>
+</table>
+</div>
+
+<!-- ==================== 3. RC桥式振荡电路 ==================== -->
+<div class="section">
+<h2>三、RC桥式（文氏桥）正弦波振荡电路（ch10）</h2>
+<div class="ppt-ref">PPT来源：ch10 10.5~10.6</div>
+
+<h3>1. 电路组成</h3>
+<p>由<strong>RC串并联选频网络</strong>（正反馈通路）+ <strong>同相放大电路</strong>（提供增益）+ <strong>稳幅环节</strong>组成。PPT原文："RC正弦波振荡电路一般用于产生频率低于1MHz的正弦波。"</p>
+
+<h3>2. 选频特性（RC串并联网络）</h3>
+<div class="formula">fo = 1/(2πRC)&emsp;|&emsp;|F|max = 1/3（在f=fo时）&emsp;|&emsp;φF = 0°（在f=fo时）</div>
+
+<h3>3. 振荡条件</h3>
+<table>
+<tr><th></th><th>起振</th><th>稳幅</th></tr>
+<tr><td>幅值条件</td><td>|AF| > 1 → Av > 3</td><td>|AF| = 1 → Av = 3</td></tr>
+<tr><td>相位条件</td><td colspan="2">φA + φF = 0°（或2nπ）</td></tr>
+</table>
+
+<h3>4. 起振信源与稳幅</h3>
+<p><strong>起振信源：</strong>PPT原文："起振的信号源来自何处？电路器件内部噪声以及电源接通扰动。噪声中，满足相位平衡条件的某一角频率ω0的噪声信号被放大，成为振荡电路的输出信号。"</p>
+<p><strong>稳幅措施：</strong>①负温度系数(NTC)热敏电阻；②JFET压控电阻（"T为压控电阻"）；③二极管限幅。</p>
+<p>PPT原文："当输出信号幅值增加到一定程度时，就要限制它继续增加，否则波形将出现失真。"</p>
+</div>
+
+<!-- ==================== 4. 负反馈放大电路 ==================== -->
+<div class="section">
+<h2>四、负反馈放大电路（ch08）</h2>
+<div class="ppt-ref">PPT来源：ch08 8.1~8.6</div>
+
+<h3>1. 反馈基本概念</h3>
+<p>PPT原文："将放大电路输出量（电压或电流）的一部分或全部，通过某种电路（称为反馈网络）送回到输入回路的过程。"</p>
+<div class="formula">
+开环增益 A = xO/xID&emsp;|&emsp;反馈系数 F = xF/xO&emsp;|&emsp;闭环增益 Af = xO/xI
+</div>
+
+<h3>2. 反馈分类与判断</h3>
+<table>
+<tr><th>分类维度</th><th>类型</th><th>判断方法</th></tr>
+<tr><td>极性</td><td>正反馈 / 负反馈</td><td><strong>瞬时极性法</strong>——从输入开始，沿信号方向逐级标注，看反馈信号是增大还是减小净输入</td></tr>
+<tr><td>输入端连接</td><td>串联 / 并联</td><td>反馈信号与输入在同一端→并联；不同端→串联</td></tr>
+<tr><td>输出端取样</td><td>电压 / 电流</td><td>负载短路后反馈消失→电压反馈；仍存在→电流反馈</td></tr>
+<tr><td>交直流</td><td>直流 / 交流</td><td>直流反馈稳Q点；交流反馈改善动态性能</td></tr>
+</table>
+
+<h3>3. 四种负反馈组态</h3>
+<table>
+<tr><th>组态</th><th>稳定量</th><th>Ri变化</th><th>Ro变化</th><th>典型电路</th></tr>
+<tr><td>电压串联</td><td>vo</td><td>增大</td><td>减小</td><td>射极跟随器</td></tr>
+<tr><td>电压并联</td><td>vo</td><td>减小</td><td>减小</td><td>反相放大</td></tr>
+<tr><td>电流串联</td><td>io</td><td>增大</td><td>增大</td><td>射极带Re</td></tr>
+<tr><td>电流并联</td><td>io</td><td>减小</td><td>增大</td><td>—</td></tr>
+</table>
+
+<h3>4. 闭环增益与深度负反馈</h3>
+<div class="formula">Af = A/(1+AF)&emsp;|&emsp;深度负反馈(AF≫1)：Af ≈ 1/F</div>
+<p>PPT原文："即闭环增益只取决于反馈网络。当反馈网络由稳定的线性元件组成时，闭环增益将有很高的稳定性。"（ch08 8.3.1）</p>
+<p>⚠ PPT原文警告："即环路增益直接影响着误差的大小，环路增益越大，误差越小。注：此处忽略了频率变化导致A减小带来的影响。"（ch08 8.4）</p>
+
+<h3>5. 负反馈对性能的影响</h3>
+<ul>
+<li><strong>提高增益稳定性</strong>——闭环增益只取决于反馈网络</li>
+<li><strong>扩展通频带</strong>——增益带宽积为常数</li>
+<li><strong>减小非线性失真</strong>——反馈将失真分量送回输入端预矫正</li>
+<li><strong>抑制反馈环内噪声</strong></li>
+<li><strong>改变输入/输出电阻</strong>——见上表</li>
+</ul>
+</div>
+
+<!-- ==================== 5. 比较器电路 ==================== -->
+<div class="section">
+<h2>五、比较器电路（ch10）</h2>
+<div class="ppt-ref">PPT来源：ch10 10.8 非正弦信号产生电路</div>
+
+<h3>1. 单门限比较器</h3>
+<p><strong>原理：</strong>运放开环（或正反馈）工作，比较输入电压vi与参考电压VREF。vi>VTH→输出一种饱和状态；vi<VTH→输出另一种饱和状态。</p>
+<p><strong>输出电压：</strong>受稳压管限幅，Uo=±VZ。</p>
+<p><strong>缺点：</strong>PPT原文——"单门限比较器的抗干扰能力"差，vi在门限附近因噪声导致输出反复跳变（震颤）。</p>
+
+<h3>2. 施密特触发器（迟滞比较器）</h3>
+<p><strong>改进：</strong>引入正反馈→门限电压随输出电压变化→具有<strong>迟滞特性</strong>。</p>
+<table>
+<tr><th></th><th>单门限比较器</th><th>施密特触发器</th></tr>
+<tr><td>门限电压</td><td>固定（VTH=VREF）</td><td>上下门限不同（VTH+ ≠ VTH−）</td></tr>
+<tr><td>抗干扰</td><td>差，易震颤</td><td>好，滞回宽度抑制噪声</td></tr>
+<tr><td>传输特性</td><td>单次跃变</td><td>滞回曲线（有记忆）</td></tr>
+</table>
+
+<h3>3. 集成比较器</h3>
+<p>PPT原文："开环增益低、失调电压大、共模抑制比小，灵敏度往往不如用集成运放构成的比较器高。"</p>
+</div>
+
+<!-- ==================== 6. OCL/OTL功放 ==================== -->
+<div class="section">
+<h2>六、OCL / OTL 功率放大电路（ch09）</h2>
+<div class="ppt-ref">PPT来源：ch09 9.1~9.4</div>
+
+<h3>1. 功放分类</h3>
+<table>
+<tr><th>类别</th><th>导通角</th><th>效率</th><th>特点</th></tr>
+<tr><td>甲类(A)</td><td>360°</td><td>≤25%</td><td>静态电流大，效率最低</td></tr>
+<tr><td>乙类(B)</td><td>180°</td><td>≤78.5%</td><td>静态电流≈0，有<strong>交越失真</strong></td></tr>
+<tr><td>甲乙类(AB)</td><td>>180°</td><td>介于甲/乙间</td><td>小静态偏流<strong>克服交越失真</strong></td></tr>
+<tr><td>丁类(D)</td><td>开关态</td><td>>90%</td><td>PWM+低通滤波</td></tr>
+</table>
+<p>PPT原文："提高效率的主要途径：<strong>降低静态功耗，即减小静态电流。</strong>"（ch09 9.1）</p>
+
+<h3>2. OCL vs OTL</h3>
+<table>
+<tr><th></th><th>OCL（双电源）</th><th>OTL（单电源）</th></tr>
+<tr><td>电源</td><td>±VCC</td><td>+VCC + 输出电容</td></tr>
+<tr><td>输出端静态电压</td><td>0V</td><td>VCC/2</td></tr>
+<tr><td>最大输出功率</td><td class="formula" style="margin:0;padding:4px;">Pomax = VCC²/(2RL)</td><td class="formula" style="margin:0;padding:4px;">Pomax = VCC²/(8RL)</td></tr>
+<tr><td>最大效率</td><td>π/4 ≈ 78.5%</td><td>π/4 ≈ 78.5%</td></tr>
+<tr><td>结构</td><td>NPN+PNP互补对称推挽</td><td>同上+输出大电容</td></tr>
+</table>
+
+<h3>3. 交越失真及克服</h3>
+<p><strong>原因：</strong>乙类Q点在截止点，"乙类互补对称电路存在的问题"——输入过零时|vBE|<死区电压(0.7V)，两管均不导通。</p>
+<p><strong>克服：</strong>改为甲乙类。PPT原文："利用二极管进行偏置克服交越失真。利用VBE扩大电路进行偏置克服交越失真。"</p>
+<ul>
+<li><strong>二极管偏置：</strong>两管基极间串两个二极管≈1.4V偏压</li>
+<li><strong>VBE倍增电路：</strong>一BJT+两电阻，等效可调电压源</li>
+</ul>
+
+<h3>4. OCL输出级关键认识</h3>
+<p>OCL输出级是<strong>共集电极（射极跟随器）结构</strong>→电压增益<strong>Av≈1</strong>。<strong>没有电压放大功能！</strong>电压放大由前级运放完成，功放只做功率输出。</p>
+</div>
+
+<div class="nav-links"><a href="index.html">← 返回首页</a><a href="关键注意事项.html">关键注意事项 →</a></div>
+</div>
+<button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer"><p>华中科技大学《模拟电子技术基础》— 核心电路详解</p></div>
+</div>
+<button class="chapter-nav-toggle" onclick="toggleChapterNav()" title="章节导航">📖</button>
+<div class="chapter-nav-panel" id="chapterNav">
+  <div class="nav-header"><div class="nav-title">📂 章节导航</div><div class="nav-sub">模拟电子技术基础</div></div>
+  <div class="nav-section">基础理论</div><a href="ch01.html"><span class="num">1</span> 绪论</a><a href="ch02.html"><span class="num">2</span> 运算放大器</a><a href="ch03.html"><span class="num">3</span> 二极管及其电路</a>
+  <div class="nav-section">放大器件</div><a href="ch04.html"><span class="num">4</span> MOS场效应管</a><a href="ch05.html"><span class="num">5</span> 双极结型三极管</a>
+  <div class="nav-section">集成电路与系统</div><a href="ch07.html"><span class="num">7</span> 模拟集成电路</a><a href="ch08.html"><span class="num">8</span> 反馈放大电路</a>
+  <div class="nav-section">功率与信号</div><a href="ch09.html"><span class="num">9</span> 功率放大电路</a><a href="ch10.html"><span class="num">10</span> 信号处理与产生</a>
+  <div class="nav-section">专题</div><a href="problems.html"><span class="num">⚡</span> 电路问题汇总</a><a href="关键注意事项.html"><span class="num">⚠</span> 关键注意事项</a><a href="核心电路详解.html"><span class="num">📐</span> 核心电路详解</a>
+  <a href="index.html"><span class="num">🏠</span> 返回首页</a>
+</div>
+<script>function toggleChapterNav(){document.getElementById('chapterNav').classList.toggle('open');}</script>
+</body>
+</html>
