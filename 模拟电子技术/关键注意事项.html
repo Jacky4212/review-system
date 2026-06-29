@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>关键注意事项 - 模拟电子技术</title>
 <style>
-  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #2d7fc1; --accent-hover: #1d4ed8; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --highlight-bg: #fefce8; --highlight-border: #eab308; --highlight-strong: #92400e; --checkpoint-bg: #eff6ff; --checkpoint-border: #bfdbfe; --checkpoint-color: #1e40af; --tag-must-bg: #fee2e2; --tag-must-color: #991b1b; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
-  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #6a82f0; --accent-hover: #5a72e0; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --highlight-bg: #2d2a1a; --highlight-border: #c8900a; --highlight-strong: #e8b830; --checkpoint-bg: #1e2a3a; --checkpoint-border: #2d4a5a; --checkpoint-color: #6a82f0; --tag-must-bg: #3d1a1a; --tag-must-color: #e88080; --heading-color: var(--ink); background-color: var(--paper); }
+  :root { --paper: #fdf6e3; --paper-dark: #f5ecd7; --ink: #2c2c2c; --ink-light: #555; --accent: #2d7fc1; --accent-hover: #1d4ed8; --divider: #d6c8a8; --card-bg: #fef9ef; --card-border: #e8dcc8; --sidebar-bg: #f8f3e5; --sidebar-border: #e0d8c0; --code-bg: #eee8d8; --heading-color: #1a3a5c; --radius: 8px; --font: "Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif; }
+  .dark-mode { --paper: #1a1a2e; --paper-dark: #22223a; --ink: #e0e0ec; --ink-light: #8888aa; --accent: #6a82f0; --accent-hover: #5a72e0; --divider: #2d2d45; --card-bg: #24243a; --card-border: #33334d; --sidebar-bg: #1a1a2e; --sidebar-border: #2d2d45; --code-bg: #2a2a3e; --heading-color: var(--ink); background-color: var(--paper); }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--font); font-size: 12pt; line-height: 1.75; color: var(--ink); background: var(--paper); display: flex; min-height: 100vh; }
   .sidebar {position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
@@ -23,26 +23,23 @@
   .main-wrap { flex: 1; min-width: 0; margin-left: 210px; display: flex; flex-direction: column; }
   .topbar { background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; padding: 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
   .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; transition: color 0.15s; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; }
+  .topbar a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9em; } .topbar a:hover { color: #fff; } .topbar h2 { font-size: 1.2em; }
   .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; flex: 1; }
-  .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
-  .section h2 { font-size: 1.3em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-bottom: 16px; }
-  .attention-item { padding: 12px 16px; margin: 10px 0; border-left: 3px solid #e74c3c; background: var(--highlight-bg); border-radius: 0 6px 6px 0; }
-  .attention-item .a-label { display: inline-block; padding: 1px 8px; border-radius: 3px; font-size: .75em; font-weight: 700; margin-right: 6px; }
-  .a-label.易错 { background: #fee2e2; color: #991b1b; }
-  .a-label.必记 { background: #fef3c7; color: #92400e; }
-  .a-label.公式 { background: #dbeafe; color: #1e40af; }
-  .a-label.区别 { background: #f0fdf4; color: #166534; }
-  .dark-mode .attention-item { background: #2d2a1a; border-color: #e74c3c; }
-  .dark-mode .a-label.易错 { background: #3d1a1a; color: #e88080; }
-  .dark-mode .a-label.必记 { background: #3d3a1a; color: #e8b830; }
-  .dark-mode .a-label.公式 { background: #1a2a3d; color: #80b8e0; }
-  .dark-mode .a-label.区别 { background: #1a3d2a; color: #80c090; }
-  .ppt-quote { background: var(--code-bg); border-left: 3px solid #eab308; padding: 6px 12px; margin: 4px 0; font-size: .9em; color: var(--highlight-strong); border-radius: 0 4px 4px 0; }
-  .ppt-quote::before { content: 'PPT：'; font-weight: 700; color: #92400e; }
-  .dark-mode .ppt-quote { background: #2d2a1a; border-color: #c8900a; color: #e8b830; } .dark-mode .ppt-quote::before { color: #e8b830; }
-  .nav-links { margin-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; } .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; box-shadow: 0 2px 10px rgba(0,0,0,0.18); } .back2top:hover { opacity: 1; }
+  .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .section h2 { font-size: 1.15em; color: var(--heading-color); border-bottom: 2px solid var(--divider); padding-bottom: 6px; margin-bottom: 12px; }
+  .section h2 .ch-num { font-size:.75em; color:var(--accent); margin-right:4px; }
+  .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 8px; }
+  .k-item { padding: 10px 14px; margin: 0; border-left: 3px solid #e74c3c; background: var(--card-bg); border-radius: 0 6px 6px 0; border-top: 1px solid var(--card-border); border-right: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); }
+  .k-item.type-易错 { border-left-color: #e74c3c; } .k-item.type-必记 { border-left-color: #f39c12; } .k-item.type-公式 { border-left-color: #3498db; } .k-item.type-区别 { border-left-color: #27ae60; }
+  .k-label { display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: .72em; font-weight: 700; margin-right: 6px; vertical-align: middle; }
+  .k-label.易错 { background: #fee2e2; color: #c0392b; } .k-label.必记 { background: #fef3c7; color: #92400e; } .k-label.公式 { background: #dbeafe; color: #1e40af; } .k-label.区别 { background: #e0f5ec; color: #166534; }
+  .dark-mode .k-label.易错 { background: #3d1a1a; color: #e88080; } .dark-mode .k-label.必记 { background: #3d3a1a; color: #e8b830; } .dark-mode .k-label.公式 { background: #1a2a3d; color: #80b8e0; } .dark-mode .k-label.区别 { background: #1a3d2a; color: #80c090; }
+  .dark-mode .k-item.type-易错 { border-left-color: #e74c3c; } .dark-mode .k-item.type-必记 { border-left-color: #f0a030; } .dark-mode .k-item.type-公式 { border-left-color: #60a0e0; } .dark-mode .k-item.type-区别 { border-left-color: #50c878; }
+  .k-item .k-main { font-weight: 600; color: var(--ink); margin: 4px 0; line-height: 1.5; }
+  .k-quote { background: var(--code-bg); border-left: 2px solid #eab308; padding: 4px 10px; margin-top: 6px; font-size: .85em; color: #8a6d3b; border-radius: 0 4px 4px 0; line-height: 1.5; }
+  .dark-mode .k-quote { background: #2a2a20; border-color: #c8900a; color: #c0a060; }
+  .nav-links { margin-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .nav-links a { display: inline-block; padding: 10px 24px; background: var(--card-bg); border-radius: 8px; text-decoration: none; color: var(--accent); border: 1px solid var(--card-border); transition: all 0.2s; font-size: 0.93em; font-weight: 500; } .nav-links a:hover { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .back2top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.3em; cursor: pointer; opacity: 0.75; transition: all 0.2s; z-index: 98; } .back2top:hover { opacity: 1; }
   .theme-toggle { position: fixed; top: 14px; right: 16px; z-index: 200; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--divider); background: var(--card-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.2s; } .theme-toggle:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: scale(1.05); }
   .chapter-nav-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 8px 0 0 8px; background: linear-gradient(135deg, #1a3a5c, var(--accent)); color: #fff; border: none; font-size: 1.1em; cursor: pointer; z-index: 97; opacity: 0.8; transition: all 0.2s; box-shadow: -2px 0 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; } .chapter-nav-toggle:hover { opacity: 1; }
   .chapter-nav-panel { position: fixed; right: -260px; top: 50%; transform: translateY(-50%); width: 240px; background: var(--card-bg); border-radius: 14px 0 0 14px; box-shadow: -6px 0 28px rgba(0,0,0,0.15); z-index: 96; transition: right 0.35s; padding: 16px 0 12px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--card-border); } .chapter-nav-panel.open { right: 0; }
@@ -50,8 +47,8 @@
   .chapter-nav-panel .nav-section { font-size: 0.68em; font-weight: 600; color: var(--ink-light); padding: 10px 18px 3px; text-transform: uppercase; letter-spacing: 0.5px; }
   .chapter-nav-panel a { display: flex; align-items: center; gap: 8px; padding: 7px 18px; font-size: 0.88em; color: var(--ink); text-decoration: none; transition: all 0.15s; border-left: 3px solid transparent; margin: 1px 0; } .chapter-nav-panel a:hover { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); } .chapter-nav-panel a.current { background: var(--paper-dark); border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
   .chapter-nav-panel a .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 5px; background: var(--paper-dark); font-size: 0.78em; font-weight: 600; color: var(--ink-light); flex-shrink: 0; }
-  .footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
-  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } } @media (max-width: 640px) { .section { padding: 18px 16px; } .topbar h2 { font-size: 1em; } .attention-item { padding: 10px 14px; } .back2top { right: 10px; bottom: 20px; width: 38px; height: 38px; font-size: 1.1em; } }
+  .footer { text-align: center; padding: 20px; color: var(--ink-light); font-size: 0.82em; border-top: 1px solid var(--divider); }
+  @media (max-width: 768px) { .sidebar { display: none; } .main-wrap { margin-left: 0; } .items-grid { grid-template-columns: 1fr; } } @media (max-width: 640px) { .section { padding: 14px 16px; } .topbar h2 { font-size: 1em; } .k-item { padding: 8px 12px; } }
 </style>
 </head>
 <body>
@@ -69,266 +66,100 @@
 <script>(function(){var p=window.location.pathname.split('/').pop()||'index.html';document.querySelectorAll('.sidebar-nav a').forEach(function(a){if(a.getAttribute('href')===p)a.classList.add('current');});})();</script>
 <button class="theme-toggle no-print" onclick="toggleTheme()" title="切换暗黑模式">🌙</button>
 <script>(function(){var d=localStorage.getItem('analogelec-theme');if(d==='dark'){document.body.classList.add('dark-mode');document.querySelector('.theme-toggle').textContent='☀️';}})();function toggleTheme(){var b=document.body;b.classList.toggle('dark-mode');var btn=document.querySelector('.theme-toggle');var isDark=b.classList.contains('dark-mode');btn.textContent=isDark?'☀️':'🌙';localStorage.setItem('analogelec-theme',isDark?'dark':'light');}</script>
-<div class="main-wrap">
-<div class="topbar"><div class="topbar-inner"><a href="index.html">← 返回首页</a><h2>⚠ 关键注意事项</h2><a href="ch01.html">第1章 →</a></div></div>
+<div class="main-wrap"><div class="topbar"><div class="topbar-inner"><a href="index.html">← 返回首页</a><h2>⚠ 关键注意事项</h2><a href="ch01.html">第1章 →</a></div></div>
 <div class="container">
 
-  <div class="section">
-    <h2>📌 说明</h2>
-    <p>按章节整理<strong>易错点、必记公式、关键区别</strong>。标签含义：<span class="a-label 易错">易错</span> <span class="a-label 必记">必记</span> <span class="a-label 公式">公式</span> <span class="a-label 区别">区别</span></p>
-  </div>
+<div class="section" style="border-left:3px solid var(--accent);">
+  <p style="margin:0;">按章节整理的<strong>易错点 · 必记公式 · 关键区别</strong>。边框色 = 类别色：
+  <span class="k-label 易错">易错</span>红框
+  <span class="k-label 必记">必记</span>橙框
+  <span class="k-label 公式">公式</span>蓝框
+  <span class="k-label 区别">区别</span>绿框
+  </p>
+</div>
 
-  <!-- ====== 第1章 ====== -->
-  <div class="section"><h2>第1章 绪论</h2>
+<!-- 第1章 -->
+<div class="section"><h2><span class="ch-num">01</span>绪论</h2><div class="items-grid">
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main">输入、输出电阻是<strong>交流电阻</strong>，不是直流电阻。</div><div class="k-quote">"注意：输入、输出电阻为交流电阻"（ch01 1.5）</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>频率失真(线性失真)不产生新频率分量；非线性失真产生新频率分量(谐波)。</strong></div><div class="k-quote">"幅度失真和相位失真...统称为频率失真，也称为线性失真。""由元器件非线性特性引起的失真。"（ch01 1.5）</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>电压/电流增益 dB = 20lg|A|；功率增益 dB = 10lgAp。</strong>电压电流20倍lg，功率10倍lg。</div><div class="k-quote">"电压增益=20lg|Av|dB；电流增益=20lg|Ai|dB；功率增益=10lgAp dB"（ch01 1.4）</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main">四种放大模型理想条件：电压(Ri→∞,Ro→0)；电流(Ri→0,Ro→∞)；互阻(Ri→0,Ro→0)；互导(Ri→∞,Ro→∞)。</div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>输入、输出电阻是交流电阻，不是直流电阻。</strong>
-    <div class="ppt-quote">"注意：输入、输出电阻为交流电阻"（ch01 1.5）</div>
-  </div>
+<!-- 第2章 -->
+<div class="section"><h2><span class="ch-num">02</span>运算放大器</h2><div class="items-grid">
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>虚短(vP≈vN) + 虚断(iP≈0,iN≈0)</strong>是分析运放线性电路的两条核心法则，"必须熟练掌握"。</div><div class="k-quote">""虚短"和"虚断"是用来分析各种运放线性应用电路的有力法则，必须熟练掌握。"（ch02 2.2）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>虚短≠真短路，虚断≠真断路。</strong>仅运放工作在线性区（有负反馈）才成立。虚短因Avo→∞,vP-vN=vo/Avo→0；虚断因ri→∞。</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>同相Av=1+R2/R1(正),Ri→∞,有共模电压；反相Av=−Rf/R1(负),Ri=R1,虚地无共模电压。</strong></div><div class="k-quote">"注意输入输出的相位关系"（ch02 2.1）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>电压跟随器(Av=1)作用="隔离或缓冲"，</strong>不是放大电压。利用Ri→∞、Ro→0阻抗变换。</div><div class="k-quote">"电压跟随器对电压增益有贡献吗？隔离或缓冲"（ch02 2.3.1）</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>积分：vo=−(1/RC)∫vi dt；微分：vo=−RC·dvi/dt。</strong></div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>频率失真（线性失真）不产生新频率分量；非线性失真产生新频率分量（谐波）。</strong>
-    <div class="ppt-quote">"幅度失真和相位失真通常都是同时发生的，它们统称为频率失真，也称为线性失真。" "由元器件非线性特性引起的失真。"（ch01 1.5）</div>
-  </div>
+<!-- 第3章 -->
+<div class="section"><h2><span class="ch-num">03</span>二极管及其基本电路</h2><div class="items-grid">
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>P型多子=空穴；N型多子=自由电子。</strong></div><div class="k-quote">"在P型半导体中空穴是多数载流子...在N型半导体中自由电子是多数载流子"（ch03 3.1.2）</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>雪崩击穿</strong>（少子获动能撞击→载流子倍增）vs <strong>齐纳击穿</strong>（强电场破坏共价键）。均为电击穿(可逆)，区别于热击穿(不可逆)。</div><div class="k-quote">"热击穿——不可逆。电击穿——可逆。"（ch03 3.2.3）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main">小信号模型前提：①二极管正向偏置；②<strong>vD>>VT(=26mV)</strong>；③rd=VT/IDQ，与Q点有关。</div><div class="k-quote">"该模型用于二极管处于正向偏置条件下，且vD>>VT。"（ch03 3.4.2）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>齐纳二极管工作在反向电击穿状态，不是正向导通！</strong></div><div class="k-quote">"齐纳二极管稳压时工作在反向电击穿状态。"（ch03 3.5.1）</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>空穴是半导体区别于导体的重要特点。</strong>空穴移动实际是价电子反向移动。</div><div class="k-quote">"空穴的出现是半导体区别于导体的一个重要特点。"（ch03 3.1）</div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>电压增益 dB = 20lg|Av|；电流增益 dB = 20lg|Ai|；功率增益 dB = 10lgAp。</strong>电压和电流是20倍lg，功率是10倍lg。
-    <div class="ppt-quote">"电压增益=20lg|Av|dB；电流增益=20lg|Ai|dB；功率增益=10lgAp dB"（ch01 1.4）</div>
-  </div>
+<!-- 第4章 -->
+<div class="section"><h2><span class="ch-num">04</span>MOS场效应管及其放大电路</h2><div class="items-grid">
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>增强型</strong>"必须依靠栅极外加电压才能产生反型层"VGS=0无沟道；<strong>耗尽型</strong>VGS=0已有沟道。</div><div class="k-quote">"必须依靠栅极外加电压才能产生反型层的MOSFET称为增强型器件"（ch04 4.1.1）</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>MOSFET = 单极型器件</strong>（沟道仅一种载流子），<strong>VCCS</strong>电压控制电流源，输入电阻极高。</div><div class="k-quote">"沟道中只有一种类型的载流子参与导电，所以场效应管也称为单极型三极管。"（ch04 4.1.1）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>恒流区条件：vGS>VTN 且 vDS≥vGS−VTN。</strong>Q点计算后必须检验！不满足则"必须作出新的假设，同时重新分析电路。"</div><div class="k-quote">"必须让FET工作在恒流区（放大区）才有放大作用""必须检验是否满足恒流区工作条件"（ch04 4.2.2）</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>gm=2Kn(VGSQ−VTN)=2√(Kn·IDQ)。</strong>gm是转移特性Q点切线斜率。</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>小信号模型前提：vgs<<2(VGSQ−VTN)，</strong>未包含结电容不能分析高频。</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>VDS极性接反→PN结正偏→MOS管失效！</strong>NMOS漏极为正，PMOS漏极为负。</div><div class="k-quote">"VDS极性接反会怎样？PN结正偏，MOS管失效。"（ch04 4.1.1）</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>三种组态：共源(反相Av=−gmRd)；共漏/源随(同相Av≈1)；共栅(同相)。</strong></div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>四种放大模型理想条件：</strong>电压放大(Ri→∞, Ro→0)；电流放大(Ri→0, Ro→∞)；互阻(Ri→0, Ro→0)；互导(Ri→∞, Ro→∞)。
-  </div>
-  </div>
+<!-- 第5章 -->
+<div class="section"><h2><span class="ch-num">05</span>双极结型三极管及其放大电路</h2><div class="items-grid">
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>BJT放大条件：发射结正偏+集电结反偏。</strong>NPN:VC>VB>VE；PNP全部相反(VC<VB<VE)。</div><div class="k-quote">"内部条件：发射区杂质浓度远大于基区...外部条件：发射结正向偏置，集电结反向偏置。"（ch05 5.1.2）</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>BJT(CCCS,βib,双极,Ri中等) vs FET(VCCS,gmvgs,单极,Ri极高)。</strong></div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>rbe≈200Ω+(1+β)×26mV/IEQ。</strong>不能用万用表量b、e间电阻！</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main">H参数简化：忽略hre(10⁻³~10⁻⁴)和1/hoe(约100kΩ)。</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>共射(反相高Av)；共集/射随(同相Av≈1,缓冲)；共基(同相低Ri)。</strong></div></div>
+</div></div>
 
-  <!-- ====== 第2章 ====== -->
-  <div class="section"><h2>第2章 运算放大器</h2>
+<!-- 第7章 -->
+<div class="section"><h2><span class="ch-num">07</span>模拟集成电路</h2><div class="items-grid">
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>"利用叠加原理将差模和共模分开处理——差分放大电路分析的核心手段。"</strong>差模时源极公共端为虚地。</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>差模vid=vP−vN</strong>(大小相等相位相反)；<strong>共模vic=(vP+vN)/2</strong>(大小相等相位相同)。</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>Avd=−gmRd</strong>(双端差模)；<strong>KCMR=|Avd/Avc|</strong>越大越好。</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>温度变化+电源波动=共模信号</strong>→差分放大可抑制=克服零漂的原理。</div><div class="k-quote">"温度变化和电源电压波动等效于共模信号"（ch07 7.2）</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main">运放输入失调→输出不为零：VIO(失调电压)、IIO(失调电流)、IIB(偏置电流)。</div><div class="k-quote">"但由于失调电压、失调电流、偏置电流的存在使输出电压不为0。"（ch07 7.5）</div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>虚短(vP≈vN)和虚断(iP≈0, iN≈0)是分析运放线性电路的两条核心法则，"必须熟练掌握"。</strong>
-    <div class="ppt-quote">""虚短"和"虚断"是用来分析各种运放线性应用电路的有力法则，必须熟练掌握。"（ch02 2.2）</div>
-  </div>
+<!-- 第8章 -->
+<div class="section"><h2><span class="ch-num">08</span>反馈放大电路</h2><div class="items-grid">
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>瞬时极性法四步：</strong>①先区分放大电路和反馈网络→②沿信号方向逐级标注→③知道各电路相位关系→④正确确定反馈引入位置。</div><div class="k-quote">"判断反馈极性时，注意：（1）...（2）...（3）...（4）..."（ch08 8.1.3）</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>串联→Ri增大；并联→Ri减小；电压→Ro减小；电流→Ro增大。</strong></div><div class="k-quote">"引入串联负反馈后，输入电阻增大了""引入并联负反馈后，输入电阻减小了""引入电压负反馈后，输出电阻减小了""引入电流负反馈后，输出电阻增大了"（ch08 8.3.4）</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>闭环Af=A/(1+AF)；深度负反馈(AF>>1)：Af≈1/F。</strong></div><div class="k-quote">"即闭环增益只取决于反馈网络"（ch08 8.3.1）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>深度负反馈近似有误差！</strong>环路增益越大误差越小，高频时A下降AF减小→误差增大。</div><div class="k-quote">"即环路增益直接影响着误差的大小...注：此处忽略了频率变化导致A减小带来的影响。"（ch08 8.4）</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>自激振荡条件AF=−1</strong>(|AF|=1+相移180°)。信源=噪声+干扰。解决=密勒补偿。</div><div class="k-quote">"自激振荡是指，在没有任何输入信号的情况下，放大电路的输出端仍会连续不断地产生某种频率的输出波形。"（ch08 8.6.1）</div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>虚短 ≠ 真的短路，虚断 ≠ 真的断路。</strong>虚短是因为Avo→∞，vP−vN=vo/Avo→0；虚断是因为ri→∞，iP=iN≈0。只有运放工作在线性区（引入负反馈）才成立。
-  </div>
+<!-- 第9章 -->
+<div class="section"><h2><span class="ch-num">09</span>功率放大电路</h2><div class="items-grid">
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>甲类(360°)效率~25% | 乙类(180°)交越失真ηmax=78.5% | 甲乙类(>180°)无交越 | 丁类开关态>90%。</strong></div><div class="k-quote">"提高效率的主要途径：降低静态功耗，即减小静态电流。"（ch09 9.1）</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>OCL: Pomax=VCC²/(2RL)；OTL: Pomax=VCC²/(8RL)。</strong>OCL用±VCC双电源,OTL用+VCC单电源+输出电容。</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>交越失真→甲乙类偏置克服</strong>（二极管偏置或VBE倍增电路）。</div><div class="k-quote">"利用二极管进行偏置克服交越失真。利用VBE扩大电路进行偏置克服交越失真。"（ch09 9.4）</div></div>
+<div class="k-item type-易错"><span class="k-label 易错">易错</span><div class="k-main"><strong>OCL输出级是共集电极结构→Av≈1，无电压放大功能！</strong>电压放大由前级完成。</div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>同相放大 vs 反相放大：</strong>同相Av=1+R2/R1(正)，Ri→∞，有共模电压；反相Av=−Rf/R1(负)，Ri=R1，虚地无共模电压。
-    <div class="ppt-quote">"注意输入输出的相位关系"（ch02 2.1）</div>
-  </div>
+<!-- 第10章 -->
+<div class="section"><h2><span class="ch-num">10</span>信号处理与信号产生电路</h2><div class="items-grid">
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>LPF低通/HPF高通/BPF带通(串联)/BRF带阻(并联)/APF全通。</strong></div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>Q=0.707→巴特沃斯响应</strong>，通带内最平坦无过冲。</div><div class="k-quote">"当Q=0.707时，在通带内幅频响应曲线最大限度平坦，没有起伏...为巴特沃斯低通滤波器。"（ch10 10.3.1）</div></div>
+<div class="k-item type-公式"><span class="k-label 公式">公式</span><div class="k-main"><strong>RC文氏桥：fo=1/(2πRC)，|F|max=1/3，需Av=3。</strong>起振Av>3，稳幅后Av=3。</div></div>
+<div class="k-item type-必记"><span class="k-label 必记">必记</span><div class="k-main"><strong>起振信源=器件内部噪声+电源接通扰动。</strong>稳幅：NTC/JFET/二极管。</div><div class="k-quote">"起振的信号源来自何处？电路器件内部噪声以及电源接通扰动。"（ch10 10.5）</div></div>
+<div class="k-item type-区别"><span class="k-label 区别">区别</span><div class="k-main"><strong>施密特(迟滞,抗干扰) vs 单门限(易抖动)。</strong></div><div class="k-quote">"单门限比较器的抗干扰能力""门限电压随输出电压变化"（ch10 10.8）</div></div>
+</div></div>
 
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>电压跟随器(Av=1)的作用是"隔离或缓冲"，</strong>不是放大电压。利用Ri→∞、Ro→0实现阻抗变换。
-    <div class="ppt-quote">"电压跟随器对电压增益有贡献吗？隔离或缓冲"（ch02 2.3.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>积分电路：vo=−(1/RC)∫vi dt；微分电路：vo=−RC·dvi/dt。</strong>
-  </div>
-  </div>
-
-  <!-- ====== 第3章 ====== -->
-  <div class="section"><h2>第3章 二极管及其基本电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>P型半导体多子是空穴；N型半导体多子是自由电子。</strong>
-    <div class="ppt-quote">"在P型半导体中空穴是多数载流子…在N型半导体中自由电子是多数载流子"（ch03 3.1.2）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>雪崩击穿 vs 齐纳击穿：</strong>雪崩是少子获动能撞击→载流子倍增；齐纳是强电场直接破坏共价键。均为电击穿（可逆），区别于热击穿（不可逆）。
-    <div class="ppt-quote">"热击穿——不可逆。电击穿——可逆。"（ch03 3.2.3）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>小信号模型使用前提：</strong>①二极管正向偏置；②vD>>VT(=26mV)；③微变电阻rd与Q点有关。
-    <div class="ppt-quote">"该模型用于二极管处于正向偏置条件下，且vD>>VT。"（ch03 3.4.2）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>齐纳二极管（稳压管）工作在反向电击穿状态，不是正向导通！</strong>
-    <div class="ppt-quote">"齐纳二极管稳压时工作在反向电击穿状态。"（ch03 3.5.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>空穴是半导体区别于导体的重要特点。</strong>空穴移动实际是价电子反向移动。
-    <div class="ppt-quote">"空穴的出现是半导体区别于导体的一个重要特点。"（ch03 3.1）</div>
-  </div>
-  </div>
-
-  <!-- ====== 第4章 ====== -->
-  <div class="section"><h2>第4章 MOS场效应管及其放大电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>增强型 vs 耗尽型：</strong>增强型——"必须依靠栅极外加电压才能产生反型层"，VGS=0无沟道；耗尽型——VGS=0已有沟道。
-    <div class="ppt-quote">"必须依靠栅极外加电压才能产生反型层的MOSFET称为增强型器件"（ch04 4.1.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>MOSFET是单极型器件（沟道中仅一种载流子），是电压控制电流源(VCCS)，输入电阻极高。</strong>
-    <div class="ppt-quote">"沟道中只有一种类型的载流子参与导电，所以场效应管也称为单极型三极管。"（ch04 4.1.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>恒流区(放大区)条件：vGS > VTN 且 vDS ≥ vGS−VTN。必须检验！</strong>Q点计算后一定要验证。
-    <div class="ppt-quote">"必须让FET工作在恒流区（放大区）才有放大作用。""必须检验是否满足恒流区工作条件：VDSQ > VGSQ - VTN > 0。"（ch04 4.2.2）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>静态工作点假设错误→必须重新假设！</strong>
-    <div class="ppt-quote">"如果初始假设是错误的，则必须作出新的假设，同时重新分析电路。"（ch04 4.2.2）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>gm = 2Kn(VGSQ−VTN) = 2√(Kn·IDQ)。</strong>gm是转移特性Q点切线斜率。
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>小信号模型前提：vgs << 2(VGSQ−VTN)，未包含结电容不能分析高频。</strong>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>VDS极性接反→PN结正偏→MOS管失效！</strong>NMOS漏极为正，PMOS漏极为负。
-    <div class="ppt-quote">"VDS极性接反会怎样？PN结正偏，MOS管失效。"（ch04 4.1.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>三种组态对比：共源(反相，Av=−gmRd)；共漏/源极跟随器(同相，Av≈1)；共栅(同相)。</strong>
-  </div>
-  </div>
-
-  <!-- ====== 第5章 ====== -->
-  <div class="section"><h2>第5章 双极结型三极管及其放大电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>BJT放大条件：发射结正偏 + 集电结反偏。</strong>NPN：VBE>0且VC>VB；PNP：VEB>0且VC<VB（电压极性全部相反！）。
-    <div class="ppt-quote">"内部条件：发射区杂质浓度远大于基区杂质浓度，且基区很薄。外部条件：发射结正向偏置，集电结反向偏置。"（ch05 5.1.2）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>BJT vs FET：BJT是电流控制(CCCS, βib)，FET是电压控制(VCCS, gmvgs)。</strong>BJT输入电阻中等(rbe)，FET输入电阻极高(>10^9Ω)。BJT有两种载流子（双极），FET仅一种（单极）。
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>rbe ≈ 200Ω + (1+β)×26mV/IEQ。</strong>不能用万用表直接量b、e间电阻！
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>H参数简化：忽略hre(反向电压传输比，10^-3~10^-4)和1/hoe(rce，约100kΩ)。</strong>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>三种组态：共射(反相，高Av)；共集/射随(同相，Av≈1，缓冲)；共基(同相)。</strong>共集=射极跟随器，高Ri低Ro；共基低Ri。
-  </div>
-  </div>
-
-  <!-- ====== 第7章 ====== -->
-  <div class="section"><h2>第7章 模拟集成电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>差分放大电路核心分析方法：叠加原理→差模和共模分开计算。</strong>差模时源极公共端为"虚地"。
-    <div class="ppt-quote">"动态分析时，利用叠加原理将差模和共模分开处理——这是差分放大电路分析的核心手段。"（ch07 7.2.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>差模信号(vid=vP−vN): 大小相等相位相反; 共模信号(vic=(vP+vN)/2): 大小相等相位相同。</strong>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>双端输出差模增益Avd=−gmRd，共模增益Avc≈0；KCMR=|Avd/Avc|越大越好。</strong>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>温度变化和电源电压波动→等效为共模信号→差分放大可抑制。</strong>这就是差分放大能克服零漂的原因。
-    <div class="ppt-quote">"温度变化和电源电压波动等效于共模信号，差分放大电路通过高KCMR可有效抑制这些干扰。"（ch07 7.2.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>运放输入失调→输出电压不为零。</strong>VIO(失调电压)、IIO(失调电流)、IIB(偏置电流)。
-    <div class="ppt-quote">"但由于失调电压、失调电流、偏置电流的存在使输出电压不为0。"（ch07 7.5）</div>
-  </div>
-  </div>
-
-  <!-- ====== 第8章 ====== -->
-  <div class="section"><h2>第8章 反馈放大电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>瞬时极性法四步：</strong>①先区分基本放大电路和反馈网络；②沿信号传输方向逐级标注；③知道各种放大电路的相位关系；④正确确定反馈信号引入位置。
-    <div class="ppt-quote">"判断反馈极性时，注意：（1）…（2）…（3）…（4）…"（ch08 8.1.3）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>四种负反馈组态对Ri和Ro的影响：</strong>串联→Ri↑，并联→Ri↓；电压→Ro↓，电流→Ro↑。
-    <div class="ppt-quote">"引入串联负反馈后，输入电阻增大了。""引入并联负反馈后，输入电阻减小了。""引入电压负反馈后，输出电阻减小了。""引入电流负反馈后，输出电阻增大了。"（ch08 8.3.4）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>闭环增益Af=A/(1+AF)；深度负反馈(AF>>1)：Af≈1/F。</strong>
-    <div class="ppt-quote">"即闭环增益只取决于反馈网络。当反馈网络由稳定的线性元件组成时，闭环增益将有很高的稳定性。"（ch08 8.3.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>深度负反馈近似有误差！</strong>环路增益越大误差越小，高频时A下降AF减小误差增大。
-    <div class="ppt-quote">"即环路增益直接影响着误差的大小，环路增益越大，误差越小。"（ch08 8.4）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>自激振荡条件：AF=−1（|AF|=1且相移180°）。</strong>信源来自器件噪声和外部干扰。解决方法：密勒电容频率补偿。
-    <div class="ppt-quote">"自激振荡是指，在没有任何输入信号的情况下，放大电路的输出端仍会连续不断地产生某种频率的输出波形。"（ch08 8.6.1）</div>
-  </div>
-  </div>
-
-  <!-- ====== 第9章 ====== -->
-  <div class="section"><h2>第9章 功率放大电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>甲类(导通角360°)→效率最低；乙类(180°)→有交越失真→ηmax≈78.5%；甲乙类(>180°)→克服交越失真；丁类→开关状态→效率>90%。</strong>
-    <div class="ppt-quote">"提高效率的主要途径：降低静态功耗，即减小静态电流。"（ch09 9.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>OCL: Pomax=VCC²/(2RL), ηmax=π/4≈78.5%。OTL: Pomax=VCC²/(8RL)。</strong>注意OCL用双电源±VCC，OTL用单电源+VCC且输出串大电容。
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>交越失真→甲乙类偏置克服。</strong>二极管偏置或VBE倍增电路。
-    <div class="ppt-quote">"利用二极管进行偏置克服交越失真。利用VBE扩大电路进行偏置克服交越失真。"（ch09 9.4）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 易错">易错</span> <strong>OCL输出级是共集电极结构→Av≈1，无电压放大功能！</strong>电压放大由前级完成，功放只做功率输出。
-  </div>
-  </div>
-
-  <!-- ====== 第10章 ====== -->
-  <div class="section"><h2>第10章 信号处理与信号产生电路</h2>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>五种滤波器：LPF(低通)、HPF(高通)、BPF(带通=低通+高通串联)、BRF(带阻=低通+高通并联)、APF(全通)。</strong>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>Q=0.707时为巴特沃斯响应——通带内最平坦，无过冲。</strong>
-    <div class="ppt-quote">"当Q=0.707时，在通带内幅频响应曲线最大限度平坦，没有起伏，在阻带内则单调下降为零，为巴特沃斯低通滤波器。"（ch10 10.3.1）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 公式">公式</span> <strong>RC文氏桥振荡：fo=1/(2πRC)，|F|max=1/3(在f=fo时)，需Av=3满足|AF|=1。</strong>起振时需Av>3，稳幅后Av=3。
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 必记">必记</span> <strong>起振信号源 = 电路器件内部噪声 + 电源接通扰动。</strong>稳幅→NTC热敏电阻/JFET/二极管。
-    <div class="ppt-quote">"起振的信号源来自何处？电路器件内部噪声以及电源接通扰动。"（ch10 10.5）</div>
-  </div>
-
-  <div class="attention-item">
-    <span class="a-label 区别">区别</span> <strong>施密特触发器 vs 单门限比较器：</strong>施密特有迟滞(上门限≠下门限)→抗干扰；单门限易抖动。
-    <div class="ppt-quote">"单门限比较器的抗干扰能力""门限电压随输出电压变化"（ch10 10.8）</div>
-  </div>
-  </div>
-
-  <div class="nav-links"><a href="index.html">← 返回首页</a><a href="problems.html">电路问题汇总 →</a></div>
+<div class="nav-links"><a href="index.html">← 返回首页</a><a href="problems.html">电路问题汇总 →</a></div>
 </div>
 <button class="back2top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="footer"><p>华中科技大学《模拟电子技术基础》— 关键注意事项</p></div>
